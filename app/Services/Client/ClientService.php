@@ -50,7 +50,7 @@ class ClientService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'errors' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors()];
             }
 
             $client = Client::create($validator->validated());

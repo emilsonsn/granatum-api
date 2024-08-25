@@ -22,21 +22,21 @@ class TaskController extends Controller
     public function create(Request $request){
         $result = $this->tasksService->create($request);
 
-        $result['message'] = "Tarefa criada com sucesso";
+        if($result['status']) $result['message'] = "Tarefa criada com sucesso";
         return $this->response($result);
     }
 
     public function update(Request $request, $id){
         $result = $this->tasksService->update($request, $id);
         
-        $result['message'] = "Tarefa atualizada com sucesso";
+        if($result['status']) $result['message'] = "Tarefa atualizada com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->tasksService->delete($id);
         
-        $result['message'] = "Tarefa Deletada com sucesso";
+        if($result['status']) $result['message'] = "Tarefa Deletada com sucesso";
         return $this->response($result);
     }
 
@@ -45,7 +45,7 @@ class TaskController extends Controller
     public function change_status_sub_tasks($id){
         $result = $this->tasksService->change_status_sub_tasks($id);
 
-        $result['message'] = "Sub-Tarefa atualizada com sucesso";
+        if($result['status']) $result['message'] = "Sub-Tarefa atualizada com sucesso";
         return $this->response($result);
     }
 
@@ -53,7 +53,7 @@ class TaskController extends Controller
     public function delete_sub_tasks($id){
         $result = $this->tasksService->delete_sub_tasks($id);
 
-        $result['message'] = "Sub-Tarefa deletada com sucesso";
+        if($result['status']) $result['message'] = "Sub-Tarefa deletada com sucesso";
         return $this->response($result);
     }
 
@@ -62,20 +62,20 @@ class TaskController extends Controller
     public function create_status($request){
         $result = $this->tasksService->create_status($request);
 
-        $result['message'] = "Sub-Tarefa deletada com sucesso";
+        if($result['status']) $result['message'] = "Sub-Tarefa deletada com sucesso";
         return $this->response($result);
     }
 
     public function delete_task_file($id){
         $result = $this->tasksService->delete_task_file($id);
 
-        $result['message'] = "Anexo deletado com sucesso";
+        if($result['status']) $result['message'] = "Anexo deletado com sucesso";
         return $this->response($result);
     }
     public function delete_status($id){
         $result = $this->tasksService->delete_status($id);
 
-        $result['message'] = "Sub-Tarefa deletada com sucesso";
+        if($result['status']) $result['message'] = "Sub-Tarefa deletada com sucesso";
         return $this->response($result);
     }
 

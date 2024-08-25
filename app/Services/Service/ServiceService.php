@@ -41,7 +41,7 @@ class ServiceService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'errors' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors()];
             }
 
             $service = Service::create($validator->validated());

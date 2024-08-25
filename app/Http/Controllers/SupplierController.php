@@ -22,21 +22,21 @@ class SupplierController extends Controller
     public function create(Request $request){
         $result = $this->supplierService->create($request);
 
-        $result['message'] = "Fornecedor criado com sucesso";
+        if($result['status']) $result['message'] = "Fornecedor criado com sucesso";
         return $this->response($result);
     }
 
     public function update(Request $request, $id){
         $result = $this->supplierService->update($request, $id);
 
-        $result['message'] = "Fornecedor atualizado com sucesso";
+        if($result['status']) $result['message'] = "Fornecedor atualizado com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->supplierService->delete($id);
 
-        $result['message'] = "Fornecedor Deletado com sucesso";
+        if($result['status']) $result['message'] = "Fornecedor Deletado com sucesso";
         return $this->response($result);
     }
 
@@ -58,14 +58,14 @@ class SupplierController extends Controller
     public function typeCreate(Request $request){
         $result = $this->supplierService->typeCreate($request);
 
-        $result['message'] = "Tipo de fornecedor criado com sucesso";
+        if($result['status']) $result['message'] = "Tipo de fornecedor criado com sucesso";
         return $this->response($result);
     }
 
     public function typeDelete($id){
         $result = $this->supplierService->typeDelete($id);
 
-        $result['message'] = "Tipo de fornecedor Deletado com sucesso";
+        if($result['status']) $result['message'] = "Tipo de fornecedor Deletado com sucesso";
         return $this->response($result);
     }
 }

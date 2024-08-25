@@ -22,21 +22,21 @@ class ClientController extends Controller
     public function create(Request $request){
         $result = $this->clientService->create($request);
 
-        $result['message'] = "Cliente criado com sucesso";
+        if($result['status']) $result['message'] = "Cliente criado com sucesso";
         return $this->response($result);
     }
 
     public function update(Request $request, $id){
         $result = $this->clientService->update($request, $id);
 
-        $result['message'] = "Cliente atualizado com sucesso";
+        if($result['status']) $result['message'] = "Cliente atualizado com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->clientService->delete($id);
 
-        $result['message'] = "Cliente Deletado com sucesso";
+        if($result['status']) $result['message'] = "Cliente Deletado com sucesso";
         return $this->response($result);
     }
 

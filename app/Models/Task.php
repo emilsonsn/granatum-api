@@ -17,7 +17,7 @@ class Task extends Model
         'name',
         'user_id',
         'concluded_at',
-        'description',
+        'description ',
         'task_status_id'
     ];
 

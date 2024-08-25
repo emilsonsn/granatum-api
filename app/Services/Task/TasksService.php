@@ -54,7 +54,7 @@ class TasksService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'errors' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors()];
             }
 
             $data = $validator->validated();
@@ -228,7 +228,7 @@ class TasksService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'errors' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors()];
             }
 
             $taskStatus = TaskStatus::create($validator->validated());

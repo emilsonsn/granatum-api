@@ -22,21 +22,21 @@ class ServiceController extends Controller
     public function create(Request $request){
         $result = $this->serviceService->create($request);
 
-        $result['message'] = "Serviço criado com sucesso";
+        if($result['status']) $result['message'] = "Serviço criado com sucesso";
         return $this->response($result);
     }
 
     public function update(Request $request, $id){
         $result = $this->serviceService->update($request, $id);
         
-        $result['message'] = "Serviço atualizado com sucesso";
+        if($result['status']) $result['message'] = "Serviço atualizado com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->serviceService->delete($id);
         
-        $result['message'] = "Serviço Deletado com sucesso";
+        if($result['status']) $result['message'] = "Serviço Deletado com sucesso";
         return $this->response($result);
     }
 

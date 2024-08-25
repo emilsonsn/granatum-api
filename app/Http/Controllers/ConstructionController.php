@@ -22,21 +22,21 @@ class ConstructionController extends Controller
     public function create(Request $request){
         $result = $this->constructionService->create($request);
 
-        $result['message'] = "Obra criada com sucesso";
+        if($result['status']) $result['message'] = "Obra criada com sucesso";
         return $this->response($result);
     }
 
     public function update(Request $request, $id){
         $result = $this->constructionService->update($request, $id);
         
-        $result['message'] = "Obra atualizada com sucesso";
+        if($result['status']) $result['message'] = "Obra atualizada com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->constructionService->delete($id);
         
-        $result['message'] = "Obra Deletada com sucesso";
+        if($result['status']) $result['message'] = "Obra Deletada com sucesso";
         return $this->response($result);
     }
 
