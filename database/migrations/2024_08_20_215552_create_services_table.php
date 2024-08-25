@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('service_name');
+            $table->string('name');
             $table->unsignedBigInteger('service_type_id');
             $table->timestamps();
             
