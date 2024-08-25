@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebhookController;
@@ -31,37 +33,43 @@ Route::post('updatePassword', [UserController::class, 'updatePassword']);
 Route::get('validateToken', [AuthController::class, 'validateToken']);
 
 Route::middleware('jwt')->group(function(){
+    
     Route::post('logout', [AuthController::class, 'logout']);
-
-    Route::prefix('tender')->group(function(){
-        Route::get('search', [TenderController::class, 'search']);
-        Route::get('get-edital/{idLicitacao}', [TenderController::class, 'edital']);
-        Route::post('favorite/{tender_id}', [TenderController::class, 'favorite']);
-    });
 
     Route::get('user/getUser', [UserController::class, 'getUser']);
 
-    Route::get('setting/search', [SettingController::class, 'search']);
-
-    Route::middleware(AdminMiddleware::class)->group(function(){
-
-        Route::prefix('user')->group(function(){
-            Route::get('search', [UserController::class, 'search']);
-            Route::post('create', [UserController::class, 'create']);
-            Route::patch('{id}', [UserController::class, 'update']);
-            Route::post('block/{id}', [UserController::class, 'userBlock']);
-        });
-
-        Route::prefix('dashboard')->group(function(){
-            Route::get('search', [DashboardController::class, 'search']);
-            Route::get('userGraph', [DashboardController::class, 'userGraph']);
-        });
-
-        Route::patch('setting/update', [SettingController::class, 'update']);
-
+    Route::prefix('user')->group(function(){
+        Route::get('search', [UserController::class, 'search']);
+        Route::post('create', [UserController::class, 'create']);
+        Route::patch('{id}', [UserController::class, 'update']);
+        Route::post('block/{id}', [UserController::class, 'userBlock']);
     });
-});
 
-Route::prefix('webhook')->group(function() {
-    Route::post('hotmart', [WebhookController::class, 'handle']);
+    Route::prefix('supplier')->group(function(){
+        Route::get('search', [SupplierController::class, 'search']);
+        Route::post('create', [SupplierController::class, 'create']);
+        Route::patch('{id}', [SupplierController::class, 'update']);
+        Route::delete('{id}', [SupplierController::class, 'delete']);
+    });
+
+    Route::prefix('task')->group(function(){
+        Route::get('search', [TaskController::class, 'search']);
+        Route::post('create', [TaskController::class, 'create']);
+        Route::patch('{id}', [TaskController::class, 'update']);
+        Route::delete('{id}', [TaskController::class, 'delete']);
+
+        // Sub-tasks
+        Route::patch('subtask/status/{id}', [TaskController::class, 'change_status_sub_tasks']);
+        Route::delete('subtask/{id}', [TaskController::class, 'delete_sub_tasks']);
+
+        // Status
+        Route::post('status/create', [TaskController::class, 'create_status']);
+        Route::delete('status/{id}', [TaskController::class, 'delete_status']);
+
+        // Arquivos de tarefas
+        Route::delete('file/{id}', [TaskController::class, 'delete_task_file']);
+    });
+
+
+
 });

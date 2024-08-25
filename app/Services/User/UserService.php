@@ -101,7 +101,7 @@ class UserService
 
             $userToUpdate = User::find($user_id);
 
-            if(!isset($userToUpdate)) throw new Exception('usuário não encontrado');
+            if(!isset($userToUpdate)) throw new Exception('Usuário não encontrado');
 
             $userToUpdate->update($validator->validated());
 
