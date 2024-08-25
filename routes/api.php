@@ -42,6 +42,12 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [UserController::class, 'create']);
         Route::patch('{id}', [UserController::class, 'update']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);
+
+        Route::get('position/search', [UserController::class, 'positionSearch']);
+
+        Route::get('sector/search', [UserController::class, 'sectorSearch']);
+        Route::post('sector/create', [UserController::class, 'sectorCreate']);
+        Route::delete('sector/{id}', [UserController::class, 'sectorDelete']);
     });
 
     Route::prefix('supplier')->group(function(){

@@ -8,6 +8,8 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PasswordRecoveryMail;
+use App\Models\CompanyPosition;
+use App\Models\Sector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,7 +54,7 @@ class UserService
             $rules = [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8',
+                'password' => 'nullable|string|min:8',
                 'phone' => 'nullable|string',
                 'whatsapp' => 'nullable|string',
                 'cpf_cnpj' => 'nullable|string',
@@ -171,6 +173,72 @@ class UserService
             $recovery->delete();
 
             return ['status' => true, 'data' => $user];
+        }catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function positionSearch($request)
+    {
+        try {
+            $perPage = $request->input('take', 10);
+
+            $companyPositions = CompanyPosition::orderBy('id', 'desc');
+
+            $companyPositions = $companyPositions->paginate($perPage);
+
+            return $companyPositions;
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function sectorSearch($request)
+    {
+        try {
+            $perPage = $request->input('take', 10);
+
+            $sectors = Sector::orderBy('id', 'desc');
+
+            $sectors = $sectors->paginate($perPage);
+
+            return $sectors;
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function sectorCreate($request)
+    {
+        try {
+            $rules = [
+                'sector' => 'required|string|max:255',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return ['status' => false, 'error' => $validator->errors()];
+            }
+
+            $sector = Sector::create($validator->validated());
+
+            return ['status' => true, 'data' => $sector];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function sectorDelete($id){
+        try{
+            $sector = Sector::find($id);
+
+            if(!$sector) throw new Exception('Setor não encontrado');
+
+            $name = $sector->sector;
+            $sector->delete();
+
+            return ['status' => true, 'data' => $sector];
         }catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
