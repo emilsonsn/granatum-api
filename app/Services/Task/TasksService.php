@@ -46,7 +46,7 @@ class TasksService
             $rules = [
                 'name' => 'required|string|max:255',
                 'user_id' => 'required|integer',
-                'concluded_at' => 'required|date',
+                'concluded_at' => 'nullable|date',
                 'description'  => 'required|string',
                 'task_status_id' => 'nullable|integer'
             ];
@@ -71,12 +71,13 @@ class TasksService
 
             if(isset($request->sub_tasks)){
                 foreach($request->sub_tasks as $sub_task){
-                    SubTask::createOrUpdate(
+                    SubTask::updateOrCreate(
                         [
                             'id' => $sub_task['id']] ,
                         [
                             'description' => $sub_task['description'],
-                            'status' => $sub_task['status']
+                            'status' => $sub_task['status'] ?? false,
+                            'task_id' => $task->id,
                         ]
                     );
                 }
@@ -125,7 +126,7 @@ class TasksService
 
             if(isset($request->sub_tasks)){
                 foreach($request->sub_tasks as $sub_task){
-                    SubTask::createOrUpdate(
+                    SubTask::updateOrCreate(
                         [
                             'id' => $sub_task['id']] ,
                         [
