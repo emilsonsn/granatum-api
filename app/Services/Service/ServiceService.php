@@ -4,6 +4,7 @@ namespace App\Services\Service;
 
 use Exception;
 use App\Models\Service;
+use App\Models\ServiceType;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceService
@@ -90,6 +91,57 @@ class ServiceService
 
             return ['status' => true, 'data' => $serviceName];
         } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function typeSearch($request)
+    {
+        try {
+            $perPage = $request->input('take', 10);
+
+            $services = ServiceType::orderBy('id', 'desc');
+
+            $services = $services->paginate($perPage);
+
+            return $services;
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function typeCreate($request)
+    {
+        try {
+            $rules = [
+                'type' => 'required|string|max:255',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return ['status' => false, 'error' => $validator->errors()];
+            }
+
+            $service = ServiceType::create($validator->validated());
+
+            return ['status' => true, 'data' => $service];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function typeDelete($id){
+        try{
+            $service = ServiceType::find($id);
+
+            if(!$service) throw new Exception('Serviço não encontrado');
+
+            $serviceType = $service->type;
+            $service->delete();
+
+            return ['status' => true, 'data' => $serviceType];
+        }catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
     }

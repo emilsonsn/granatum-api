@@ -40,6 +40,26 @@ class ServiceController extends Controller
         return $this->response($result);
     }
 
+    public function typeSearch(Request $request){
+        $result = $this->serviceService->typeSearch($request);
+
+        return $result;
+    }
+
+    public function typeCreate(Request $request){
+        $result = $this->serviceService->typeCreate($request);
+
+        if($result['status']) $result['message'] = "Tipo de serviço criado com sucesso";
+        return $this->response($result);
+    }
+
+    public function typeDelete($id){
+        $result = $this->serviceService->typeDelete($id);
+
+        if($result['status']) $result['message'] = "Tipo de serviço deletado com sucesso";
+        return $this->response($result);
+    }
+
     private function response($result){
         return response()->json([
             'status' => $result['status'],
