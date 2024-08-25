@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SolicitationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -86,6 +87,13 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [OrderController::class, 'delete']);
 
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
+    });
+
+    Route::prefix('solicitation')->group(function(){
+        Route::get('search', [SolicitationController::class, 'search']);
+        Route::post('create', [SolicitationController::class, 'create']);
+        Route::patch('{id}', [SolicitationController::class, 'update']);
+        Route::delete('{id}', [SolicitationController::class, 'delete']);
     });
 
     Route::prefix('task')->group(function(){
