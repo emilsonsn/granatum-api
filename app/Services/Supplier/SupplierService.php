@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PasswordRecoveryMail;
 use App\Models\Supplier;
+use App\Models\SupplierTypes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -110,6 +111,57 @@ class SupplierService
             $supplier->delete();
 
             return ['status' => true, 'data' => $supplierFantasy_name];
+        }catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function typeSearch($request)
+    {
+        try {
+            $perPage = $request->input('take', 10);
+
+            $suppliers = SupplierTypes::orderBy('id', 'desc');
+
+            $suppliers = $suppliers->paginate($perPage);
+
+            return ['status' => true, 'data' => $suppliers];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function typeCreate($request)
+    {
+        try {
+            $rules = [
+                'type' => 'required|string|max:255',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return ['status' => false, 'errors' => $validator->errors()];
+            }
+
+            $supplier = SupplierTypes::create($validator->validated());
+
+            return ['status' => true, 'data' => $supplier];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
+    public function typeDelete($id){
+        try{
+            $supplier = SupplierTypes::find($id);
+
+            if(!$supplier) throw new Exception('tipo de fornecedor não encontrado');
+
+            $supplierType = $supplier->type;
+            $supplier->delete();
+
+            return ['status' => true, 'data' => $supplierType];
         }catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }

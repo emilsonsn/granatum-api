@@ -30,7 +30,7 @@ Route::post('updatePassword', [UserController::class, 'updatePassword']);
 Route::get('validateToken', [AuthController::class, 'validateToken']);
 
 Route::middleware('jwt')->group(function(){
-    
+
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('user/getUser', [UserController::class, 'getUser']);
@@ -47,6 +47,10 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [SupplierController::class, 'create']);
         Route::patch('{id}', [SupplierController::class, 'update']);
         Route::delete('{id}', [SupplierController::class, 'delete']);
+
+        Route::get('type/search', [SupplierController::class, 'typeSearch']);
+        Route::get('type/create', [SupplierController::class, 'typeCreate']);
+        Route::get('type/delete', [SupplierController::class, 'typeDelete']);
     });
 
     Route::prefix('service')->group(function(){

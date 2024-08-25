@@ -28,14 +28,14 @@ class SupplierController extends Controller
 
     public function update(Request $request, $id){
         $result = $this->supplierService->update($request, $id);
-        
+
         $result['message'] = "Fornecedor atualizado com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->supplierService->delete($id);
-        
+
         $result['message'] = "Fornecedor Deletado com sucesso";
         return $this->response($result);
     }
@@ -47,5 +47,25 @@ class SupplierController extends Controller
             'data' => $result['data'] ?? null,
             'error' => $result['error'] ?? null
         ]);
+    }
+
+    public function typeSearch(Request $request){
+        $result = $this->supplierService->typeSearch($request);
+
+        return $this->response($result);
+    }
+
+    public function typeCreate(Request $request){
+        $result = $this->supplierService->typeCreate($request);
+
+        $result['message'] = "Tipo de fornecedor criado com sucesso";
+        return $this->response($result);
+    }
+
+    public function typeDelete($id){
+        $result = $this->supplierService->typeDelete($id);
+
+        $result['message'] = "Tipo de fornecedor Deletado com sucesso";
+        return $this->response($result);
     }
 }
