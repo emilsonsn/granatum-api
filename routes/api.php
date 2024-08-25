@@ -70,6 +70,4 @@ Route::middleware('jwt')->group(function(){
         Route::delete('file/{id}', [TaskController::class, 'delete_task_file']);
     });
 
-
-
 });
