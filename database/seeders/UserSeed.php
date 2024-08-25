@@ -13,7 +13,10 @@ class UserSeed extends Seeder
      */
     public function run(): void
     {
-        User::createOrFirst([
+        User::firstOrCreate([
+            'email' => 'admin@admin',
+        ],
+        [
             'name' => 'Admin',
             'email' => 'admin@admin',
             'password' => Hash::make('admin'),
@@ -24,7 +27,6 @@ class UserSeed extends Seeder
             'company_position_id' => null,
             'sector_id' => null,
             'is_active' => true,
-            'is_admin' => true
         ]);
     }
 }

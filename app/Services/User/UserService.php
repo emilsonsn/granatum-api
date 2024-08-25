@@ -60,7 +60,6 @@ class UserService
                 'company_position_id' => 'nullable|integer',
                 'sector_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean|default:true',
-                'is_admin' => 'nullable|boolean|default:false',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -92,7 +91,6 @@ class UserService
                 'company_position_id' => 'nullable|integer',
                 'sector_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean|default:true',
-                'is_admin' => 'nullable|boolean|default:false',
             ];
 
             $validator = Validator::make($request->all(), $rules);

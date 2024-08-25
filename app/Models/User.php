@@ -32,7 +32,6 @@ class User extends Authenticatable implements JWTSubject
         'company_position_id',
         'sector_id',
         'is_active',
-        'is_admin',
     ];
 
     /**
