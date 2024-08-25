@@ -23,4 +23,11 @@ class Construction extends Model
         'description',
     ];
 
+    public function contractor(){
+        return $this->belongsTo(Client::class, 'contractor_id', 'id');
+    }
+
+    public function client(){
+        return $this->belongsTo(Client::class, 'client_id', 'id');
+    }
 }
