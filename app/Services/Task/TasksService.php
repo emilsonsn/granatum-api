@@ -21,7 +21,7 @@ class TasksService
             $search_term = $request->search_term;
             $task_status_id = $request->task_status_id;
 
-            $tasks = Task::get();
+            $tasks = Task::orderBy('id', 'desc');
 
             if(isset($search_term)){
                 $tasks->where('name', 'LIKE', "%{$search_term}%")

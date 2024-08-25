@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
@@ -50,6 +52,20 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [SupplierController::class, 'create']);
         Route::patch('{id}', [SupplierController::class, 'update']);
         Route::delete('{id}', [SupplierController::class, 'delete']);
+    });
+
+    Route::prefix('service')->group(function(){
+        Route::get('search', [ServiceController::class, 'search']);
+        Route::post('create', [ServiceController::class, 'create']);
+        Route::patch('{id}', [ServiceController::class, 'update']);
+        Route::delete('{id}', [ServiceController::class, 'delete']);
+    });
+
+    Route::prefix('client')->group(function(){
+        Route::get('search', [ClientController::class, 'search']);
+        Route::post('create', [ClientController::class, 'create']);
+        Route::patch('{id}', [ClientController::class, 'update']);
+        Route::delete('{id}', [ClientController::class, 'delete']);
     });
 
     Route::prefix('task')->group(function(){

@@ -21,10 +21,11 @@ class SupplierService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $suppliers = Supplier::get();
+            $suppliers = Supplier::orderBy('id', 'desc');
 
             if(isset($search_term)){
                 $suppliers->where('fantasy_name', 'LIKE', "%{$search_term}%")
+                    ->orWhere('cnpj', 'LIKE', "%{$search_term}%")
                     ->orWhere('email', 'LIKE', "%{$search_term}%")
                     ->orWhere('phone', 'LIKE', "%{$search_term}%")
                     ->orWhere('whatsapp', 'LIKE', "%{$search_term}%");
