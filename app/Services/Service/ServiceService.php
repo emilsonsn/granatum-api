@@ -24,7 +24,7 @@ class ServiceService
 
             $services = $services->paginate($perPage);
 
-            return ['status' => true, 'data' => $services];
+            return $services;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
@@ -46,7 +46,7 @@ class ServiceService
 
             $service = Service::create($validator->validated());
 
-            return $service;
+            return ['status' => true, 'data' => $service];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
