@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Supplier\ClientService;
+use App\Services\Client\ClientService;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -28,14 +28,14 @@ class ClientController extends Controller
 
     public function update(Request $request, $id){
         $result = $this->clientService->update($request, $id);
-        
+
         $result['message'] = "Cliente atualizado com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->clientService->delete($id);
-        
+
         $result['message'] = "Cliente Deletado com sucesso";
         return $this->response($result);
     }
