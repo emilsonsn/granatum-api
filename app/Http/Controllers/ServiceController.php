@@ -16,7 +16,7 @@ class ServiceController extends Controller
     public function search(Request $request){
         $result = $this->serviceService->search($request);
 
-        return $this->response($result);
+        return $result;
     }
 
     public function create(Request $request){
@@ -28,14 +28,14 @@ class ServiceController extends Controller
 
     public function update(Request $request, $id){
         $result = $this->serviceService->update($request, $id);
-        
+
         if($result['status']) $result['message'] = "Serviço atualizado com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->serviceService->delete($id);
-        
+
         if($result['status']) $result['message'] = "Serviço Deletado com sucesso";
         return $this->response($result);
     }

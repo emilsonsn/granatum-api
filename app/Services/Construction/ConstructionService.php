@@ -26,7 +26,7 @@ class ConstructionService
 
             $constructions = $constructions->paginate($perPage);
 
-            return ['status' => true, 'data' => $constructions];
+            return $constructions;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }

@@ -29,7 +29,7 @@ class UserService
 
             $users = $users->paginate($perPage);
 
-            return ['status' => true, 'data' => $users];
+            return $users;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
@@ -132,9 +132,9 @@ class UserService
         try {
             $email = $request->email;
             $user = User::where('email', $email)->first();
-                
+
             if (!isset($user)) throw new Exception('Usuário não encontrado.');
-            
+
             $code = bin2hex(random_bytes(10));
 
             $recovery = PasswordRecovery::create([

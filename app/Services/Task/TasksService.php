@@ -34,7 +34,7 @@ class TasksService
 
             $tasks = $tasks->paginate($perPage);
 
-            return ['status' => true, 'data' => $tasks];
+            return $tasks;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
@@ -61,11 +61,11 @@ class TasksService
 
             if(!isset($data['task_status_id'])){
                 $status = TaskStatus::orderBy('id', 'asc')->first();
-                
+
                 if(!isset($status)) throw new Exception('Não tem nenhm status de tarefas cadastrado');
 
                 $data['task_status_id'] = $status->id;
-            }             
+            }
 
             $task = Task::create($data);
 
@@ -85,7 +85,7 @@ class TasksService
             if(isset($request->tasks_files)){
                 foreach($request->tasks_files as $file){
                     $path = $file->store('tasks_files');
-    
+
                     TaskFile::create(
                         [
                             'name' => $file->getClientOriginalName(),
@@ -139,7 +139,7 @@ class TasksService
             if(isset($request->tasks_files)){
                 foreach($request->tasks_files as $file){
                     $path = $file->store('tasks_files');
-    
+
                     TaskFile::create(
                         [
                             'name' => $file->getClientOriginalName(),

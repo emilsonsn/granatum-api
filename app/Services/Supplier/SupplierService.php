@@ -28,7 +28,7 @@ class SupplierService
 
             $suppliers = $suppliers->paginate($perPage);
 
-            return ['status' => true, 'data' => $suppliers];
+            return $suppliers;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
@@ -119,7 +119,7 @@ class SupplierService
 
             $suppliers = $suppliers->paginate($perPage);
 
-            return ['status' => true, 'data' => $suppliers];
+            return $suppliers;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }

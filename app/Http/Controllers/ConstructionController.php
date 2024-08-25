@@ -16,7 +16,7 @@ class ConstructionController extends Controller
     public function search(Request $request){
         $result = $this->constructionService->search($request);
 
-        return $this->response($result);
+        return $result;
     }
 
     public function create(Request $request){
@@ -28,14 +28,14 @@ class ConstructionController extends Controller
 
     public function update(Request $request, $id){
         $result = $this->constructionService->update($request, $id);
-        
+
         if($result['status']) $result['message'] = "Obra atualizada com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->constructionService->delete($id);
-        
+
         if($result['status']) $result['message'] = "Obra Deletada com sucesso";
         return $this->response($result);
     }

@@ -16,7 +16,7 @@ class TaskController extends Controller
     public function search(Request $request){
         $result = $this->tasksService->search($request);
 
-        return $this->response($result);
+        return $result;
     }
 
     public function create(Request $request){
@@ -28,14 +28,14 @@ class TaskController extends Controller
 
     public function update(Request $request, $id){
         $result = $this->tasksService->update($request, $id);
-        
+
         if($result['status']) $result['message'] = "Tarefa atualizada com sucesso";
         return $this->response($result);
     }
 
     public function delete($id){
         $result = $this->tasksService->delete($id);
-        
+
         if($result['status']) $result['message'] = "Tarefa Deletada com sucesso";
         return $this->response($result);
     }

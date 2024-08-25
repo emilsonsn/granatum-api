@@ -46,7 +46,7 @@ class ServiceService
 
             $service = Service::create($validator->validated());
 
-            return ['status' => true, 'data' => $service];
+            return $service;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }
@@ -84,7 +84,7 @@ class ServiceService
             $service = Service::find($user_id);
 
             if(!isset($service)) throw new Exception('Serviço não encontrado');
-            
+
             $serviceName = $service->name;
             $service->delete();
 

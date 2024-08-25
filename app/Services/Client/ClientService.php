@@ -27,7 +27,7 @@ class ClientService
 
             $clients = $clients->paginate($perPage);
 
-            return ['status' => true, 'data' => $clients];
+            return $clients;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage()];
         }

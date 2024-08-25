@@ -16,7 +16,7 @@ class ClientController extends Controller
     public function search(Request $request){
         $result = $this->clientService->search($request);
 
-        return $this->response($result);
+        return $result;
     }
 
     public function create(Request $request){
