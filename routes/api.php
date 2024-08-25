@@ -50,8 +50,8 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [SupplierController::class, 'delete']);
 
         Route::get('type/search', [SupplierController::class, 'typeSearch']);
-        Route::get('type/create', [SupplierController::class, 'typeCreate']);
-        Route::get('type/delete', [SupplierController::class, 'typeDelete']);
+        Route::post('type/create', [SupplierController::class, 'typeCreate']);
+        Route::delete('type/{id}', [SupplierController::class, 'typeDelete']);
     });
 
     Route::prefix('service')->group(function(){
@@ -61,8 +61,8 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [ServiceController::class, 'delete']);
 
         Route::get('type/search', [ServiceController::class, 'typeSearch']);
-        Route::get('type/create', [ServiceController::class, 'typeCreate']);
-        Route::get('type/delete', [ServiceController::class, 'typeDelete']);
+        Route::post('type/create', [ServiceController::class, 'typeCreate']);
+        Route::delete('type/{id}', [ServiceController::class, 'typeDelete']);
     });
 
     Route::prefix('construction')->group(function(){
