@@ -58,6 +58,10 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [ServiceController::class, 'create']);
         Route::patch('{id}', [ServiceController::class, 'update']);
         Route::delete('{id}', [ServiceController::class, 'delete']);
+
+        Route::get('type/search', [ServiceController::class, 'typeSearch']);
+        Route::get('type/create', [ServiceController::class, 'typeCreate']);
+        Route::get('type/delete', [ServiceController::class, 'typeDelete']);
     });
 
     Route::prefix('construction')->group(function(){
