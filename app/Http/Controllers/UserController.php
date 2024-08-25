@@ -24,7 +24,7 @@ class UserController extends Controller
 
         return $this->response($result);
     }
-    
+
     public function create(Request $request){
         $result = $this->userService->create($request);
 
@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id){
         $result = $this->userService->update($request, $id);
-        
+
         if($result['status']) $result['message'] = "Usuário atualizado com sucesso";
         return $this->response($result);
     }
@@ -66,5 +66,31 @@ class UserController extends Controller
             'data' => $result['data'] ?? null,
             'error' => $result['error'] ?? null
         ]);
+    }
+
+    public function positionSearch(Request $request){
+        $result = $this->userService->positionSearch($request);
+
+        return $result;
+    }
+
+    public function sectorSearch(Request $request){
+        $result = $this->userService->sectorSearch($request);
+
+        return $result;
+    }
+
+    public function sectorCreate(Request $request){
+        $result = $this->userService->sectorCreate($request);
+
+        if($result['status']) $result['message'] = "Setor criado com sucesso";
+        return $this->response($result);
+    }
+
+    public function sectorDelete($id){
+        $result = $this->userService->sectorDelete($id);
+
+        if($result['status']) $result['message'] = "Setor deletado com sucesso";
+        return $this->response($result);
     }
 }
