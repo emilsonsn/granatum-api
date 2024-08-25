@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use App\Models\Task;
 use App\Models\TaskFile;
 use App\Models\TaskStatus;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TasksService
@@ -209,6 +210,8 @@ class TasksService
             $taskFile = TaskFile::find($id);
 
             if(!isset($taskFile)) throw new Exception ("Arquivo não encontrado");
+
+            Storage::delete($taskFile->path);
 
             $taskFileName= $taskFile->name;
             $taskFile->delete();
