@@ -1,18 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
-use App\Http\Controllers\TenderController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WebhookController;
-use App\Http\Middleware\AdminMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +54,13 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [ServiceController::class, 'create']);
         Route::patch('{id}', [ServiceController::class, 'update']);
         Route::delete('{id}', [ServiceController::class, 'delete']);
+    });
+
+    Route::prefix('construction')->group(function(){
+        Route::get('search', [ConstructionController::class, 'search']);
+        Route::post('create', [ConstructionController::class, 'create']);
+        Route::patch('{id}', [ConstructionController::class, 'update']);
+        Route::delete('{id}', [ConstructionController::class, 'delete']);
     });
 
     Route::prefix('client')->group(function(){
