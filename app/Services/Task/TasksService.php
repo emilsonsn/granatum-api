@@ -48,7 +48,7 @@ class TasksService
                 'user_id' => 'required|integer',
                 'concluded_at' => 'required|date',
                 'description'  => 'required|string',
-                'task_status_id' => 'required|integer'
+                'task_status_id' => 'nullable|integer'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -57,7 +57,17 @@ class TasksService
                 return ['status' => false, 'errors' => $validator->errors()];
             }
 
-            $task = Task::create($validator->validated());
+            $data = $validator->validated();
+
+            if(!isset($data['task_status_id'])){
+                $status = TaskStatus::orderBy('id', 'asc')->first();
+                
+                if(!isset($status)) throw new Exception('Não tem nenhm status de tarefas cadastrado');
+
+                $data['task_status_id'] = $status->id;
+            }             
+
+            $task = Task::create($data);
 
             if(isset($request->sub_tasks)){
                 foreach($request->sub_tasks as $sub_task){
