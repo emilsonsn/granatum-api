@@ -85,5 +85,4 @@ Route::middleware('jwt')->group(function(){
         // Arquivos de tarefas
         Route::delete('file/{id}', [TaskController::class, 'delete_task_file']);
     });
-
 });
