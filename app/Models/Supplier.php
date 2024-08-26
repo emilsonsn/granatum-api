@@ -27,6 +27,6 @@ class Supplier extends Model
     ];
 
     public function supplierType(){
-        return $this->belongsTo(SupplierTypes::class);
+        return $this->belongsTo(SupplierTypes::class, 'type_supplier_id', 'id');
     }
 }

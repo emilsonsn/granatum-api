@@ -12,6 +12,7 @@ use App\Models\CompanyPosition;
 use App\Models\Sector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -22,7 +23,7 @@ class UserService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $users = User::where('is_admin', 0);
+            $users = User::where('is_admin', 0)->with('companyPosition', 'sector');
 
             if(isset($search_term)){
                 $users->where('name', 'LIKE', "%{$search_term}%")
@@ -64,7 +65,12 @@ class UserService
                 'is_active' => 'nullable|boolean|default:true',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            $password = str_shuffle(Str::upper(Str::random(1)) . rand(0, 9) . Str::random(1, '?!@#$%^&*') . Str::random(5));
+
+            $requestData = $request->all();
+            $requestData['password'] = Hash::make($password);
+
+            $validator = Validator::make($requestData, $rules);
 
             if ($validator->fails()) {
                 return ['status' => false, 'error' => $validator->errors()];

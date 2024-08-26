@@ -16,7 +16,7 @@ class UserController extends Controller
     public function search(Request $request){
         $result = $this->userService->search($request);
 
-        return $this->response($result);
+        return $result;
     }
 
     public function getUser(){

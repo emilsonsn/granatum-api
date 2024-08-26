@@ -16,7 +16,7 @@ class ServiceService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $services = Service::orderBy('id', 'desc');
+            $services = Service::orderBy('id', 'desc')->with('type');
 
             if(isset($search_term)){
                 $services->where('name', 'LIKE', "%{$search_term}%")
@@ -36,7 +36,7 @@ class ServiceService
         try {
             $rules = [
                 'name' => 'required|string|max:255',
-                'type' => 'required|string|max:255',
+                'service_type_id' => 'required|integer|max:255',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -59,7 +59,7 @@ class ServiceService
         try {
             $rules = [
                 'name' => 'required|string|max:255',
-                'type' => 'required|string|max:255',
+                'service_type_id' => 'required|integer|max:255',
             ];
 
             $validator = Validator::make($request->all(), $rules);

@@ -16,7 +16,7 @@ class SupplierService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $suppliers = Supplier::orderBy('id', 'desc');
+            $suppliers = Supplier::orderBy('id', 'desc')->with('supplierType');
 
             if(isset($search_term)){
                 $suppliers->where('fantasy_name', 'LIKE', "%{$search_term}%")
