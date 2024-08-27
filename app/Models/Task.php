@@ -24,5 +24,9 @@ class Task extends Model
     public function status(){
         return $this->belongsTo(TaskStatus::class);
     }
+
+    public function files(){
+        return $this->belongsTo(TaskFile::class);
+    }
    
 }
