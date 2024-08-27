@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SolicitationController;
@@ -98,6 +99,12 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [OrderController::class, 'delete']);
 
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
+    });
+
+    
+    Route::prefix('dashboard')->group(function(){
+        Route::get('cards', [DashboardController::class, 'cards']);
+        Route::post('purchaseGraphic', [DashboardController::class, 'purchaseGraphic']);
     });
 
     Route::prefix('solicitation')->group(function(){

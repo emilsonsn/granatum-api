@@ -8,11 +8,12 @@ use App\Models\Order;
 use App\Models\Solicitation;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
 
-    public function cards($request)
+    public function cards()
     {
         try {
             // Compras por dia
@@ -66,6 +67,19 @@ class DashboardService
                 ],
             ];
             
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+        }
+    }
+
+    public function purchaseGraphic(){
+        try{
+            $data = Order::where('purchase_status', PurchaseStatusEnum::Resolved->value)
+                   ->whereYear('purchase_date', Carbon::now()->format('Y'))
+                   ->groupBy(Carbon::parse('purchase_date')->format('F'))
+                   ->get(['purchase_date', DB::raw('count(*) as total')])
+                   ->toArray();
+            return ['status' => true, 'data' => $data];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
