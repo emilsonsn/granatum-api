@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    public $table = 'sectors';
+    public $table = 'orders';
 
     protected $fillable = [
         'order_type',
@@ -39,5 +39,5 @@ class Order extends Model
     public function supplier(){
         return $this->belongsTo(Supplier::class);
     }
-   
+
 }
