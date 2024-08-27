@@ -118,6 +118,7 @@ Route::middleware('jwt')->group(function(){
         Route::delete('subtask/{id}', [TaskController::class, 'delete_sub_tasks']);
 
         // Status
+        Route::get('status', [TaskController::class, 'getStatus']);
         Route::post('status/create', [TaskController::class, 'create_status']);
         Route::delete('status/{id}', [TaskController::class, 'delete_status']);
 
