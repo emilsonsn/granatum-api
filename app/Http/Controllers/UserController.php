@@ -25,6 +25,12 @@ class UserController extends Controller
         return $result;
     }
 
+    public function cards(Request $request){
+        $result = $this->userService->cards($request);
+
+        return $result;
+    }
+
     public function getUser(){
         $result = $this->userService->getUser();
 

@@ -45,6 +45,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('all', [UserController::class, 'all']);
         Route::get('search', [UserController::class, 'search']);
         Route::get('me', [UserController::class, 'getUser']);
+        Route::get('cards', [UserController::class, 'cards']);
         Route::post('create', [UserController::class, 'create']);
         Route::patch('{id}', [UserController::class, 'update']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);
@@ -101,7 +102,7 @@ Route::middleware('jwt')->group(function(){
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
     });
 
-    
+
     Route::prefix('dashboard')->group(function(){
         Route::get('cards', [DashboardController::class, 'cards']);
         Route::post('purchaseGraphic', [DashboardController::class, 'purchaseGraphic']);
