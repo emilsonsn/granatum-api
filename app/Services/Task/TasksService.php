@@ -173,6 +173,23 @@ class TasksService
         }
     }
 
+    public function getStatus() {
+        try {
+            // Buscar todos os status
+            $statuses = TaskStatus::all();
+
+            return [
+                'status' => true,
+                'data' => $statuses
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
     public function change_status_sub_tasks($id){
         try {
 
