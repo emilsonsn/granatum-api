@@ -35,7 +35,7 @@ class UserService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $users = User::where('is_admin', 0)->with('companyPosition', 'sector');
+            $users = User::with('companyPosition', 'sector');
 
             if(isset($search_term)){
                 $users->where('name', 'LIKE', "%{$search_term}%")
@@ -56,6 +56,28 @@ class UserService
             $user = auth()->user();
 
             return ['status' => true, 'data' => $user];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+        }
+    }
+
+    public function cards()
+    {
+        try {
+            $users = User::selectRaw('COUNT(*) as total')
+                ->selectRaw('SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active')
+                ->first();
+
+            $users->inactive = $users->total - $users->active;
+
+            return [
+                'status' => true,
+                'data' => [
+                    'total' => $users->total,
+                    'active' => $users->active,
+                    'inactive' => $users->inactive
+                ]
+            ];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
