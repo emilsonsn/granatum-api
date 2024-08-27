@@ -10,6 +10,7 @@ use App\Http\Controllers\SolicitationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,12 +34,16 @@ Route::get('validateToken', [AuthController::class, 'validateToken']);
 
 Route::middleware('jwt')->group(function(){
 
+    Route::middleware(AdminMiddleware::class)->group(function() {
+        // Middleware do admin
+    });
+
     Route::post('logout', [AuthController::class, 'logout']);
 
-    Route::get('user/getUser', [UserController::class, 'getUser']);
-
     Route::prefix('user')->group(function(){
+        Route::get('all', [UserController::class, 'all']);
         Route::get('search', [UserController::class, 'search']);
+        Route::get('me', [UserController::class, 'getUser']);
         Route::post('create', [UserController::class, 'create']);
         Route::patch('{id}', [UserController::class, 'update']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);

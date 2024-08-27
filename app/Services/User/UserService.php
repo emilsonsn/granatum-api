@@ -17,6 +17,17 @@ use Illuminate\Support\Str;
 class UserService
 {
 
+    public function all()
+    {
+        try {
+            $users = User::get();
+
+            return ['status' => true, 'data' => $users];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage()];
+        }
+    }
+
     public function search($request)
     {
         try {
