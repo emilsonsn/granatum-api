@@ -21,7 +21,7 @@ class SolicitationService
 
             return $solicitations;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -49,7 +49,7 @@ class SolicitationService
 
             return ['status' => true, 'data' => $solicitation];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -79,7 +79,7 @@ class SolicitationService
 
             return ['status' => true, 'data' => $solicitationToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -94,7 +94,7 @@ class SolicitationService
 
             return ['status' => true, 'data' => $solicitationId];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 

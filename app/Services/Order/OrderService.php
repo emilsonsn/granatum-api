@@ -27,7 +27,7 @@ class OrderService
 
             return $order;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -71,7 +71,7 @@ class OrderService
 
             return ['status' => true, 'data' => $order];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -118,7 +118,7 @@ class OrderService
 
             return ['status' => true, 'data' => $orderToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -133,7 +133,7 @@ class OrderService
 
             return ['status' => true, 'data' => $orderDescription];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -150,7 +150,7 @@ class OrderService
 
             return ['status' => true, 'data' => $orderFileName];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 

@@ -29,7 +29,7 @@ class ClientService
 
             return $clients;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -57,7 +57,7 @@ class ClientService
 
             return ['status' => true, 'data' => $client];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -88,7 +88,7 @@ class ClientService
 
             return ['status' => true, 'data' => $clientToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -103,7 +103,7 @@ class ClientService
 
             return ['status' => true, 'data' => $clientName];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 }

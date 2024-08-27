@@ -28,7 +28,7 @@ class ConstructionService
 
             return $constructions;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -54,7 +54,7 @@ class ConstructionService
 
             return ['status' => true, 'data' => $construction];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -82,7 +82,7 @@ class ConstructionService
 
             return ['status' => true, 'data' => $constructionToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -97,7 +97,7 @@ class ConstructionService
 
             return ['status' => true, 'data' => $constructionName];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 

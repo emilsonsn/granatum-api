@@ -30,7 +30,7 @@ class SupplierService
 
             return $suppliers;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -59,7 +59,7 @@ class SupplierService
 
             return ['status' => true, 'data' => $supplier];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -91,7 +91,7 @@ class SupplierService
 
             return ['status' => true, 'data' => $supplierToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -106,7 +106,7 @@ class SupplierService
 
             return ['status' => true, 'data' => $supplierFantasy_name];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -121,7 +121,7 @@ class SupplierService
 
             return $suppliers;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -142,7 +142,7 @@ class SupplierService
 
             return ['status' => true, 'data' => $supplier];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 
@@ -157,7 +157,7 @@ class SupplierService
 
             return ['status' => true, 'data' => $supplierType];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
         }
     }
 }
