@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PasswordRecoveryMail;
+use App\Mail\WelcomeMail;
 use App\Models\CompanyPosition;
 use App\Models\Sector;
 use Illuminate\Support\Facades\Log;
@@ -88,6 +89,9 @@ class UserService
             }
 
             $user = User::create($validator->validated());
+
+            Mail::to($user->email)->send(new WelcomeMail($user->name, $user->email, $password));
+
 
             return ['status' => true, 'data' => $user];
         } catch (Exception $error) {
