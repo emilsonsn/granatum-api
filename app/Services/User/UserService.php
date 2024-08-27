@@ -92,7 +92,6 @@ class UserService
 
             Mail::to($user->email)->send(new WelcomeMail($user->name, $user->email, $password));
 
-
             return ['status' => true, 'data' => $user];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];

@@ -2,10 +2,13 @@
 
 namespace App\Services\Order;
 
+use App\Enums\PurchaseStatus;
+use App\Enums\PurchaseStatusEnum;
 use App\Models\Item;
 use Exception;
 use App\Models\Order;
 use App\Models\OrderFile;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -113,11 +116,21 @@ class OrderService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
+
             $orderToUpdate = Order::find($user_id);
 
             if(!isset($orderToUpdate)) throw new Exception('Pedido não encontrado');
-
-            $orderToUpdate->update($validator->validated());
+            
+            $data = $validator->validated();
+            
+            if(
+                $orderToUpdate->purchase_status != PurchaseStatusEnum::Resolved->value
+                and $data['purchase_status'] != PurchaseStatusEnum::Resolved->value
+            ){
+                $data['purchase_date'] = Carbon::now()->format('Y-m-d');
+            }            
+            
+            $orderToUpdate->update();
 
             if(isset($request['items'])){
                 foreach($request['items'] as $item){
