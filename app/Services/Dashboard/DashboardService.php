@@ -68,7 +68,7 @@ class DashboardService
             ];
             
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -81,7 +81,7 @@ class DashboardService
                    ->toArray();
             return ['status' => true, 'data' => $data];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 

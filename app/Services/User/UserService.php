@@ -25,7 +25,7 @@ class UserService
 
             return ['status' => true, 'data' => $users];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -46,7 +46,7 @@ class UserService
 
             return $users;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -57,7 +57,7 @@ class UserService
 
             return ['status' => true, 'data' => $user];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -79,7 +79,7 @@ class UserService
                 ]
             ];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -116,7 +116,7 @@ class UserService
 
             return ['status' => true, 'data' => $user];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -149,7 +149,7 @@ class UserService
 
             return ['status' => true, 'data' => $userToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -165,7 +165,7 @@ class UserService
 
             return ['status' => true, 'data' => $user];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -193,7 +193,7 @@ class UserService
 
         } catch (Exception $error) {
             Log::error('Erro na recuperação de senha: ' . $error->getMessage());
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -214,7 +214,7 @@ class UserService
 
             return ['status' => true, 'data' => $user];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -229,7 +229,7 @@ class UserService
 
             return $companyPositions;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -244,7 +244,7 @@ class UserService
 
             return $sectors;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -265,7 +265,7 @@ class UserService
 
             return ['status' => true, 'data' => $sector];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -280,7 +280,7 @@ class UserService
 
             return ['status' => true, 'data' => $sector];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 }

@@ -27,7 +27,7 @@ class ServiceService
 
             return $services;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -49,7 +49,7 @@ class ServiceService
 
             return ['status' => true, 'data' => $service];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -74,7 +74,7 @@ class ServiceService
 
             return ['status' => true, 'data' => $serviceToUpdate];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -91,7 +91,7 @@ class ServiceService
 
             return ['status' => true, 'data' => $serviceName];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -106,7 +106,7 @@ class ServiceService
 
             return $services;
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -127,7 +127,7 @@ class ServiceService
 
             return ['status' => true, 'data' => $service];
         } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 
@@ -142,7 +142,7 @@ class ServiceService
 
             return ['status' => true, 'data' => $serviceType];
         }catch(Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => $error->getCode()];
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
 }
