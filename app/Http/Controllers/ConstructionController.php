@@ -46,6 +46,6 @@ class ConstructionController extends Controller
             'message' => $result['message'] ?? null,
             'data' => $result['data'] ?? null,
             'error' => $result['error'] ?? null
-        ]);
+        ], $result['statusCode'] ?? 200);
     }
 }

@@ -13,6 +13,12 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    public function all() {
+        $result = $this->userService->all();
+
+        return $this->response($result);
+    }
+
     public function search(Request $request){
         $result = $this->userService->search($request);
 
@@ -65,7 +71,7 @@ class UserController extends Controller
             'message' => $result['message'] ?? null,
             'data' => $result['data'] ?? null,
             'error' => $result['error'] ?? null
-        ]);
+        ], $result['statusCode'] ?? 200);
     }
 
     public function positionSearch(Request $request){
