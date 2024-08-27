@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Models\Item;
 use Exception;
 use App\Models\Order;
 use App\Models\OrderFile;
@@ -55,6 +56,22 @@ class OrderService
 
             $order = Order::create($validator->validated());
 
+            if(isset($request['items'])){
+                foreach($request['items'] as $item){
+                    Item::updateOrCreate(
+                        [
+                            'id' => $item['id']
+                        ],
+                        [
+                            'order_id' => $order->id,
+                            'name' => $item['name'],
+                            'quantity' => $item['quantity'],
+                            'unity_value' => $item['unity_value'],
+                        ]
+                    );
+                }
+            }
+
             if(isset($request->order_files)){
                 foreach($request->order_files as $file){
                     $path = $file->store('order_files');
@@ -101,6 +118,22 @@ class OrderService
             if(!isset($orderToUpdate)) throw new Exception('Pedido não encontrado');
 
             $orderToUpdate->update($validator->validated());
+
+            if(isset($request['items'])){
+                foreach($request['items'] as $item){
+                    Item::updateOrCreate(
+                        [
+                            'id' => $item['id']
+                        ],
+                        [
+                            'order_id' => $orderToUpdate->id,
+                            'name' => $item['name'],
+                            'quantity' => $item['quantity'],
+                            'unity_value' => $item['unity_value'],
+                        ]
+                    );
+                }
+            }
 
             if(isset($request->order_files)){
                 foreach($request->order_files as $file){
