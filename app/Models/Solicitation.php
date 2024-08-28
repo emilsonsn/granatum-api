@@ -13,7 +13,7 @@ class Solicitation extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    public $table = 'service_types';
+    public $table = 'solicitations';
 
     protected $fillable = [
         'order_id',
