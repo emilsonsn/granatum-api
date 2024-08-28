@@ -19,6 +19,12 @@ class SolicitationController extends Controller
         return $result;
     }
 
+    public function cards(Request $request){
+        $result = $this->solicitationService->cards($request);
+
+        return $this->response($result);
+    }
+    
     public function create(Request $request){
         $result = $this->solicitationService->create($request);
 

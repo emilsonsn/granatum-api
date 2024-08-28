@@ -44,8 +44,8 @@ Route::middleware('jwt')->group(function(){
     Route::prefix('user')->group(function(){
         Route::get('all', [UserController::class, 'all']);
         Route::get('search', [UserController::class, 'search']);
-        Route::get('me', [UserController::class, 'getUser']);
         Route::get('cards', [UserController::class, 'cards']);
+        Route::get('me', [UserController::class, 'getUser']);
         Route::post('create', [UserController::class, 'create']);
         Route::patch('{id}', [UserController::class, 'update']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);
@@ -110,6 +110,7 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('solicitation')->group(function(){
         Route::get('search', [SolicitationController::class, 'search']);
+        Route::get('cards', [SolicitationController::class, 'cards']);
         Route::post('create', [SolicitationController::class, 'create']);
         Route::patch('{id}', [SolicitationController::class, 'update']);
         Route::delete('{id}', [SolicitationController::class, 'delete']);

@@ -48,7 +48,7 @@ class UserService
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
-    }
+    }  
 
     public function getUser()
     {

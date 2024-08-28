@@ -2,6 +2,7 @@
 
 namespace App\Services\Solicitation;
 
+use App\Enums\SolicitationStatusEnum;
 use Exception;
 
 use App\Models\Solicitation;
@@ -20,6 +21,31 @@ class SolicitationService
             $solicitations = $solicitations->paginate($perPage);
 
             return $solicitations;
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function cards()
+    {
+        try {
+            $solicitationPending = Solicitation::where('status', SolicitationStatusEnum::Pending->value)
+                ->count();
+
+            $solicitationReject = Solicitation::where('status', SolicitationStatusEnum::Rejected->value)
+                ->count();
+
+            $solicitationFinished= Solicitation::where('status', SolicitationStatusEnum::Finished->value)
+                ->count();
+
+            return [
+                'status' => true, 
+                'data' => [
+                   'solicitationPending' => $solicitationPending,
+                   'solicitationReject' => $solicitationReject,
+                   'solicitationFinished' => $solicitationFinished,
+                ]
+            ];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
