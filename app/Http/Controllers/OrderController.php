@@ -40,6 +40,13 @@ class OrderController extends Controller
         return $this->response($result);
     }
 
+    public function upRelease($orderId){
+        $result = $this->orderService->upRelease($orderId);
+
+        if($result['status']) $result['message'] = "Lançamento realizado com sucesso";
+        return $this->response($result);
+    }
+
     public function delete_order_file($id){
         $result = $this->orderService->delete_order_file($id);
 

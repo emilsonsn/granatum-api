@@ -44,4 +44,17 @@ class Order extends Model
         return $this->hasMany(OrderFile::class);
     }
 
+    public function items(){
+        return $this->hasMany(Item::class);
+    }
+
+    public function releases(){
+        return $this->hasMany(Release::class);
+    }
+
+    public function solicitation(){
+        return $this->hasOne(Solicitation::class);
+    }
+
+
 }

@@ -96,12 +96,11 @@ Route::middleware('jwt')->group(function(){
     Route::prefix('order')->group(function(){
         Route::get('search', [OrderController::class, 'search']);
         Route::post('create', [OrderController::class, 'create']);
+        Route::post('granatum/{orderId}', [OrderController::class, 'upRelease']);
         Route::patch('{id}', [OrderController::class, 'update']);
         Route::delete('{id}', [OrderController::class, 'delete']);
-
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
     });
-
 
     Route::prefix('dashboard')->group(function(){
         Route::get('cards', [DashboardController::class, 'cards']);

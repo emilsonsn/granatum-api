@@ -8,14 +8,16 @@ use App\Models\Item;
 use Exception;
 use App\Models\Order;
 use App\Models\OrderFile;
+use App\Models\Release;
 use App\Models\Solicitation;
+use App\Trait\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-
 class OrderService
 {
 
+    use GranatumTrait;
     public function search($request)
     {
         try {
@@ -210,6 +212,44 @@ class OrderService
             $order->delete();
 
             return ['status' => true, 'data' => $orderDescription];
+        }catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function upRelease($orderId) {
+        try{
+            
+            $order = Order::find($orderId);
+
+            if(!isset($order)) throw new Exception('Pedido não encontrado');
+
+            if(count($order->releases)) throw new Exception('Lançamento já foi efetuado');
+            
+            $description = $order->description;
+            $value = $order->total_value;
+            $purchaseDate = $order->purchase_date;
+
+            $categoryId = $this->getCategories();   
+            $accountBankId = $this->getAccountBank();
+    
+            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
+    
+            if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
+    
+            Release::create([
+                'release_id' => $response['id'],
+                'category_id' => $categoryId,
+                'account_bank_id' => $accountBankId,
+                'description' => $description,
+                'value' => $value,
+                'user_id' => auth()->user()->id,
+                'order_id' => $orderId,
+                'api_response' => json_encode($response) ?? null
+            ]);
+
+            return ['status' => true, 'message' => 'Lançamento criado com sucesso'];
+
         }catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
