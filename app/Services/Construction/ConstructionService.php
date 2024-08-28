@@ -50,7 +50,9 @@ class ConstructionService
                 return ['status' => false, 'error' => $validator->errors()];
             }
 
-            $construction = Construction::create($validator->validated());
+            $data = $validator->validated();
+
+            $construction = Construction::create($data);
 
             return ['status' => true, 'data' => $construction];
         } catch (Exception $error) {

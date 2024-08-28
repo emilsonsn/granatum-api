@@ -87,7 +87,9 @@ class OrderService
             $order = Order::create($validator->validated());
 
             if(isset($request['items'])){
-                foreach($request['items'] as $item){
+                $items = json_decode($request['items']);
+
+                foreach($items as $item){
                     Item::updateOrCreate(
                         [
                             'id' => $item['id']
@@ -103,7 +105,9 @@ class OrderService
             }
 
             if(isset($request->order_files)){
-                foreach($request->order_files as $file){
+                $orderFiles = json_decode($request['order_files']);
+
+                foreach($orderFiles as $file){
                     $path = $file->store('order_files');
 
                     OrderFile::create(
