@@ -8,6 +8,7 @@ use App\Models\Item;
 use Exception;
 use App\Models\Order;
 use App\Models\OrderFile;
+use App\Models\Solicitation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -34,6 +35,32 @@ class OrderService
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+
+    public function cards()
+    {
+        try {
+            $orderPending = order::where('status', PurchaseStatusEnum::Pending->value)
+                ->count();
+            
+            $orderResolved = order::where('status', PurchaseStatusEnum::Resolved->value)
+                ->count();
+                
+            $orderRequestFinance = order::where('status', PurchaseStatusEnum::RequestFinance->value)
+                ->count();
+            
+            return [
+                'status' => true,
+                'data' => [
+                    'orderPending' => $orderPending,
+                    'orderResolved' => $orderResolved,
+                    'orderRequestFinance' => $orderRequestFinance,
+                ]
+            ];
+
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }    
 
     public function create($request)
     {
