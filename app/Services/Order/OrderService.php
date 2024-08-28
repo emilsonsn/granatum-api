@@ -86,26 +86,27 @@ class OrderService
 
             $order = Order::create($validator->validated());
 
-            if(isset($request['items'])){
-                $items = json_decode($request['items']);
+            if(isset($request->items)){
+                $items = $request->items;
 
                 foreach($items as $item){
+                    $item = json_decode($item);
                     Item::updateOrCreate(
                         [
-                            'id' => $item['id']
+                            'id' => $item->id ?? null
                         ],
                         [
-                            'order_id' => $order->id,
-                            'name' => $item['name'],
-                            'quantity' => $item['quantity'],
-                            'unity_value' => $item['unity_value'],
+                            'order_id' => $order->id ?? null,
+                            'name' => $item->name,
+                            'quantity' => $item->quantity,
+                            'unit_value' => $item->unit_value,
                         ]
                     );
                 }
             }
 
             if(isset($request->order_files)){
-                $orderFiles = json_decode($request['order_files']);
+                $orderFiles = $request->order_files;
 
                 foreach($orderFiles as $file){
                     $path = $file->store('order_files');
@@ -167,13 +168,13 @@ class OrderService
                 foreach($request['items'] as $item){
                     Item::updateOrCreate(
                         [
-                            'id' => $item['id']
+                            'id' => $item->id ?? null
                         ],
                         [
                             'order_id' => $orderToUpdate->id,
-                            'name' => $item['name'],
-                            'quantity' => $item['quantity'],
-                            'unity_value' => $item['unity_value'],
+                            'name' => $item->name,
+                            'quantity' => $item->quantity,
+                            'unit_value' => $item->unit_value,
                         ]
                     );
                 }
