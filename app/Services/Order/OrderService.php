@@ -22,7 +22,7 @@ class OrderService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $order = Order::orderBy('id', 'desc');
+            $order = Order::orderBy('id', 'desc')->with('files');
 
             if(isset($search_term)){
                 $order->where('description', 'LIKE', "%{$search_term}%");
