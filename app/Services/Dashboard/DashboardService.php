@@ -23,7 +23,7 @@ class DashboardService
 
             // Compras por semana
             $ordersByWeek = Order::where('purchase_status', PurchaseStatusEnum::Resolved->value)
-                ->whereWeek('purchase_date', Carbon::now()->weekOfYear)
+                ->whereRaw('WEEK(purchase_date) = ?', [Carbon::now()->weekOfYear])
                 ->count();
 
             // Compras por mês
@@ -75,10 +75,12 @@ class DashboardService
     public function purchaseGraphic(){
         try{
             $data = Order::where('purchase_status', PurchaseStatusEnum::Resolved->value)
-                   ->whereYear('purchase_date', Carbon::now()->format('Y'))
-                   ->groupBy(Carbon::parse('purchase_date')->format('F'))
-                   ->get(['purchase_date', DB::raw('count(*) as total')])
-                   ->toArray();
+                ->whereYear('purchase_date', Carbon::now()->format('Y'))
+                ->select(DB::raw('MONTHNAME(purchase_date) as month'), DB::raw('count(*) as total'))
+                ->groupBy('month')
+                ->get()
+                ->toArray();
+        
             return ['status' => true, 'data' => $data];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
