@@ -161,12 +161,12 @@ class OrderService
             
             if(
                 $orderToUpdate->purchase_status != PurchaseStatusEnum::Resolved->value
-                and $data['purchase_status'] != PurchaseStatusEnum::Resolved->value
+                and $data['purchase_status'] == PurchaseStatusEnum::Resolved->value
             ){
                 $data['purchase_date'] = Carbon::now()->format('Y-m-d');
             }            
             
-            $orderToUpdate->update();
+            $orderToUpdate->update($data);
 
             if(isset($request['items'])){
                 foreach($request['items'] as $item){
