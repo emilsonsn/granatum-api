@@ -100,6 +100,7 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [OrderController::class, 'update']);
         Route::delete('{id}', [OrderController::class, 'delete']);
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
+        Route::delete('item/{id}', [OrderController::class, 'delete_order_item']);
     });
 
     Route::prefix('dashboard')->group(function(){

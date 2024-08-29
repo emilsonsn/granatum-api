@@ -22,7 +22,7 @@ class TasksService
             $search_term = $request->search_term;
             $task_status_id = $request->task_status_id;
 
-            $tasks = Task::orderBy('id', 'desc')->with('files');
+            $tasks = Task::orderBy('id', 'desc')->with(['files', 'subTasks']);
 
             if(isset($search_term)){
                 $tasks->where('name', 'LIKE', "%{$search_term}%")
@@ -72,6 +72,7 @@ class TasksService
 
             if(isset($request->sub_tasks)){
                 foreach($request->sub_tasks as $sub_task){
+                    $sub_task = json_decode($sub_task);
                     SubTask::updateOrCreate(
                         [
                             'id' => $sub_task['id']] ,
@@ -129,19 +130,21 @@ class TasksService
 
             if(isset($request->sub_tasks)){
                 foreach($request->sub_tasks as $sub_task){
+                    $sub_task = json_decode($sub_task);
                     SubTask::updateOrCreate(
                         [
-                            'id' => $sub_task['id']] ,
+                            'id' => $sub_task->id] ,
                         [
-                            'description' => $sub_task['description'],
-                            'status' => $sub_task['status']
+                            'description' => $sub_task->description,
+                            'status' => $sub_task->status,
+                            'task_id' => $tasksToUpdate->id,
                         ]
                     );
                 }
             }
 
-            if(isset($request->tasks_files)){
-                foreach($request->tasks_files as $file){
+            if(isset($request->files)){
+                foreach($request->files as $file){
                     $path = $file->store('tasks_files');
 
                     TaskFile::create(

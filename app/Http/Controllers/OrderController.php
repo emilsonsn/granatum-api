@@ -53,6 +53,13 @@ class OrderController extends Controller
         if($result['status']) $result['message'] = "Anexo do Pedido Deletado com sucesso";
         return $this->response($result);
     }
+
+    public function delete_order_item($id){
+        $result = $this->orderService->delete_order_item($id);
+
+        if($result['status']) $result['message'] = "Item do Pedido Deletado com sucesso";
+        return $this->response($result);
+    }
     
     private function response($result){
         return response()->json([

@@ -170,6 +170,7 @@ class OrderService
 
             if(isset($request['items'])){
                 foreach($request['items'] as $item){
+                    $item = json_decode($item);
                     Item::updateOrCreate(
                         [
                             'id' => $item->id ?? null
@@ -273,5 +274,23 @@ class OrderService
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+
+    public function delete_order_item($id){
+        try{
+            $item = Item::find($id);
+
+            if(!isset($item)) throw new Exception ("Item não encontrado");
+
+
+            $orderItemName= $item->name;
+            $item->delete();
+
+            return ['status' => true, 'data' => $orderItemName];
+        }catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    
 
 }

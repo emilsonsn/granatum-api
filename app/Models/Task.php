@@ -25,8 +25,12 @@ class Task extends Model
         return $this->belongsTo(TaskStatus::class);
     }
 
+    public function subTasks(){
+        return $this->hasMany(SubTask::class);
+    }
+
     public function files(){
-        return $this->belongsTo(TaskFile::class);
+        return $this->hasMany(TaskFile::class);
     }
    
 }
