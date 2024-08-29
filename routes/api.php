@@ -105,6 +105,7 @@ Route::middleware('jwt')->group(function(){
     Route::prefix('dashboard')->group(function(){
         Route::get('cards', [DashboardController::class, 'cards']);
         Route::post('purchaseGraphic', [DashboardController::class, 'purchaseGraphic']);
+        Route::post('orderGraphic', [DashboardController::class, 'orderGraphic']);
     });
 
     Route::prefix('solicitation')->group(function(){

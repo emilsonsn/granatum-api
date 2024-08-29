@@ -25,6 +25,12 @@ class DashboardController extends Controller
         return $this->response($result);
     }
 
+    public function orderGraphic(){
+        $result = $this->dashboardService->orderGraphic();
+
+        return $this->response($result);
+    }
+
     private function response($result){
         return response()->json([
             'status' => $result['status'],

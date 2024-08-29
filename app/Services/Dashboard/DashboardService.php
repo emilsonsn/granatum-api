@@ -87,4 +87,20 @@ class DashboardService
         }
     }    
 
+
+    public function orderGraphic(){
+        try{
+            $data = Order::where('purchase_status', PurchaseStatusEnum::Resolved->value)
+                ->whereYear('date', Carbon::now()->format('Y'))
+                ->select(DB::raw("DATE_FORMAT(date, '%b') as month"), DB::raw('count(*) as total'))
+                ->groupBy('month')
+                ->get()
+                ->toArray();
+        
+            return ['status' => true, 'data' => $data];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }    
+
 }
