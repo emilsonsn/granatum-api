@@ -55,12 +55,12 @@ class SolicitationService
     {
         try {
             $rules = [
-                'order_id' => 'required|interger',
+                'order_id' => 'required|integer',
                 'solicitation_type' => 'required|string|max:255',
                 'total_value' => 'required|numeric',
-                'supplier_id' => 'required|interger',
-                'user_id' => 'required|interger',
-                'construction_id' => 'required|interger',
+                'supplier_id' => 'required|integer',
+                'user_id' => 'required|integer',
+                'construction_id' => 'required|integer',
                 'status' => 'required|string|max:255',
                 'payment_date' => 'nullable|date',
             ];
@@ -83,12 +83,12 @@ class SolicitationService
     {
         try {
             $rules = [
-                'order_id' => 'required|interger',
+                'order_id' => 'required|integer',
                 'solicitation_type' => 'required|string|max:255',
                 'total_value' => 'required|numeric',
-                'supplier_id' => 'required|interger',
-                'user_id' => 'required|interger',
-                'construction_id' => 'required|interger',
+                'supplier_id' => 'required|integer',
+                'user_id' => 'required|integer',
+                'construction_id' => 'required|integer',
                 'status' => 'required|string|max:255',
                 'payment_date' => 'nullable|date',
             ];

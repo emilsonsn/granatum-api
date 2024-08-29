@@ -66,9 +66,9 @@ class ConstructionService
             $rules = [
                 'name'  => 'required|string|max:255',
                 'local'  => 'required|string|max:255',
-                'contractor_id'  => 'required|interger',
-                'client_id'  => 'required|interger',
-                'cno'  => 'required|string|interger:255',
+                'contractor_id'  => 'required|integer',
+                'client_id'  => 'required|integer',
+                'cno'  => 'required|string|integer:255',
                 'description'  => 'required|string',
             ];
 
