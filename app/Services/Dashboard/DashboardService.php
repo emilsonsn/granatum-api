@@ -76,7 +76,7 @@ class DashboardService
         try{
             $data = Order::where('purchase_status', PurchaseStatusEnum::Resolved->value)
                 ->whereYear('purchase_date', Carbon::now()->format('Y'))
-                ->select(DB::raw('MONTHNAME(purchase_date) as month'), DB::raw('count(*) as total'))
+                ->select(DB::raw("DATE_FORMAT(purchase_date, '%b') as month"), DB::raw('count(*) as total'))
                 ->groupBy('month')
                 ->get()
                 ->toArray();
@@ -85,6 +85,6 @@ class DashboardService
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
-    }
+    }    
 
 }

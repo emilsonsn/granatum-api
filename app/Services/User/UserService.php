@@ -126,8 +126,7 @@ class UserService
         try {
             $rules = [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8',
+                'email' => 'required|string|email|max:255',
                 'phone' => 'nullable|string',
                 'whatsapp' => 'nullable|string',
                 'cpf_cnpj' => 'nullable|string',
