@@ -24,7 +24,8 @@ class OrderService
             $perPage = $request->input('take', 10);
             $search_term = $request->search_term;
 
-            $order = Order::orderBy('id', 'desc')->with('files');
+            $order = Order::orderBy('id', 'desc')
+                ->with(['construction', 'supplier', 'files', 'items', 'releases', 'solicitation', 'user']);
 
             if(isset($search_term)){
                 $order->where('description', 'LIKE', "%{$search_term}%");
@@ -53,6 +54,7 @@ class OrderService
             return [
                 'status' => true,
                 'data' => [
+
                     'orderPending' => $orderPending,
                     'orderResolved' => $orderResolved,
                     'orderRequestFinance' => $orderRequestFinance,
