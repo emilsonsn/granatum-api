@@ -2,14 +2,12 @@
 
 namespace App\Services\Order;
 
-use App\Enums\PurchaseStatus;
 use App\Enums\PurchaseStatusEnum;
 use App\Models\Item;
 use Exception;
 use App\Models\Order;
 use App\Models\OrderFile;
 use App\Models\Release;
-use App\Models\Solicitation;
 use App\Trait\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -187,12 +185,13 @@ class OrderService
 
             if(isset($request->order_files)){
                 foreach($request->order_files as $file){
-                    $path = $file->store('order_files');
+                    $path = $file->store('public/order_files');
+                    $fullPath = asset('storage/' . $path);
 
                     OrderFile::create(
                         [
                             'name' => $file->getClientOriginalName(),
-                            'path' => $path,
+                            'path' => $fullPath,
                             'order_id' => $orderToUpdate->id,
                         ]
                     );

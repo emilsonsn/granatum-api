@@ -89,7 +89,10 @@ class TasksService
                 foreach($request->tasks_files as $file){
                     $path = $file->store('tasks_files');
 
-                    TaskFile::create(
+                    TaskFile::updateOrCreate(
+                        [
+                        'id' => $file->id
+                        ],
                         [
                             'name' => $file->getClientOriginalName(),
                             'path' => $path,
@@ -133,10 +136,10 @@ class TasksService
                     $sub_task = json_decode($sub_task);
                     SubTask::updateOrCreate(
                         [
-                            'id' => $sub_task->id] ,
+                            'id' => $sub_task['id']] ,
                         [
-                            'description' => $sub_task->description,
-                            'status' => $sub_task->status,
+                            'description' => $sub_task['description'],
+                            'status' => $sub_task['status'] ?? false,
                             'task_id' => $tasksToUpdate->id,
                         ]
                     );
@@ -145,7 +148,7 @@ class TasksService
 
             if(isset($request->files)){
                 foreach($request->files as $file){
-                    $path = $file->store('tasks_files');
+                    $path = $file->store('tasks_files');                    
 
                     TaskFile::create(
                         [
