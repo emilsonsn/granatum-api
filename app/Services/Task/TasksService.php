@@ -85,20 +85,19 @@ class TasksService
                 }
             }
 
-            if(isset($request->tasks_files)){
-                foreach($request->tasks_files as $file){
-                    $path = $file->store('tasks_files');
+            if(isset($request->files)){
+                foreach($request->file('files') as $file){
+                    $path = $file->store('tasks_files');                    
+                    $fullPath = asset('storage/' . $path);
 
-                    TaskFile::updateOrCreate(
-                        [
-                        'id' => $file->id
-                        ],
+                    TaskFile::create(
                         [
                             'name' => $file->getClientOriginalName(),
-                            'path' => $path,
+                            'path' => $fullPath,
                             'task_id' => $task->id,
                         ]
                     );
+                    
                 }
             }
 
@@ -147,16 +146,18 @@ class TasksService
             }
 
             if(isset($request->files)){
-                foreach($request->files as $file){
+                foreach($request->file('files') as $file){
                     $path = $file->store('tasks_files');                    
+                    $fullPath = asset('storage/' . $path);
 
                     TaskFile::create(
                         [
                             'name' => $file->getClientOriginalName(),
-                            'path' => $path,
+                            'path' => $fullPath,
                             'task_id' => $tasksToUpdate->id,
                         ]
                     );
+                    
                 }
             }
 
