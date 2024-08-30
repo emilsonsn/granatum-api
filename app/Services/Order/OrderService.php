@@ -111,12 +111,13 @@ class OrderService
                 $orderFiles = $request->order_files;
 
                 foreach($orderFiles as $file){
-                    $path = $file->store('order_files');
+                    $path = $file->store('order_files', 'public');
+                    $fullPath = asset('storage/' . $path);
 
                     OrderFile::create(
                         [
                             'name' => $file->getClientOriginalName(),
-                            'path' => $path,
+                            'path' => $fullPath,
                             'order_id' => $order->id,
                         ]
                     );
@@ -185,7 +186,7 @@ class OrderService
 
             if(isset($request->order_files)){
                 foreach($request->order_files as $file){
-                    $path = $file->store('order_files');
+                    $path = $file->store('order_files', 'public');
                     $fullPath = asset('storage/' . $path);
 
                     OrderFile::create(

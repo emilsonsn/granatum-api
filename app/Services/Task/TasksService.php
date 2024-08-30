@@ -87,7 +87,7 @@ class TasksService
 
             if(isset($request->files)){
                 foreach($request->file('tasks_files') as $file){
-                    $path = $file->store('tasks_files');                    
+                    $path = $file->store('tasks_files', 'public');                    
                     $fullPath = asset('storage/' . $path);
 
                     TaskFile::create(
@@ -97,7 +97,6 @@ class TasksService
                             'task_id' => $task->id,
                         ]
                     );
-                    
                 }
             }
 
@@ -147,7 +146,7 @@ class TasksService
 
             if(isset($request->files)){
                 foreach($request->file('tasks_files') as $file){
-                    $path = $file->store('tasks_files');                    
+                    $path = $file->store('tasks_files', 'public');                    
                     $fullPath = asset('storage/' . $path);
 
                     TaskFile::create(

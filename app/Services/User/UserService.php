@@ -54,8 +54,16 @@ class UserService
     {
         try {
             $user = auth()->user();
-
-            return ['status' => true, 'data' => $user];
+    
+            if ($user) {
+                // Cast para o tipo correto
+                $user = $user instanceof \App\Models\User ? $user : \App\Models\User::find($user->id);
+    
+                $userWithRelations = $user->load(['companyPosition', 'sector']);
+                return ['status' => true, 'data' => $userWithRelations];
+            }
+    
+            return ['status' => false, 'error' => 'Usuário não autenticado', 'statusCode' => 401];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
