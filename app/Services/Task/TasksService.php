@@ -86,7 +86,7 @@ class TasksService
             }
 
             if(isset($request->files)){
-                foreach($request->file('files') as $file){
+                foreach($request->file('tasks_files') as $file){
                     $path = $file->store('tasks_files');                    
                     $fullPath = asset('storage/' . $path);
 
@@ -94,7 +94,7 @@ class TasksService
                         [
                             'name' => $file->getClientOriginalName(),
                             'path' => $fullPath,
-                            'task_id' => $task->id,
+                            'task_id' => $tasksToUpdate->id,
                         ]
                     );
                     
