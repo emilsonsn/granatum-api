@@ -49,7 +49,7 @@ Trait GranatumTrait
 
         if(!isset($result[0])) throw new Exception('Contas bancárias não encontradas');
 
-        return $result[0]['id'];
+        return $result;
     }
 
     public function createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate)

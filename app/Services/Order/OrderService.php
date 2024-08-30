@@ -78,6 +78,7 @@ class OrderService
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'required|string|max:255',
+                'bank_id' => 'required|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -130,6 +131,14 @@ class OrderService
         }
     }
 
+    public function getBank(){
+        try{
+            $result = $this->getAccountBank();
+            return ['status' => true, 'data' => $result];
+        }catch(Exception $error){
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
 
     public function update($request, $user_id)
     {
@@ -145,6 +154,7 @@ class OrderService
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'required|string|max:255',
+                'bank_id' => 'required|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);

@@ -96,6 +96,7 @@ Route::middleware('jwt')->group(function(){
     Route::prefix('order')->group(function(){
         Route::get('search', [OrderController::class, 'search']);
         Route::post('create', [OrderController::class, 'create']);
+        Route::get('getBank', [OrderController::class, 'getBank']);
         Route::post('granatum/{orderId}', [OrderController::class, 'upRelease']);
         Route::patch('{id}', [OrderController::class, 'update']);
         Route::delete('{id}', [OrderController::class, 'delete']);

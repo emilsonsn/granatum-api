@@ -33,6 +33,13 @@ class OrderController extends Controller
         return $this->response($result);
     }
 
+    public function getBank(){
+        $result = $this->orderService->getBank();
+
+        if($result['status']) $result['message'] = "Bancos encontrados";
+        return $this->response($result);
+    }
+
     public function delete($id){
         $result = $this->orderService->delete($id);
 

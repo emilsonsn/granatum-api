@@ -26,6 +26,7 @@ class Order extends Model
         'payment_method',
         'purchase_status',
         'purchase_date',
+        'bank_id'
     ];
 
     public function construction(){
