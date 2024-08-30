@@ -146,7 +146,7 @@ class TasksService
             }
 
             if(isset($request->files)){
-                foreach($request->file('files') as $file){
+                foreach($request->file('tasks_files') as $file){
                     $path = $file->store('tasks_files');                    
                     $fullPath = asset('storage/' . $path);
 
