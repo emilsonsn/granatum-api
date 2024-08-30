@@ -60,43 +60,39 @@ class TasksService
 
             $data = $validator->validated();
 
-            if(!isset($data['task_status_id'])){
+            if (!isset($data['task_status_id'])) {
                 $status = TaskStatus::orderBy('id', 'asc')->first();
 
-                if(!isset($status)) throw new Exception('Não tem nenhm status de tarefas cadastrado');
+                if (!isset($status)) throw new Exception('Não tem nenhum status de tarefas cadastrado');
 
                 $data['task_status_id'] = $status->id;
             }
 
             $task = Task::create($data);
 
-            if(isset($request->sub_tasks)){
-                foreach($request->sub_tasks as $sub_task){
-                    $sub_task = json_decode($sub_task);
-                    SubTask::updateOrCreate(
-                        [
-                            'id' => $sub_task['id']] ,
-                        [
-                            'description' => $sub_task['description'],
-                            'status' => $sub_task['status'] ?? false,
-                            'task_id' => $task->id,
-                        ]
-                    );
+            if (isset($request->sub_tasks)) {
+                foreach ($request->sub_tasks as $sub_task) {
+                    $sub_task = json_decode($sub_task, true);
+
+                    // Create a new SubTask since no 'id' is required for creation
+                    SubTask::create([
+                        'description' => $sub_task['description'],
+                        'status' => $sub_task['status'] ?? false,
+                        'task_id' => $task->id,
+                    ]);
                 }
             }
 
-            if(isset($request->files) && $request->hasFile('tasks_files')){
-                foreach($request->file('tasks_files') as $file){
-                    $path = $file->store('tasks_files', 'public');                    
+            if (isset($request->files) && $request->hasFile('tasks_files')) {
+                foreach ($request->file('tasks_files') as $file) {
+                    $path = $file->store('tasks_files', 'public');
                     $fullPath = asset('storage/' . $path);
 
-                    TaskFile::create(
-                        [
-                            'name' => $file->getClientOriginalName(),
-                            'path' => $fullPath,
-                            'task_id' => $task->id,
-                        ]
-                    );
+                    TaskFile::create([
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $fullPath,
+                        'task_id' => $task->id,
+                    ]);
                 }
             }
 
@@ -121,42 +117,55 @@ class TasksService
 
             $validator = Validator::make($data, $rules);
 
-            if ($validator->fails()) throw new Exception($validator->errors());
+            if ($validator->fails()) {
+                throw new Exception($validator->errors());
+            }
 
             $tasksToUpdate = Task::find($user_id);
 
-            if(!isset($tasksToUpdate)) throw new Exception('Tarefa não encontrada');
+            if (!isset($tasksToUpdate)) {
+                throw new Exception('Tarefa não encontrada');
+            }
 
             $tasksToUpdate->update($validator->validated());
 
-            if(isset($request->sub_tasks)){
-                foreach($request->sub_tasks as $sub_task){
-                    $sub_task = json_decode($sub_task);
-                    SubTask::updateOrCreate(
-                        [
-                            'id' => $sub_task['id']] ,
-                        [
+            if (isset($request->sub_tasks)) {
+                foreach ($request->sub_tasks as $sub_task) {
+                    $sub_task = json_decode($sub_task, true);
+
+                    // Check if sub_task has an 'id' for updating, otherwise create a new one
+                    if (isset($sub_task['id'])) {
+                        SubTask::updateOrCreate(
+                            [
+                                'id' => $sub_task['id']
+                            ],
+                            [
+                                'description' => $sub_task['description'],
+                                'status' => $sub_task['status'] ?? false,
+                                'task_id' => $tasksToUpdate->id,
+                            ]
+                        );
+                    } else {
+                        // Create a new SubTask since no 'id' is provided
+                        SubTask::create([
                             'description' => $sub_task['description'],
                             'status' => $sub_task['status'] ?? false,
                             'task_id' => $tasksToUpdate->id,
-                        ]
-                    );
+                        ]);
+                    }
                 }
             }
 
-            if(isset($request->files) && $request->hasFile('tasks_files')){
-                foreach($request->file('tasks_files') as $file){
-                    $path = $file->store('tasks_files', 'public');                    
+            if (isset($request->files) && $request->hasFile('tasks_files')) {
+                foreach ($request->file('tasks_files') as $file) {
+                    $path = $file->store('tasks_files', 'public');
                     $fullPath = asset('storage/' . $path);
 
-                    TaskFile::create(
-                        [
-                            'name' => $file->getClientOriginalName(),
-                            'path' => $fullPath,
-                            'task_id' => $tasksToUpdate->id,
-                        ]
-                    );
-                    
+                    TaskFile::create([
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $fullPath,
+                        'task_id' => $tasksToUpdate->id,
+                    ]);
                 }
             }
 
