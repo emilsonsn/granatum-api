@@ -94,7 +94,7 @@ class TasksService
                         [
                             'name' => $file->getClientOriginalName(),
                             'path' => $fullPath,
-                            'task_id' => $tasksToUpdate->id,
+                            'task_id' => $task->id,
                         ]
                     );
                     
