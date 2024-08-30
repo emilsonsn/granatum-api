@@ -85,7 +85,7 @@ class TasksService
                 }
             }
 
-            if(isset($request->files)){
+            if(isset($request->files) && $request->hasFile('tasks_files')){
                 foreach($request->file('tasks_files') as $file){
                     $path = $file->store('tasks_files', 'public');                    
                     $fullPath = asset('storage/' . $path);
@@ -144,7 +144,7 @@ class TasksService
                 }
             }
 
-            if(isset($request->files)){
+            if(isset($request->files) && $request->hasFile('tasks_files')){
                 foreach($request->file('tasks_files') as $file){
                     $path = $file->store('tasks_files', 'public');                    
                     $fullPath = asset('storage/' . $path);
