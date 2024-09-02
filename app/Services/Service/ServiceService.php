@@ -42,7 +42,7 @@ class ServiceService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $service = Service::create($validator->validated());
@@ -120,7 +120,7 @@ class ServiceService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $service = ServiceType::create($validator->validated());

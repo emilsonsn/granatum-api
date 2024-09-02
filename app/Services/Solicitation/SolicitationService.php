@@ -2,7 +2,9 @@
 
 namespace App\Services\Solicitation;
 
+use App\Enums\PurchaseStatusEnum;
 use App\Enums\SolicitationStatusEnum;
+use App\Models\Order;
 use Exception;
 
 use App\Models\Solicitation;
@@ -61,17 +63,29 @@ class SolicitationService
                 'supplier_id' => 'required|integer',
                 'user_id' => 'required|integer',
                 'construction_id' => 'required|integer',
-                'status' => 'required|string|max:255',
+                'status' => 'nullable|string|max:255',
                 'payment_date' => 'nullable|date',
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];
             }
 
-            $solicitation = Solicitation::create($validator->validated());
+            $data = $validator->validated();
+
+            if(!isset($data['status']) || $data['status'] == 'null'){
+                $data['status'] = SolicitationStatusEnum::Pending->value;
+            }
+
+            $solicitation = Solicitation::create($data);
+
+            if($data['status'] === SolicitationStatusEnum::Pending->value){
+                Order::find($data['order_id'])->update([
+                    'purchase_status' => PurchaseStatusEnum::RequestFinance->value
+                ]);
+            }
 
             return ['status' => true, 'data' => $solicitation];
         } catch (Exception $error) {
@@ -101,7 +115,21 @@ class SolicitationService
 
             if(!isset($solicitationToUpdate)) throw new Exception('Solicitação não encontrada');
 
-            $solicitationToUpdate->update($validator->validated());
+            $data = $validator->validated();
+
+            $solicitationToUpdate->update($data);
+
+            if($data['status'] === SolicitationStatusEnum::Pending->value){
+                Order::find($data['order_id'])->update([
+                    'purchase_status' => PurchaseStatusEnum::RequestFinance->value
+                ]);
+            }
+
+            if($data['status'] === SolicitationStatusEnum::Rejected->value){
+                Order::find($data['order_id'])->update([
+                    'purchase_status' => PurchaseStatusEnum::Pending->value
+                ]);
+            }
 
             return ['status' => true, 'data' => $solicitationToUpdate];
         } catch (Exception $error) {
@@ -123,5 +151,4 @@ class SolicitationService
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
-
 }

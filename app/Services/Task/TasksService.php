@@ -22,7 +22,7 @@ class TasksService
             $search_term = $request->search_term;
             $task_status_id = $request->task_status_id;
 
-            $tasks = Task::orderBy('id', 'desc')->with(['files', 'subTasks']);
+            $tasks = Task::orderBy('id', 'desc')->with(['files', 'subTasks', 'user']);
 
             if(isset($search_term)){
                 $tasks->where('name', 'LIKE', "%{$search_term}%")
@@ -51,11 +51,16 @@ class TasksService
                 'description'  => 'required|string',
                 'task_status_id' => 'nullable|integer'
             ];
+            $data = $request->all();
 
-            $validator = Validator::make($request->all(), $rules);
+            if(isset($data['concluded_at']) || $data['concluded_at'] == 'null'){
+                $data['concluded_at'] = null;
+            }
+
+            $validator = Validator::make($data, $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $data = $validator->validated();
@@ -112,12 +117,16 @@ class TasksService
             $rules = [
                 'name' => 'required|string|max:255',
                 'user_id' => 'required|integer',
-                'concluded_at' => 'required|date',
+                'concluded_at' => 'nullable|date',
                 'description'  => 'required|string',
                 'task_status_id' => 'required|integer'
             ];
 
             $data = $request->all();
+
+            if(isset($data['concluded_at']) || $data['concluded_at'] == 'null'){
+                $data['concluded_at'] = null;
+            }
 
             $validator = Validator::make($data, $rules);
 
@@ -272,7 +281,7 @@ class TasksService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $taskStatus = TaskStatus::create($validator->validated());

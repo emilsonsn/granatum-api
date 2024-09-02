@@ -77,17 +77,23 @@ class OrderService
                 'description' => 'required|string',
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
-                'purchase_status' => 'required|string|max:255',
+                'purchase_status' => 'nullable|string|max:255',
                 'bank_id' => 'required|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
-            $order = Order::create($validator->validated());
+            $data = $validator->validated();
+
+            if(!isset($data['purchase_status']) || $data['purchase_status'] == 'null'){
+                $data['purchase_status'] = PurchaseStatusEnum::Pending->value;
+            }
+
+            $order = Order::create($data);
 
             if(isset($request->items)){
                 $items = $request->items;

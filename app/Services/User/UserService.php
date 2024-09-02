@@ -115,7 +115,7 @@ class UserService
             $validator = Validator::make($requestData, $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $user = User::create($validator->validated());
@@ -265,7 +265,7 @@ class UserService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $sector = Sector::create($validator->validated());

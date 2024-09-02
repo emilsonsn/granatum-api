@@ -32,5 +32,9 @@ class Task extends Model
     public function files(){
         return $this->hasMany(TaskFile::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
    
 }

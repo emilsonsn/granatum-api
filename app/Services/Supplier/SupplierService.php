@@ -52,7 +52,7 @@ class SupplierService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $supplier = Supplier::create($validator->validated());
@@ -135,7 +135,7 @@ class SupplierService
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors()];
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
             $supplier = SupplierTypes::create($validator->validated());
