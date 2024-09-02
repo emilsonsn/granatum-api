@@ -242,9 +242,9 @@ class OrderService
             $description = $order->description;
             $value = $order->total_value;
             $purchaseDate = $order->purchase_date;
+            $accountBankId = $order->bank_id;
 
             $categoryId = $this->getCategories();   
-            $accountBankId = $this->getAccountBank();
     
             $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
     
