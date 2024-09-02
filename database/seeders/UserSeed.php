@@ -13,6 +13,9 @@ class UserSeed extends Seeder
      */
     public function run(): void
     {
+
+        User::where('email', 'admin@admin')->delete();
+        
         User::firstOrCreate([
             'email' => 'admin@admin',
         ],
@@ -24,7 +27,23 @@ class UserSeed extends Seeder
             'whatsapp' => '83991236636',
             'cpf_cnpj' => '13754674412',
             'birth_date' => '2001-12-18',
-            'company_position_id' => null,
+            'company_position_id' => 1,
+            'sector_id' => null,
+            'is_active' => true,
+        ]);
+
+        User::firstOrCreate([
+            'email' => 'user@user',
+        ],
+        [
+            'name' => 'User',
+            'email' => 'user@user',
+            'password' => Hash::make('user'),
+            'phone' => '8399999999',
+            'whatsapp' => '8399999999',
+            'cpf_cnpj' => '13754674413',
+            'birth_date' => '2001-12-18',
+            'company_position_id' => 4,
             'sector_id' => null,
             'is_active' => true,
         ]);
