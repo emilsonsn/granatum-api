@@ -88,7 +88,11 @@ class TasksService
                     $path = $file->store('tasks_files', 'public');
                     $fullPath = asset('storage/' . $path);
 
-                    TaskFile::create([
+                    TaskFile::firstOrCreate(
+                    [
+                        'id'=> $file->id
+                    ],
+                    [
                         'name' => $file->getClientOriginalName(),
                         'path' => $fullPath,
                         'task_id' => $task->id,
@@ -130,10 +134,9 @@ class TasksService
             $tasksToUpdate->update($validator->validated());
 
             if (isset($request->sub_tasks)) {
-                foreach ($request->sub_tasks as $sub_task) {
-                    $sub_task = json_decode($sub_task, true);
+                foreach ($request->sub_tasks as $sub_task) {                    
+                    if(!is_array($sub_task)) $sub_task = json_decode($sub_task, true);
 
-                    // Check if sub_task has an 'id' for updating, otherwise create a new one
                     if (isset($sub_task['id'])) {
                         SubTask::updateOrCreate(
                             [
@@ -146,7 +149,6 @@ class TasksService
                             ]
                         );
                     } else {
-                        // Create a new SubTask since no 'id' is provided
                         SubTask::create([
                             'description' => $sub_task['description'],
                             'status' => $sub_task['status'] ?? false,
@@ -161,7 +163,11 @@ class TasksService
                     $path = $file->store('tasks_files', 'public');
                     $fullPath = asset('storage/' . $path);
 
-                    TaskFile::create([
+                    TaskFile::firstOrCreate(
+                        [
+                            'id'=> $file->id
+                        ],
+                        [
                         'name' => $file->getClientOriginalName(),
                         'path' => $fullPath,
                         'task_id' => $tasksToUpdate->id,
