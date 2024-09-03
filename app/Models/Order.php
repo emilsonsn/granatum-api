@@ -26,7 +26,9 @@ class Order extends Model
         'payment_method',
         'purchase_status',
         'purchase_date',
-        'bank_id'
+        'has_granatum',
+        'bank_id',
+        'category_id'
     ];
 
     public function construction(){

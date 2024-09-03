@@ -19,6 +19,12 @@ class OrderController extends Controller
         return $result;
     }
 
+    public function getById($id){
+        $result = $this->orderService->getById($id);
+
+        return $result;
+    }
+
     public function create(Request $request){
         $result = $this->orderService->create($request);
 
@@ -37,6 +43,13 @@ class OrderController extends Controller
         $result = $this->orderService->getBank();
 
         if($result['status']) $result['message'] = "Bancos encontrados";
+        return $this->response($result);
+    }
+
+    public function getCategories(){
+        $result = $this->orderService->getCategories();
+
+        if($result['status']) $result['message'] = "Categorias não encontradas";
         return $this->response($result);
     }
 

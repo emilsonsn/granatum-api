@@ -17,31 +17,22 @@ Trait GranatumTrait
         $this->baseUrl = env('GRANATUM_API_BASE_URL');
     }
 
-    public function getCategories()
-    {
-        $url = $this->buildUrl('categorias');
-
-        $response = Http::get($url);
-
-        $categories =  $response->json();
-
-        if(!count($categories)) throw new Exception('Categoria API não encontrada');
-
-        foreach($categories as $category){
-            if($category['descricao'] == 'API'){
-                $categoryId = $category['id'];
-            }
-        }
-
-        if(!isset($categoryId)) throw new Exception('Categoria API não encontrada');
-
-        return $categoryId;
-        
-    }
-
     public function getAccountBank()
     {
         $url = $this->buildUrl('contas');
+
+        $response = Http::get($url);
+
+        $result = $response->json();
+
+        if(!isset($result[0])) throw new Exception('Contas bancárias não encontradas');
+
+        return $result;
+    }
+
+    public function categories()
+    {
+        $url = $this->buildUrl('categorias');
 
         $response = Http::get($url);
 

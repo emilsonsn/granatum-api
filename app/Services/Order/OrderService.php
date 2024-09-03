@@ -37,6 +37,22 @@ class OrderService
         }
     }
 
+    public function getById($id)
+    {
+        try {
+
+            $order = Order::where('id', $id)
+                ->with(['construction', 'supplier', 'files', 'items', 'releases', 'solicitation', 'user'])
+                ->first();
+            
+                if(!isset($order)) throw new Exception('Pedido não encontrado');
+
+            return $order;
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
     public function cards()
     {
         try {
@@ -68,6 +84,7 @@ class OrderService
     {
         try {
             $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
+            $request['category_id'] = $request['category_id'] === 'null' ? null : $request['category_id'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
@@ -81,6 +98,7 @@ class OrderService
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'nullable|string|max:255',
                 'bank_id' => 'nullable|integer',
+                'category_id' => 'nullable|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -146,10 +164,44 @@ class OrderService
         }
     }
 
+    public function getCategories(){
+        try{
+            $result = $this->categories();
+    
+            $result = array_reduce($result, function($carry, $category) {
+                if (isset($category['categorias_filhas']) && is_array($category['categorias_filhas'])) {
+                    $carry = array_merge($carry, $category['categorias_filhas']);
+                } else {
+                    $carry[] = $category;
+                }
+                return $carry;
+            }, []);
+    
+            $result = array_reduce($result, function($carry, $category) {
+                $exists = false;
+                foreach ($carry as $existingCategory) {
+                    if ($existingCategory['descricao'] === $category['descricao']) {
+                        $exists = true;
+                        break;
+                    }
+                }
+                if (!$exists) {
+                    $carry[] = $category;
+                }
+                return $carry;
+            }, []);
+    
+            return ['status' => true, 'data' => $result];
+        }catch(Exception $error){
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
     public function update($request, $user_id)
     {
         try {
             $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
+            $request['category_id'] = $request['category_id'] === 'null' ? null : $request['category_id'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
@@ -163,6 +215,7 @@ class OrderService
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'required|string|max:255',
                 'bank_id' => 'nullable|integer',
+                'category_id' => 'nullable|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -250,12 +303,13 @@ class OrderService
             $value = $order->total_value;
             $purchaseDate = $order->purchase_date;
             $accountBankId = $order->bank_id;
-
-            $categoryId = $this->getCategories();   
+            $categoryId =  $order->category_id;
     
             $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
+
+            $order->update(['has_granatum' => true]);
     
             Release::create([
                 'release_id' => $response['id'],
@@ -307,7 +361,4 @@ class OrderService
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
-
-    
-
 }
