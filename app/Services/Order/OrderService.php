@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Enums\CompanyPositionEnum;
 use App\Enums\PurchaseStatusEnum;
 use App\Models\Item;
 use Exception;
@@ -10,6 +11,7 @@ use App\Models\OrderFile;
 use App\Models\Release;
 use App\Trait\GranatumTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 class OrderService
@@ -27,6 +29,27 @@ class OrderService
 
             if(isset($search_term)){
                 $order->where('description', 'LIKE', "%{$search_term}%");
+            }
+
+            if(isset($request->status)){
+                $order->where('purchase_status', $request->status);
+            }
+
+            if(isset($request->is_home)){
+                $companyPosition = Auth::user()->companyPosition;
+                switch ($companyPosition->position){
+                    case CompanyPositionEnum::Admin->value: break;
+                    case CompanyPositionEnum::Financial->value:
+                        $order->where('status', PurchaseStatusEnum::RequestFinance->value);
+                        break;
+                    case CompanyPositionEnum::Supplies->value:
+                        $order->where('status', PurchaseStatusEnum::RequestManager->value);
+                        break;
+                    case CompanyPositionEnum::Requester->value:
+                        $order->where('status', PurchaseStatusEnum::Pending->value);
+                        break;
+                    default: break;
+                }
             }
 
             $order = $order->paginate($perPage);
@@ -109,6 +132,10 @@ class OrderService
 
             if(!isset($data['purchase_status']) || $data['purchase_status'] == 'null'){
                 $data['purchase_status'] = PurchaseStatusEnum::Pending->value;
+            }
+
+            if((float)$data['total_value'] <= 300 && $data['payment_method'] != 'Cash'){
+                $data['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
             }
 
             $order = Order::create($data);
