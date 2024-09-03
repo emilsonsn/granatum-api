@@ -67,6 +67,8 @@ class OrderService
     public function create($request)
     {
         try {
+            $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
+
             $rules = [
                 'order_type' => 'required|string|max:255',
                 'date' => 'required|date',
@@ -78,14 +80,12 @@ class OrderService
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'nullable|string|max:255',
-                'bank_id' => 'required|integer',
+                'bank_id' => 'nullable|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
-            }
+            if ($validator->fails()) throw new Exception($validator->errors());
 
             $data = $validator->validated();
 
@@ -149,6 +149,8 @@ class OrderService
     public function update($request, $user_id)
     {
         try {
+            $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
+
             $rules = [
                 'order_type' => 'required|string|max:255',
                 'date' => 'required|date',
@@ -160,13 +162,12 @@ class OrderService
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'required|string|max:255',
-                'bank_id' => 'required|integer',
+                'bank_id' => 'nullable|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) throw new Exception($validator->errors());
-
 
             $orderToUpdate = Order::find($user_id);
 
