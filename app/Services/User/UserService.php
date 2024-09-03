@@ -105,29 +105,36 @@ class UserService
                 'company_position_id' => 'nullable|integer',
                 'sector_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean|default:true',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // validação para a foto
             ];
-
+    
             $password = str_shuffle(Str::upper(Str::random(1)) . rand(0, 9) . Str::random(1, '?!@#$%^&*') . Str::random(5));
-
+    
             $requestData = $request->all();
             $requestData['password'] = Hash::make($password);
-
+    
             $validator = Validator::make($requestData, $rules);
-
+    
             if ($validator->fails()) {
-                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
+                return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];
             }
-
+    
+            // Verifica se uma foto foi enviada
+            if ($request->hasFile('photo')) {
+                $path = $request->file('photo')->store('photos', 'public'); // salva a foto no storage em 'photos'
+                $requestData['photo'] = $path; // salva o caminho no array de dados
+            }
+    
             $user = User::create($validator->validated());
-
+    
             Mail::to($user->email)->send(new WelcomeMail($user->name, $user->email, $password));
-
+    
             return ['status' => true, 'data' => $user];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
-
+    
 
     public function update($request, $user_id)
     {
@@ -142,6 +149,7 @@ class UserService
                 'company_position_id' => 'nullable|integer',
                 'sector_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean|default:true',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // validação para a foto
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -152,7 +160,14 @@ class UserService
 
             if(!isset($userToUpdate)) throw new Exception('Usuário não encontrado');
 
-            $userToUpdate->update($validator->validated());
+            $requestData = $validator->validated();
+
+            if ($request->hasFile('photo')) {
+                $path = $request->file('photo')->store('photos', 'public');
+                $requestData['photo'] = $path;
+            }
+
+            $userToUpdate->update();
 
             return ['status' => true, 'data' => $userToUpdate];
         } catch (Exception $error) {
