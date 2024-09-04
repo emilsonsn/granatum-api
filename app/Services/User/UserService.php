@@ -149,7 +149,7 @@ class UserService
                 'company_position_id' => 'nullable|integer',
                 'sector_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean|default:true',
-                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // validação para a foto
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -167,7 +167,7 @@ class UserService
                 $requestData['photo'] = $path;
             }
 
-            $userToUpdate->update();
+            $userToUpdate->update($requestData);
 
             return ['status' => true, 'data' => $userToUpdate];
         } catch (Exception $error) {
