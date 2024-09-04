@@ -119,10 +119,10 @@ class UserService
                 return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];
             }
     
-            // Verifica se uma foto foi enviada
             if ($request->hasFile('photo')) {
-                $path = $request->file('photo')->store('photos', 'public'); // salva a foto no storage em 'photos'
-                $requestData['photo'] = $path; // salva o caminho no array de dados
+                $path = $request->file('photo')->store('photos', 'public');
+                $fullPath = asset('storage/' . $path);
+                $requestData['photo'] = $fullPath;
             }
     
             $user = User::create($requestData);
@@ -164,7 +164,8 @@ class UserService
 
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('photos', 'public');
-                $requestData['photo'] = $path;
+                $fullPath = asset('storage/' . $path);
+                $requestData['photo'] = $fullPath;
             }
 
             $userToUpdate->update($requestData);
