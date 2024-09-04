@@ -32,7 +32,8 @@ class OrderService
             }
 
             if(isset($request->status)){
-                $order->where('purchase_status', $request->status);
+                $status = explode(',', $request->status);
+                $order->whereIn('purchase_status', $status);
             }
 
             if(isset($request->is_home)){
