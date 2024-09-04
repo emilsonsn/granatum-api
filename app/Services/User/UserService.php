@@ -139,6 +139,8 @@ class UserService
     public function update($request, $user_id)
     {
         try {
+            $request['photo'] = $request['photo'] == 'null' ? null : $request['photo'];
+
             $rules = [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255',
