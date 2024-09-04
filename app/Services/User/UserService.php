@@ -125,7 +125,7 @@ class UserService
                 $requestData['photo'] = $path; // salva o caminho no array de dados
             }
     
-            $user = User::create($validator->validated());
+            $user = User::create($requestData);
     
             Mail::to($user->email)->send(new WelcomeMail($user->name, $user->email, $password));
     
