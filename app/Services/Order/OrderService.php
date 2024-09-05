@@ -36,18 +36,28 @@ class OrderService
                 $order->whereIn('purchase_status', $status);
             }
 
+            if(isset($request->start_date) && isset($request->end_date)){                
+                $order->whereBetween('date', [$request->start_date, $request->end_date]);
+            }else if(isset($request->start_date)){
+                $order->whereDate('date', '>' ,$request->start_date);
+            }else if(isset($request->end_date)){
+                $order->whereDate('date', '<' ,$request->end_date);
+            }
+
             if(isset($request->is_home)){
                 $companyPosition = Auth::user()->companyPosition;
+                $order->where('purchase_status', '!=', PurchaseStatusEnum::Resolved->value);
+
                 switch ($companyPosition->position){
                     case CompanyPositionEnum::Admin->value: break;
                     case CompanyPositionEnum::Financial->value:
-                        $order->where('status', PurchaseStatusEnum::RequestFinance->value);
+                        $order->where('purchase_status', PurchaseStatusEnum::RequestFinance->value);
                         break;
                     case CompanyPositionEnum::Supplies->value:
-                        $order->where('status', PurchaseStatusEnum::RequestManager->value);
+                        $order->where('purchase_status', PurchaseStatusEnum::RequestManager->value);
                         break;
                     case CompanyPositionEnum::Requester->value:
-                        $order->where('status', PurchaseStatusEnum::Pending->value);
+                        $order->where('purchase_status', PurchaseStatusEnum::Pending->value);
                         break;
                     default: break;
                 }
@@ -109,6 +119,7 @@ class OrderService
         try {
             $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
             $request['category_id'] = $request['category_id'] === 'null' ? null : $request['category_id'];
+            $request['purchase_status'] = $request['purchase_status'] === 'null' ? null : $request['purchase_status'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
@@ -131,12 +142,16 @@ class OrderService
 
             $data = $validator->validated();
 
-            if(!isset($data['purchase_status']) || $data['purchase_status'] == 'null'){
-                $data['purchase_status'] = PurchaseStatusEnum::Pending->value;
+            if((float)$data['total_value'] <= 300){
+                $data['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
             }
 
-            if((float)$data['total_value'] <= 300 && $data['payment_method'] != 'Cash'){
-                $data['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
+            if($data['payment_method'] != 'Cash'){
+                $data['purchase_status'] = PurchaseStatusEnum::RequestFinance->value;
+            }
+
+            if(!isset($data['purchase_status']) || $data['purchase_status'] == 'null'){
+                $data['purchase_status'] = PurchaseStatusEnum::Pending->value;
             }
 
             $order = Order::create($data);
@@ -337,8 +352,6 @@ class OrderService
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
 
-            $order->update(['has_granatum' => true]);
-    
             Release::create([
                 'release_id' => $response['id'],
                 'category_id' => $categoryId,
@@ -350,6 +363,12 @@ class OrderService
                 'api_response' => json_encode($response) ?? null
             ]);
 
+            $order->update(['has_granatum' => true]);
+
+            $attachResponse = $this->sendAttachs($order->id, $response['id']);
+
+            if(isset($attachResponse['errors'])) throw new Exception ("Não foi possível enviar os anexos");
+    
             return ['status' => true, 'message' => 'Lançamento criado com sucesso'];
 
         }catch(Exception $error) {

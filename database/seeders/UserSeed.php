@@ -13,8 +13,6 @@ class UserSeed extends Seeder
      */
     public function run(): void
     {
-
-        User::where('email', 'admin@admin')->delete();
         
         User::firstOrCreate([
             'email' => 'admin@admin',
@@ -28,6 +26,38 @@ class UserSeed extends Seeder
             'cpf_cnpj' => '13754674412',
             'birth_date' => '2001-12-18',
             'company_position_id' => 1,
+            'sector_id' => null,
+            'is_active' => true,
+        ]);
+
+        User::firstOrCreate([
+            'email' => 'financial@financial',
+        ],
+        [
+            'name' => 'Financial',
+            'email' => 'financial@financial',
+            'password' => Hash::make('financial'),
+            'phone' => '83991236636',
+            'whatsapp' => '83991236636',
+            'cpf_cnpj' => '13754674432',
+            'birth_date' => '2001-12-18',
+            'company_position_id' => 2,
+            'sector_id' => null,
+            'is_active' => true,
+        ]);
+
+        User::firstOrCreate([
+            'email' => 'manager@manager',
+        ],
+        [
+            'name' => 'Manager',
+            'email' => 'manager@manager',
+            'password' => Hash::make('manager'),
+            'phone' => '83991236636',
+            'whatsapp' => '83991236636',
+            'cpf_cnpj' => '13754614412',
+            'birth_date' => '2001-12-18',
+            'company_position_id' => 3,
             'sector_id' => null,
             'is_active' => true,
         ]);
