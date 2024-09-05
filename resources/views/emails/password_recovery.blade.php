@@ -32,7 +32,7 @@
         a {
             display: inline-block;
             background-color: #0044cc;
-            color: #fff;
+            color: #fff !important;
             text-decoration: none;
             padding: 10px 20px;
             border-radius: 4px;
