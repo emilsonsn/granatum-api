@@ -146,7 +146,7 @@ class OrderService
                 $data['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
             }
 
-            if($data['payment_method'] != 'Cash'){
+            if($data['payment_method'] == 'Cash'){
                 $data['purchase_status'] = PurchaseStatusEnum::RequestFinance->value;
             }
 
