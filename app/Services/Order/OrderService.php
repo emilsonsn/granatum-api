@@ -120,6 +120,7 @@ class OrderService
             $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
             $request['category_id'] = $request['category_id'] === 'null' ? null : $request['category_id'];
             $request['purchase_status'] = $request['purchase_status'] === 'null' ? null : $request['purchase_status'];
+            $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
