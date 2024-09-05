@@ -58,7 +58,7 @@
 
 <body>
     <div class="email-container">
-        <h1>Bem-vindo, {{ $name }}!</h1>
+        <h1>Bem-vindo(a)! {{ $name }}!</h1>
         <p>Estamos felizes em tê-lo conosco. Aqui estão os seus detalhes de acesso:</p>
         <p><strong>Email:</strong> <span class="email">{{ "$email" }}</span></p>
         <p><strong>Senha Temporária:</strong> {{ $password }}</p>
