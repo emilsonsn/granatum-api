@@ -39,7 +39,7 @@ Trait GranatumTrait
 
         $result = $response->json();
 
-        if(!isset($result[0])) throw new Exception('Contas bancárias não encontradas');
+        if(!isset($result[0])) throw new Exception('Categorias não encontradas');
 
         return $result;
     }

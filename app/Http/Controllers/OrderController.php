@@ -49,7 +49,7 @@ class OrderController extends Controller
     public function getCategories(){
         $result = $this->orderService->getCategories();
 
-        if($result['status']) $result['message'] = "Categorias não encontradas";
+        if($result['status']) $result['message'] = "Categorias encontradas";
         return $this->response($result);
     }
 

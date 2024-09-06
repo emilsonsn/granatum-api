@@ -212,34 +212,25 @@ class OrderService
         try{
             $result = $this->categories();
     
+            // Primeira redução para combinar categorias filhas com suas respectivas categorias pais
             $result = array_reduce($result, function($carry, $category) {
                 if (isset($category['categorias_filhas']) && is_array($category['categorias_filhas'])) {
-                    $carry = array_merge($carry, $category['categorias_filhas']);
+                    foreach ($category['categorias_filhas'] as $filha) {
+                        // Atualiza a descrição da categoria filha incluindo a categoria pai
+                        $filha['descricao'] = $category['descricao'] . ' / ' . $filha['descricao'];
+                        $carry[] = $filha;
+                    }
                 } else {
                     $carry[] = $category;
                 }
                 return $carry;
             }, []);
     
-            $result = array_reduce($result, function($carry, $category) {
-                $exists = false;
-                foreach ($carry as $existingCategory) {
-                    if ($existingCategory['descricao'] === $category['descricao']) {
-                        $exists = true;
-                        break;
-                    }
-                }
-                if (!$exists) {
-                    $carry[] = $category;
-                }
-                return $carry;
-            }, []);
-    
             return ['status' => true, 'data' => $result];
-        }catch(Exception $error){
+        } catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
-    }
+    }    
 
     public function update($request, $user_id)
     {
