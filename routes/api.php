@@ -48,6 +48,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('me', [UserController::class, 'getUser']);
         Route::post('create', [UserController::class, 'create']);
         Route::patch('{id}', [UserController::class, 'update']);
+        Route::delete('{id}', [UserController::class, 'delete']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);
 
         Route::get('position/search', [UserController::class, 'positionSearch']);
