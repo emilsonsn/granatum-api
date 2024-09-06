@@ -48,6 +48,8 @@ Trait GranatumTrait
     {
         $url = $this->buildUrl('lancamentos');
 
+        if($value > 0) $value = $value * -1;
+
         $payload = [
             'categoria_id' => $categoryId,
             'conta_id' => $accountBankId,
