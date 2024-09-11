@@ -12,6 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('clients', function (Blueprint $table) {
+
+            $table->dropUnique(['cpf_cnpj']);
+            $table->dropUnique(['email']);
+
             $table->string('cpf_cnpj')->nullable()->change();
             $table->string('phone')->nullable()->change();
             $table->string('whatsapp')->nullable()->change();
@@ -24,11 +28,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('clients', function (Blueprint $table) {
-            $table->string('cpf_cnpj')->unique()->change();
-            $table->string('phone')->change();
-            $table->string('whatsapp')->change();
-            $table->string('email')->unique()->change();
-        });
+        // Schema::table('clients', function (Blueprint $table) {
+        //     $table->string('cpf_cnpj')->unique()->change();
+        //     $table->string('phone')->change();
+        //     $table->string('whatsapp')->change();
+        //     $table->string('email')->unique()->change();
+        // });
     }
 };
