@@ -47,11 +47,11 @@ class UserSeed extends Seeder
         ]);
 
         User::firstOrCreate([
-            'email' => 'suprimentos@andradeengenhariaeletrica.com.br',
+            'email' => 'thiago.andrade@andradeengenhariaeletrica.com.br',
         ],
         [
             'name' => 'Tiago Andrade',
-            'email' => 'suprimentos@andradeengenhariaeletrica.com.br',
+            'email' => 'thiago.andrade@andradeengenhariaeletrica.com.br',
             'password' => Hash::make('@123Mudar'),
             'phone' => '99999999999',
             'whatsapp' => '999999999999',
