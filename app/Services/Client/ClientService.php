@@ -39,8 +39,8 @@ class ClientService
             $rules = [
                 'name' => 'required|string|max:255',
                 'cpf_cnpj' => 'required|string|max:255',
-                'phone' => 'required|string|max:255',
-                'whatsapp' => 'required|string|max:255',
+                'phone' => 'nullable|string|max:255',
+                'whatsapp' => 'nullable|string|max:255',
                 'email' => 'required|string|max:255',
                 'address' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
@@ -68,8 +68,8 @@ class ClientService
             $rules = [
                 'fantasy_name' => 'required|string|max:255',
                 'cpf_cnpj' => 'required|string|max:255',
-                'phone' => 'required|string|max:255',
-                'whatsapp' => 'required|string|max:255',
+                'phone' => 'nullable|string|max:255',
+                'whatsapp' => 'nullable|string|max:255',
                 'email' => 'required|string|max:255',
                 'address' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
