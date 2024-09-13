@@ -3,12 +3,15 @@
 namespace App\Services\Order;
 
 use App\Enums\CompanyPositionEnum;
+use App\Enums\OrderTypeEnum;
 use App\Enums\PurchaseStatusEnum;
+use App\Enums\SolicitationStatusEnum;
 use App\Models\Item;
 use Exception;
 use App\Models\Order;
 use App\Models\OrderFile;
 use App\Models\Release;
+use App\Models\Solicitation;
 use App\Trait\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -121,18 +124,20 @@ class OrderService
             $request['category_id'] = $request['category_id'] === 'null' ? null : $request['category_id'];
             $request['purchase_status'] = $request['purchase_status'] === 'null' ? null : $request['purchase_status'];
             $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
+            $request['purchase_date'] = $request['purchase_date'] === 'null' ? null : $request['purchase_date'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
                 'date' => 'required|date',
                 'construction_id' => 'required|integer',
                 'user_id' => 'required|integer',
-                'supplier_id' => 'required|integer',
+                'supplier_id' => 'nullable|integer',
                 'quantity_items' => 'required|integer',
                 'description' => 'required|string',
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'nullable|string|max:255',
+                'purchase_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
             ];
@@ -143,11 +148,17 @@ class OrderService
 
             $data = $validator->validated();
 
+            if(
+                $data['purchase_status'] == PurchaseStatusEnum::Resolved->value
+            ){
+                $data['purchase_date'] = $data['purchase_date'] ?? Carbon::now()->format('Y-m-d');
+            }
+
             if((float)$data['total_value'] <= 300){
                 $data['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
             }
 
-            if($data['payment_method'] == 'Cash'){
+            if($data['payment_method'] == 'Cash' || $data['order_type'] == OrderTypeEnum::Reimbursement->value){
                 $data['purchase_status'] = PurchaseStatusEnum::RequestFinance->value;
             }
 
@@ -156,6 +167,22 @@ class OrderService
             }
 
             $order = Order::create($data);
+
+            if($data['purchase_status'] == PurchaseStatusEnum::RequestFinance->value){
+                $solicitation_type = $data['order_type'] == OrderTypeEnum::Reimbursement->value ? 'Reimbursement' : 'Payment';
+                $solicitation = Solicitation::create([
+                    'order_id' => $order->id,
+                    'solicitation_type' => $solicitation_type,
+                    'total_value' => $order->total_value,
+                    'supplier_id' => $order->supplier_id,
+                    'user_id' => $order->user_id,
+                    'construction_id' => $order->construction_id,
+                    'status' =>  SolicitationStatusEnum::Pending->value,
+                    'payment_date' => null,
+                ]);
+
+                $order['solicitation'] = $solicitation;
+            }
 
             if(isset($request->items)){
                 $items = $request->items;
@@ -237,23 +264,29 @@ class OrderService
         try {
             $request['bank_id'] = $request['bank_id'] === 'null' ? null : $request['bank_id'];
             $request['category_id'] = $request['category_id'] === 'null' ? null : $request['category_id'];
+            $request['purchase_status'] = $request['purchase_status'] === 'null' ? null : $request['purchase_status'];
+            $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
+            $request['purchase_date'] = $request['purchase_date'] === 'null' ? null : Carbon::parse($request['purchase_date'])->format('Y-m-d');
 
             $rules = [
                 'order_type' => 'required|string|max:255',
                 'date' => 'required|date',
                 'construction_id' => 'required|integer',
                 'user_id' => 'required|integer',
-                'supplier_id' => 'required|integer',
+                'supplier_id' => 'nullable|integer',
                 'quantity_items' => 'required|integer',
                 'description' => 'required|string',
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'required|string|max:255',
+                'purchase_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            $data = $request->all();
+
+            $validator = Validator::make($data, $rules);
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
@@ -267,10 +300,38 @@ class OrderService
                 $orderToUpdate->purchase_status != PurchaseStatusEnum::Resolved->value
                 and $data['purchase_status'] == PurchaseStatusEnum::Resolved->value
             ){
-                $data['purchase_date'] = Carbon::now()->format('Y-m-d');
-            }            
-            
+                $data['purchase_date'] = $data['purchase_date'] ?? Carbon::now()->format('Y-m-d');
+            }
+
+            if((float)$data['total_value'] <= 300){
+                $data['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
+            }
+
+            if($data['payment_method'] == 'Cash' || $data['order_type'] == OrderTypeEnum::Reimbursement->value){
+                $data['purchase_status'] = PurchaseStatusEnum::RequestFinance->value;
+            }
+
+            if(!isset($data['purchase_status']) || $data['purchase_status'] == 'null'){
+                $data['purchase_status'] = PurchaseStatusEnum::Pending->value;
+            }
+
             $orderToUpdate->update($data);
+
+            // if($data['purchase_status'] == PurchaseStatusEnum::RequestFinance->value){
+            //     $solicitation_type = $data['order_type'] == OrderTypeEnum::Reimbursement->value ? 'Reimbursement' : 'Payment';
+            //     $solicitation = Solicitation::create([
+            //         'order_id' => $orderToUpdate->id,
+            //         'solicitation_type' => $solicitation_type,
+            //         'total_value' => $orderToUpdate->total_value,
+            //         'supplier_id' => $orderToUpdate->supplier_id,
+            //         'user_id' => $orderToUpdate->user_id,
+            //         'construction_id' => $orderToUpdate->construction_id,
+            //         'status' =>  SolicitationStatusEnum::Pending->value,
+            //         'payment_date' => null,
+            //     ]);
+
+            //     $orderToUpdate['solicitation'] = $solicitation;
+            // }
 
             if(isset($request['items'])){
                 foreach($request['items'] as $item){

@@ -81,11 +81,25 @@ class SolicitationService
 
             $solicitation = Solicitation::create($data);
 
-            if($data['status'] === SolicitationStatusEnum::Pending->value){
-                Order::find($data['order_id'])->update([
-                    'purchase_status' => PurchaseStatusEnum::RequestFinance->value
-                ]);
-            }
+            switch ($data['status']) {
+                case SolicitationStatusEnum::Pending->value:
+                    Order::find($data['order_id'])->update([
+                        'purchase_status' => PurchaseStatusEnum::RequestFinance->value
+                    ]);
+                    break;
+            
+                case SolicitationStatusEnum::Rejected->value:
+                    Order::find($data['order_id'])->update([
+                        'purchase_status' => PurchaseStatusEnum::Pending->value
+                    ]);
+                    break;
+            
+                case SolicitationStatusEnum::Finished->value:
+                    Order::find($data['order_id'])->update([
+                        'purchase_status' => PurchaseStatusEnum::Resolved->value
+                    ]);
+                    break;
+            }            
 
             return ['status' => true, 'data' => $solicitation];
         } catch (Exception $error) {
@@ -119,17 +133,25 @@ class SolicitationService
 
             $solicitationToUpdate->update($data);
 
-            if($data['status'] === SolicitationStatusEnum::Pending->value){
-                Order::find($data['order_id'])->update([
-                    'purchase_status' => PurchaseStatusEnum::RequestFinance->value
-                ]);
-            }
-
-            if($data['status'] === SolicitationStatusEnum::Rejected->value){
-                Order::find($data['order_id'])->update([
-                    'purchase_status' => PurchaseStatusEnum::Pending->value
-                ]);
-            }
+            switch ($data['status']) {
+                case SolicitationStatusEnum::Pending->value:
+                    Order::find($data['order_id'])->update([
+                        'purchase_status' => PurchaseStatusEnum::RequestFinance->value
+                    ]);
+                    break;
+            
+                case SolicitationStatusEnum::Rejected->value:
+                    Order::find($data['order_id'])->update([
+                        'purchase_status' => PurchaseStatusEnum::Pending->value
+                    ]);
+                    break;
+            
+                case SolicitationStatusEnum::Finished->value:
+                    Order::find($data['order_id'])->update([
+                        'purchase_status' => PurchaseStatusEnum::Resolved->value
+                    ]);
+                    break;
+            } 
 
             return ['status' => true, 'data' => $solicitationToUpdate];
         } catch (Exception $error) {

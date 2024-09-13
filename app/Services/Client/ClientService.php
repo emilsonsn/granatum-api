@@ -66,7 +66,7 @@ class ClientService
     {
         try {
             $rules = [
-                'fantasy_name' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'cpf_cnpj' => 'required|string|max:255',
                 'phone' => 'nullable|string|max:255',
                 'whatsapp' => 'nullable|string|max:255',
