@@ -5,7 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FunnelController;
+use App\Http\Controllers\FunnelStepController;
+use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SolicitationController;
 use App\Http\Controllers\SupplierController;
@@ -119,6 +123,38 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [SolicitationController::class, 'create']);
         Route::patch('{id}', [SolicitationController::class, 'update']);
         Route::delete('{id}', [SolicitationController::class, 'delete']);
+    });
+
+    Route::prefix('lead')->group(function(){
+        Route::get('search', [LeadController::class, 'search']);
+        Route::get('{id}', [LeadController::class, 'getById']);
+        Route::post('create', [LeadController::class, 'create']);
+        Route::patch('{id}', [LeadController::class, 'update']);
+        Route::delete('{id}', [LeadController::class, 'delete']);
+    });
+
+    Route::prefix('funnel')->group(function(){
+        Route::get('search', [FunnelController::class, 'search']);
+        Route::get('{id}', [FunnelController::class, 'getById']);
+        Route::post('create', [FunnelController::class, 'create']);
+        Route::patch('{id}', [FunnelController::class, 'update']);
+        Route::delete('{id}', [FunnelController::class, 'delete']);
+    });
+
+    Route::prefix('funnel-step')->group(function(){
+        Route::get('search', [FunnelStepController::class, 'search']);
+        Route::get('{id}', [FunnelStepController::class, 'getById']);
+        Route::post('create', [FunnelStepController::class, 'create']);
+        Route::patch('{id}', [FunnelStepController::class, 'update']);
+        Route::delete('{id}', [FunnelStepController::class, 'delete']);
+    });
+
+    Route::prefix('partner')->group(function(){
+        Route::get('search', [PartnerController::class, 'search']);
+        Route::get('{id}', [PartnerController::class, 'getById']);
+        Route::post('create', [PartnerController::class, 'create']);
+        Route::patch('{id}', [PartnerController::class, 'update']);
+        Route::delete('{id}', [PartnerController::class, 'delete']);
     });
 
     Route::prefix('task')->group(function(){
