@@ -15,51 +15,21 @@ class UserSeed extends Seeder
     {
 
         User::firstOrCreate([
-            'email' => 'igormatos@andradeengenhariaeletrica.com.br',
+            'email' => 'admin@admin',
         ],
         [
-            'name' => 'Igor Matos',
-            'email' => 'igormatos@andradeengenhariaeletrica.com.br',
-            'password' => Hash::make('@123Mudar'),
+            'name' => 'Administrador',
+            'email' => 'admin@admin',
+            'password' => Hash::make('admin'),
             'phone' => '99999999999',
             'whatsapp' => '999999999999',
-            'cpf_cnpj' => '12345678910',
+            'cpf_cnpj' => '13754674412',
             'birth_date' => '2024-09-05',
             'company_position_id' => 1,
             'sector_id' => null,
             'is_active' => true,
         ]);        
 
-        User::firstOrCreate([
-            'email' => 'alana@andradeengenharia.com.br',
-        ],
-        [
-            'name' => 'Alana Andrade',
-            'email' => 'alana@andradeengenharia.com.br',
-            'password' => Hash::make('@123Mudar'),
-            'phone' => '99999999999',
-            'whatsapp' => '999999999999',
-            'cpf_cnpj' => '12345678911',
-            'birth_date' => '2024-09-05',
-            'company_position_id' => 2,
-            'sector_id' => null,
-            'is_active' => true,
-        ]);
-
-        User::firstOrCreate([
-            'email' => 'thiago.andrade@andradeengenhariaeletrica.com.br',
-        ],
-        [
-            'name' => 'Tiago Andrade',
-            'email' => 'thiago.andrade@andradeengenhariaeletrica.com.br',
-            'password' => Hash::make('@123Mudar'),
-            'phone' => '99999999999',
-            'whatsapp' => '999999999999',
-            'cpf_cnpj' => '12345678912',
-            'birth_date' => '2024-09-05',
-            'company_position_id' => 3,
-            'sector_id' => null,
-            'is_active' => true,
-        ]);
+       
     }
 }
