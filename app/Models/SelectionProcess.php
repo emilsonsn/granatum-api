@@ -16,6 +16,7 @@ class SelectionProcess extends Model
     public $table = 'selection_process';
 
     protected $fillable = [
+        'title',
         'total_candidates',
         'available_vacancies',
         'user_id',

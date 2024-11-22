@@ -32,6 +32,7 @@ return new class extends Migration
 
         Schema::create('selection_process', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->integer('total_candidates')->nullable();
             $table->integer('available_vacancies');
             $table->unsignedBigInteger('user_id');
@@ -62,6 +63,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('selection_process_status');
+        Schema::dropIfExists('status');
         Schema::dropIfExists('selection_process');
         Schema::dropIfExists('vacancies');
         Schema::dropIfExists('professions');

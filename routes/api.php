@@ -11,12 +11,15 @@ use App\Http\Controllers\FunnelStepController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\ProfessionController;
+use App\Http\Controllers\SelectionProcessController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SolicitationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TravelController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VacancyController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Http\Request;
 
@@ -133,6 +136,30 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [TravelController::class, 'update']);
         Route::delete('{id}', [TravelController::class, 'delete']);
         Route::delete('file/{id}', [TravelController::class, 'deleteFile']);
+    });
+
+    Route::prefix('profession')->group(function(){
+        Route::get('search', [ProfessionController::class, 'search']);
+        Route::get('{id}', [ProfessionController::class, 'getById']);        
+        Route::post('create', [ProfessionController::class, 'create']);
+        Route::patch('{id}', [ProfessionController::class, 'update']);
+        Route::delete('{id}', [ProfessionController::class, 'delete']);
+    });
+
+    Route::prefix('vacancy')->group(function(){
+        Route::get('search', [VacancyController::class, 'search']);
+        Route::get('{id}', [VacancyController::class, 'getById']);        
+        Route::post('create', [VacancyController::class, 'create']);
+        Route::patch('{id}', [VacancyController::class, 'update']);
+        Route::delete('{id}', [VacancyController::class, 'delete']);
+    });
+
+    Route::prefix('selection-process')->group(function(){
+        Route::get('search', [SelectionProcessController::class, 'search']);
+        Route::get('{id}', [SelectionProcessController::class, 'getById']);        
+        Route::post('create', [SelectionProcessController::class, 'create']);
+        Route::patch('{id}', [SelectionProcessController::class, 'update']);
+        Route::delete('{id}', [SelectionProcessController::class, 'delete']);
     });
 
     Route::prefix('dashboard')->group(function(){
