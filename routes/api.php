@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\EvolutionEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,15 @@ Route::post('updatePassword', [UserController::class, 'updatePassword']);
 
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);
+
+Route::post('/evolution-data', function (Request $request) {
+    $data = $request->all();
+
+    broadcast(new EvolutionEvent($data));
+
+    return response()->json(['status' => 'success']);
+});
+
 
 Route::middleware('jwt')->group(function(){
 
