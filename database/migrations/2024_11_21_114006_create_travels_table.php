@@ -32,7 +32,7 @@ return new class extends Migration
 
         Schema::create('travel_attachments', function (Blueprint $table) {
             $table->id();
-            $table->string('filename');
+            $table->string('name');
             $table->string('path');
             $table->unsignedBigInteger('travel_id');
             $table->timestamps();

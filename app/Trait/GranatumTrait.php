@@ -3,6 +3,7 @@
 namespace App\Trait;
 
 use App\Models\Order;
+use App\Models\Travel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -64,10 +65,15 @@ Trait GranatumTrait
         return $response->json();
     }
 
-    protected function sendAttachs($orderId, $releaseId)
+    protected function sendAttachs($id, $releaseId, $model = 'order')
     {
-        $order = Order::find($orderId);
-        $files = $order->files;
+        if($model == 'order'){
+            $order = Order::find($id);
+            $files = $order->files;
+        }else{
+            $travels = Travel::find($id);
+            $files = $travels->files;
+        }
     
         foreach($files as $file){
             $relativePath = str_replace(asset('storage') . '/', '', $file->path);

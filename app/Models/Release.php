@@ -23,6 +23,7 @@ class Release extends Model
         'value',
         'user_id',
         'order_id',
+        'travel_id',
         'api_response'
     ];
 
@@ -32,6 +33,10 @@ class Release extends Model
 
     public function order(){
         return $this->belongsTo(Order::class);
+    }
+
+    public function travel(){
+        return $this->belongsTo(Travel::class);
     }
  
 }

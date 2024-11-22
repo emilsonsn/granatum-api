@@ -32,4 +32,12 @@ class Travel extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function files(){
+        return $this->hasMany(TravelAttachment::class);
+    }
+
+    public function releases(){
+        return $this->hasMany(Release::class);
+    }
 }

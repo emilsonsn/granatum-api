@@ -2,16 +2,20 @@
 
 namespace App\Services\Travel;
 
+use App\Models\Release;
 use Exception;
 use App\Models\Travel;
 use App\Models\TravelAttachment;
+use App\Trait\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TravelService
 {
+    use GranatumTrait;
 
     public function search($request)
     {
@@ -136,7 +140,7 @@ class TravelService
                     $path = $attachment->store('attachments');
 
                     TravelAttachment::create([            
-                        'filename' => $name,
+                        'name' => $name,
                         'path' => $path,
                         'travel_id' => $travel->id,
                     ]);
@@ -191,7 +195,7 @@ class TravelService
                     $path = $attachment->store('attachments');
                     
                     TravelAttachment::create([            
-                        'filename' => $name,
+                        'name' => $name,
                         'path' => $path,
                         'travel_id' => $travelToUpdate->id,
                     ]);
@@ -203,6 +207,70 @@ class TravelService
             return ['status' => true, 'data' => $travelToUpdate];
         } catch (Exception $error) {
             DB::rollBack();
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function deleteFile($id){
+        try{
+            $travelAttachment = TravelAttachment::find($id);
+
+            if(!isset($travelAttachment)) throw new Exception ("Arquivo não encontrado");
+
+            Storage::delete($travelAttachment->path);
+
+            $travelAttachmentName= $travelAttachment->name;
+            $travelAttachment->delete();
+
+            return ['status' => true, 'data' => $travelAttachmentName];
+        }catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function upRelease($id) {
+        try{
+            
+            $travel = Travel::find($id);
+
+            if(!isset($travel)) throw new Exception('Viagem não encontrada');
+
+            if(count($travel->releases)) throw new Exception('Lançamento já foi efetuado');
+            
+            $description = $travel->description;
+            $value = $travel->total_value;
+            $purchaseDate = $travel->purchase_date;
+            $accountBankId = $travel->bank_id;
+            $categoryId =  $travel->category_id;
+    
+            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
+    
+            if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
+
+            Release::create([
+                'release_id' => $response['id'],
+                'category_id' => $categoryId,
+                'account_bank_id' => $accountBankId,
+                'description' => $description,
+                'value' => $value,
+                'user_id' => auth()->user()->id,
+                'order_id' => null,
+                'travel_id' => $id,
+                'api_response' => json_encode($response) ?? null
+            ]);
+
+            $travel->update([
+                'has_granatum' => true,
+                'purchase_status' => 'Resolved'
+            ]);
+
+            $attachResponse = $this->sendAttachs($travel->id, $response['id'], 'travel');
+
+            if(isset($attachResponse['errors'])) throw new Exception ("Não foi possível enviar os anexos");
+    
+            return ['status' => true, 'message' => 'Lançamento criado com sucesso'];
+
+        }catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }

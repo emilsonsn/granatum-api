@@ -15,6 +15,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SolicitationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TravelController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Http\Request;
@@ -120,6 +121,18 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [OrderController::class, 'delete']);
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
         Route::delete('item/{id}', [OrderController::class, 'delete_order_item']);
+    });
+
+    Route::prefix('travel')->group(function(){
+        Route::get('search', [TravelController::class, 'search']);
+        Route::get('getBank', [OrderController::class, 'getBank']);
+        Route::get('getCategories', [OrderController::class, 'getCategories']);
+        Route::get('{id}', [TravelController::class, 'getById']);        
+        Route::post('create', [TravelController::class, 'create']);
+        Route::post('granatum/{orderId}', [TravelController::class, 'upRelease']);
+        Route::patch('{id}', [TravelController::class, 'update']);
+        Route::delete('{id}', [TravelController::class, 'delete']);
+        Route::delete('file/{id}', [TravelController::class, 'deleteFile']);
     });
 
     Route::prefix('dashboard')->group(function(){

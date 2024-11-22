@@ -16,7 +16,7 @@ class TravelAttachment extends Model
     public $table = 'travels';
 
     protected $fillable = [
-        'filename',
+        'name',
         'path',
         'travel_id',
     ];
