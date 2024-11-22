@@ -19,7 +19,8 @@ class SelectionProcessService
             $perPage = $request->input('take', 10);
             $is_active = $request->is_active ?? null;
 
-            $selectionProcesses = SelectionProcess::orderBy('id', 'desc');
+            $selectionProcesses = SelectionProcess::orderBy('id', 'desc')
+                ->with('vacancy');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
@@ -45,6 +46,7 @@ class SelectionProcessService
         try {
 
             $selectionProcess = SelectionProcess::where('id', $id)
+                ->with('vacancy')
                 ->first();
             
             if(!isset($selectionProcess)) throw new Exception('Processo seletivo não encontrado');

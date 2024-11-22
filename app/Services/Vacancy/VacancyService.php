@@ -21,7 +21,7 @@ class VacancyService
             $profession_id = $request->profession_id ?? null;
 
             $vacancies = Vacancy::orderBy('id', 'desc')
-                ->with('user');
+                ->with('profession');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
