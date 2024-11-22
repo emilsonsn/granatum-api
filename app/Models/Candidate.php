@@ -21,6 +21,7 @@ class Candidate extends Model
         'email',
         'cpf',
         'phone',
+        'is_active',
         'profession_id',
     ];
 

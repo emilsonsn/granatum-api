@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('cpf')->nullable()->unique();
             $table->string('phone');
+            $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('profession_id');
             $table->timestamps();
             $table->softDeletes();
@@ -42,7 +43,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidate_selection_process_status');
+        Schema::dropIfExists('candidate_status');
         Schema::dropIfExists('candidates');
     }
 };
