@@ -4,8 +4,10 @@ namespace App\Services\Travel;
 
 use Exception;
 use App\Models\Travel;
+use App\Models\TravelAttachment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class TravelService
@@ -15,9 +17,12 @@ class TravelService
     {
         try {
             $perPage = $request->input('take', 10);
+            $date_from = $request->date_from ?? null;
+            $date_to = $request->date_to ?? null;
+
 
             $travels = Travel::orderBy('id', 'desc')
-                ->with(['user']);
+                ->with('user');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
@@ -30,6 +35,18 @@ class TravelService
 
             if($request->filled('user_id')){
                 $travels->where('user_id', $request->user_id);
+            }
+
+            if($date_from && $date_to){
+                if($date_from == $date_to){
+                    $travels->whereDate('created_at', $date_from);
+                }else{
+                    $travels->whereBetween('created_at', [$date_from, $date_to]);
+                }
+            }else if($date_from){
+                $travels->whereDate('created_at', '>' , $date_from);
+            }else if($date_to){
+                $travels->whereDate('created_at', '<' , $date_from);
             }
 
             $travels = $travels->paginate($perPage);
@@ -45,7 +62,7 @@ class TravelService
         try {
 
             $travel = Travel::where('id', $id)
-                ->with(['user'])
+                ->with('user')
                 ->first();
             
             if(!isset($travel)) throw new Exception('Viagem não encontrada');
@@ -86,12 +103,15 @@ class TravelService
     public function create($request)
     {
         try {
+            // 'Pending', 'Resolved', 'RequestFinance', 'RequestManager' Tarcio
             $rules = [
                 'description' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
                 'transport' => ['required', 'string', 'max:255'],                
                 'total_value' => ['required', 'numeric'],                                
                 'observations' => ['nullable', 'string'],
+                'purchase_date' => ['required', 'date'],
+                'attachments' => ['nullable', 'array']
             ];
 
             $requestData = $request->all();
@@ -102,10 +122,32 @@ class TravelService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
+            if(Carbon::parser($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
+                $requestData['purchase_status'] = 'RequestManager';
+            }
+
+            DB::beginTransaction();
+
             $travel = Travel::create($requestData);
 
+            if(isset($requestData['attachments'])){
+                foreach($requestData['attachments'] as $attachment){
+                    $name = $attachment->getClientOriginalName();
+                    $path = $attachment->store('attachments');
+
+                    TravelAttachment::create([            
+                        'filename' => $name,
+                        'path' => $path,
+                        'travel_id' => $travel->id,
+                    ]);
+                }
+            }
+            
+            DB::commit();
+            
             return ['status' => true, 'data' => $travel];
         } catch (Exception $error) {
+            DB::rollBack();
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
@@ -113,6 +155,7 @@ class TravelService
     public function update($request, $id)
     {
         try {
+            // 'Pending', 'Resolved', 'RequestFinance', 'RequestManager' Tarcio
             $travelToUpdate = Travel::find($id);
 
             if(isset($travelToUpdate)) throw new Exception('Viagem não encontrada');
@@ -120,9 +163,10 @@ class TravelService
             $rules = [
                 'description' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
-                'transport' => ['required', 'string', 'max:255'],                
-                'total_value' => ['required', 'numeric'],                                
+                'transport' => ['required', 'string', 'max:255'],
+                'total_value' => ['required', 'numeric'],
                 'observations' => ['nullable', 'string'],
+                'purchase_date' => ['required', 'date']
             ];
 
             $requestData = $request->all();
@@ -133,10 +177,32 @@ class TravelService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
+            if(Carbon::parser($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
+                $requestData['purchase_status'] = 'RequestManager';
+            }
+
+            DB::beginTransaction();
+
             $travelToUpdate = $travelToUpdate->update($requestData);
+
+            if(isset($requestData['attachments'])){
+                foreach($requestData['attachments'] as $attachment){
+                    $name = $attachment->getClientOriginalName();
+                    $path = $attachment->store('attachments');
+                    
+                    TravelAttachment::create([            
+                        'filename' => $name,
+                        'path' => $path,
+                        'travel_id' => $travelToUpdate->id,
+                    ]);
+                }
+            }
+            
+            DB::commit();
 
             return ['status' => true, 'data' => $travelToUpdate];
         } catch (Exception $error) {
+            DB::rollBack();
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }

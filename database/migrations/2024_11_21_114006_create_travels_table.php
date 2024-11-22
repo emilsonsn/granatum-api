@@ -29,6 +29,17 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('id')->on('users');
         });
+
+        Schema::create('travel_attachments', function (Blueprint $table) {
+            $table->id();
+            $table->string('filename');
+            $table->string('path');
+            $table->unsignedBigInteger('travel_id');
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('travel_id')->references('id')->on('travels');
+        });
     }
 
     /**
@@ -36,6 +47,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('travel_attachments');
         Schema::dropIfExists('travels');
     }
 };
