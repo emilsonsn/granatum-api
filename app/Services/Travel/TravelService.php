@@ -23,7 +23,7 @@ class TravelService
             $perPage = $request->input('take', 10);
             $date_from = $request->date_from ?? null;
             $date_to = $request->date_to ?? null;
-
+            $purchase_status = $request->purchase_status ?? null;
 
             $travels = Travel::orderBy('id', 'desc')
                 ->with('user');
@@ -39,6 +39,10 @@ class TravelService
 
             if($request->filled('user_id')){
                 $travels->where('user_id', $request->user_id);
+            }
+
+            if($purchase_status){
+                $travels->where('purchase_status', $purchase_status);
             }
 
             if($date_from && $date_to){
