@@ -6,7 +6,7 @@ use App\Models\Release;
 use Exception;
 use App\Models\Travel;
 use App\Models\TravelAttachment;
-use App\Trait\GranatumTrait;
+use App\Traits\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -126,7 +126,7 @@ class TravelService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            if(Carbon::parser($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
+            if(Carbon::parse($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
                 $requestData['purchase_status'] = 'RequestManager';
             }
 
@@ -162,7 +162,7 @@ class TravelService
             // 'Pending', 'Resolved', 'RequestFinance', 'RequestManager' Tarcio
             $travelToUpdate = Travel::find($id);
 
-            if(isset($travelToUpdate)) throw new Exception('Viagem não encontrada');
+            if(!isset($travelToUpdate)) throw new Exception('Viagem não encontrada');
 
             $rules = [
                 'description' => ['required', 'string', 'max:255'],
@@ -181,25 +181,28 @@ class TravelService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            if(Carbon::parser($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
+            if(Carbon::parse($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
                 $requestData['purchase_status'] = 'RequestManager';
             }
 
             DB::beginTransaction();
 
-            $travelToUpdate = $travelToUpdate->update($requestData);
-
+            $travelToUpdate->update($requestData);
+            
+            $attachments = [];
             if(isset($requestData['attachments'])){
                 foreach($requestData['attachments'] as $attachment){
                     $name = $attachment->getClientOriginalName();
                     $path = $attachment->store('attachments');
                     
-                    TravelAttachment::create([            
+                    $attachments[] = TravelAttachment::create([
                         'name' => $name,
                         'path' => $path,
                         'travel_id' => $travelToUpdate->id,
                     ]);
                 }
+
+                $travelToUpdate['attachments'] = $attachments;
             }
             
             DB::commit();
@@ -275,18 +278,26 @@ class TravelService
         }
     }
 
-    public function delete($id){
-        try{
+    public function delete($id)
+    {
+        try {
             $travel = Travel::find($id);
 
-            if(!$travel) throw new Exception('Viagem não encontrada');
+            if (!$travel) throw new Exception('Viagem não encontrada');
 
-            $travelName = $travel->name;
+            $travelDescription = $travel->description;
+
+            foreach ($travel->files as $file) {
+                Storage::delete($file->path);
+                $file->delete();
+            }
+
             $travel->delete();
 
-            return ['status' => true, 'data' => $travelName];
-        }catch(Exception $error) {
+            return ['status' => true, 'data' => $travelDescription];
+        } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+
 }

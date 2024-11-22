@@ -12,7 +12,7 @@ use App\Models\Order;
 use App\Models\OrderFile;
 use App\Models\Release;
 use App\Models\Solicitation;
-use App\Trait\GranatumTrait;
+use App\Traits\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
