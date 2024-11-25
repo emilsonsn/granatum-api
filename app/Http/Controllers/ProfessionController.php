@@ -56,6 +56,12 @@ class ProfessionController extends Controller
         return $result;
     }
 
+    public function cards(Request $request) {
+        $result = $this->professionService->cards($request);
+        return $result;
+    }
+
+
     /**
      * @OA\Get(
      *     path="/profession/{id}",

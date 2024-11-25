@@ -148,6 +148,7 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('profession')->group(function(){
         Route::get('search', [ProfessionController::class, 'search']);
+        Route::get('cards', [ProfessionController::class, 'cards']);        
         Route::get('{id}', [ProfessionController::class, 'getById']);        
         Route::post('create', [ProfessionController::class, 'create']);
         Route::patch('{id}', [ProfessionController::class, 'update']);

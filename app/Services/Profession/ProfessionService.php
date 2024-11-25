@@ -56,20 +56,13 @@ class ProfessionService
             $totalProfessionsMonth = Profession::whereMonth('created_at', Carbon::now())
                 ->count();
 
-            $activeProfessions = Profession::with('selectionProcesses', function($query){
-                $query->where('is_active', true);
-            })->count();
-                
-            $inactiveProfessions = Profession::doenstHave('selectionProcesses', function($query){
-                $query->where('is_active', true);
-            })->count();
+            $total = Profession::count();
 
             return [
                'status' => true,
                 'data' => [
                     'totalProfessionsMonth' => $totalProfessionsMonth,
-                    'activeProfessions' => $activeProfessions,
-                    'inactiveProfessions' => $inactiveProfessions,                                      
+                    'totalProfessions' => $total,
                 ],
             ];
             
