@@ -170,6 +170,341 @@
                 }
             }
         },
+        "/candidate/search": {
+            "get": {
+                "tags": [
+                    "Candidatos"
+                ],
+                "summary": "Listar candidatos",
+                "operationId": "8f0657401892a7593e209c0169910d0d",
+                "parameters": [
+                    {
+                        "name": "search_term",
+                        "in": "query",
+                        "description": "Termo para busca",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "Status ativo do candidato",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "profession_id",
+                        "in": "query",
+                        "description": "ID da profissão do candidato",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de candidatos retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/candidate/create": {
+            "post": {
+                "tags": [
+                    "Candidatos"
+                ],
+                "summary": "Criar um novo candidato",
+                "operationId": "c1e329020464a642d4999c506bbb3830",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nome do candidato",
+                                        "type": "string"
+                                    },
+                                    "surname": {
+                                        "description": "Sobrenome do candidato",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "E-mail do candidato",
+                                        "type": "string"
+                                    },
+                                    "cpf": {
+                                        "description": "CPF do candidato",
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "description": "Telefone do candidato",
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "description": "Status ativo do candidato",
+                                        "type": "boolean"
+                                    },
+                                    "profession_id": {
+                                        "description": "ID da profissão do candidato",
+                                        "type": "integer"
+                                    },
+                                    "attachments[]": {
+                                        "description": "Anexos do candidato",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "processes": {
+                                        "description": "Processos de seleção relacionados",
+                                        "type": "string",
+                                        "example": "1,2,3"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Candidato criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/candidate/{id}?_method=PATCH": {
+            "post": {
+                "tags": [
+                    "Candidatos"
+                ],
+                "summary": "Atualizar dados de um candidato",
+                "operationId": "613fc3286097e0982fc8c7382de80895",
+                "parameters": [
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "Método HTTP override para PATCH",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "PATCH"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do candidato",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nome do candidato",
+                                        "type": "string"
+                                    },
+                                    "surname": {
+                                        "description": "Sobrenome do candidato",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "E-mail do candidato",
+                                        "type": "string"
+                                    },
+                                    "cpf": {
+                                        "description": "CPF do candidato",
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "description": "Telefone do candidato",
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "description": "Status ativo do candidato",
+                                        "type": "boolean"
+                                    },
+                                    "profession_id": {
+                                        "description": "ID da profissão do candidato",
+                                        "type": "integer"
+                                    },
+                                    "attachments[]": {
+                                        "description": "Anexos do candidato",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "processes": {
+                                        "description": "Processos de seleção relacionados",
+                                        "type": "string",
+                                        "example": "1,2,3"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Candidato atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/candidate/{id}": {
+            "delete": {
+                "tags": [
+                    "Candidatos"
+                ],
+                "summary": "Deletar um candidato",
+                "operationId": "4762533944ba64e487f1aceb0827e602",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do candidato",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Candidato deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": "Nome do candidato deletado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Candidato não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Candidato não encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/profession/search": {
             "get": {
                 "tags": [
@@ -1553,6 +1888,10 @@
         {
             "name": "Autenticação",
             "description": "Endpoints relacionados à autenticação de usuários"
+        },
+        {
+            "name": "Candidatos",
+            "description": "Endpoints relacionados à gestão de candidatos"
         },
         {
             "name": "Processos Seletivos",

@@ -51,9 +51,8 @@ class CandidateService
     public function create($request)
     {
         try {
-
             $request['attachments'] = $request['attachments'] == 'null' ? null : $request['attachments'];
-            $request['is_active'] = $request['is_active'] == 'null' ? null : $request['is_active'];
+            $request['is_active'] = $request['is_active'] !== 'false' ? true : false;
             $request['processes'] = $request['processes'] == 'null' ? null : $request['processes'];
 
             $rules = [
@@ -78,23 +77,23 @@ class CandidateService
 
             $candidate = Candidate::create($data);
 
-            if(isset($request->attachments)){      
-                $request['attachments'] = is_array($request->attachments) ? $request->attachments : json_decode($request->attachments, true);          
-                foreach($request->attachments as $attachment){
-                    $filename = $attachment['attachment']->filename();
-                    $path = $attachment['attachment']->path();
-                    $processes = [null];
-                    if($request->processes) $processes = explode(',',$request->processes);
-                    foreach($processes as $process){
+            if (isset($request->attachments)) {
+                foreach ($request->attachments as $attachment) {
+                    $filename = $attachment->getClientOriginalName();
+                    $path = $attachment->store('attachments');
+            
+                    $processes = $request->processes ? explode(',', $request->processes) : [null];
+            
+                    foreach ($processes as $process) {
                         CandidateAttachment::create([
                             'name' => $filename,
                             'path' => $path,
                             'candidate_id' => $candidate->id,
                             'selection_process_id' => $process
                         ]);
-                    }                    
+                    }
                 }
-            }
+            }            
 
             if (isset($request->processes)) {
                 $processes = explode(',' ,$request->processes);
@@ -148,21 +147,21 @@ class CandidateService
 
             $candidateToUpdate->update($validator->validated());
 
-            if(isset($request->attachments)){      
-                $request['attachments'] = is_array($request->attachments) ? $request->attachments : json_decode($request->attachments, true);          
-                foreach($request->attachments as $attachment){
-                    $filename = $attachment['attachment']->filename();
-                    $path = $attachment['attachment']->path();
-                    $processes = [null];
-                    if($request->processes) $processes = explode(',',$request->processes);
-                    foreach($processes as $process){
+            if (isset($request->attachments)) {
+                foreach ($request->attachments as $attachment) {
+                    $filename = $attachment->getClientOriginalName();
+                    $path = $attachment->store('attachments');
+            
+                    $processes = $request->processes ? explode(',', $request->processes) : [null];
+            
+                    foreach ($processes as $process) {
                         CandidateAttachment::create([
                             'name' => $filename,
                             'path' => $path,
                             'candidate_id' => $candidateToUpdate->id,
                             'selection_process_id' => $process
                         ]);
-                    }                    
+                    }
                 }
             }
 

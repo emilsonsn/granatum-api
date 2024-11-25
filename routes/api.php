@@ -3,6 +3,7 @@
 use App\Events\EvolutionEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\DashboardController;
@@ -136,6 +137,13 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [TravelController::class, 'update']);
         Route::delete('{id}', [TravelController::class, 'delete']);
         Route::delete('file/{id}', [TravelController::class, 'deleteFile']);
+    });
+
+    Route::prefix('candidate')->group(function(){
+        Route::get('search', [CandidateController::class, 'search']);
+        Route::post('create', [CandidateController::class, 'create']);
+        Route::patch('{id}', [CandidateController::class, 'update']);
+        Route::delete('{id}', [CandidateController::class, 'delete']);
     });
 
     Route::prefix('profession')->group(function(){
