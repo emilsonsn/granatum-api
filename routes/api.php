@@ -157,6 +157,7 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('vacancy')->group(function(){
         Route::get('search', [VacancyController::class, 'search']);
+        Route::get('cards', [VacancyController::class, 'cards']);        
         Route::get('{id}', [VacancyController::class, 'getById']);        
         Route::post('create', [VacancyController::class, 'create']);
         Route::patch('{id}', [VacancyController::class, 'update']);
@@ -165,6 +166,7 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('selection-process')->group(function(){
         Route::get('search', [SelectionProcessController::class, 'search']);
+        Route::get('cards', [VacancyController::class, 'cards']);        
         Route::get('{id}', [SelectionProcessController::class, 'getById']);        
         Route::post('create', [SelectionProcessController::class, 'create']);
         Route::patch('{id}', [SelectionProcessController::class, 'update']);

@@ -69,6 +69,12 @@ class VacancyController extends Controller
         return $result;
     }
 
+
+    public function cards(Request $request) {
+        $result = $this->vacancyService->cards($request);
+        return $result;
+    }
+    
     /**
      * @OA\Get(
      *     path="/vacancy/{id}",
