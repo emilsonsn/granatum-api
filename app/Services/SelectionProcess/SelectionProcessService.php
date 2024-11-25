@@ -68,7 +68,7 @@ class SelectionProcessService
                 $query->where('is_active', true);
             })->count();
                 
-            $inactiveSelectionProcesss = SelectionProcess::doesntHave('selectionProcesses', function($query){
+            $inactiveSelectionProcesss = SelectionProcess::whereDoesntHave('selectionProcesses', function($query){
                 $query->where('is_active', true);
             })->count();
 

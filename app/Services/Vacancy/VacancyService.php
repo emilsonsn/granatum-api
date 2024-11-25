@@ -81,9 +81,10 @@ class VacancyService
             })->count();
                 
             
-            $inactiveVacancys = Vacancy::doesntHave('selectionProcesses', function($query){
+            $inactiveVacancys = Vacancy::whereDoesntHave('selectionProcesses', function($query) {
                 $query->where('is_active', true);
             })->count();
+            
 
             return [
                'status' => true,
