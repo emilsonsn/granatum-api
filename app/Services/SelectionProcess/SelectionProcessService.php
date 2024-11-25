@@ -4,6 +4,7 @@ namespace App\Services\SelectionProcess;
 
 use Exception;
 use App\Models\SelectionProcess;
+use App\Models\Status;
 use App\Traits\GranatumTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -106,6 +107,25 @@ class SelectionProcessService
             if ($validator->fails()) throw new Exception($validator->errors());
 
             $selectionProcess = SelectionProcess::create($requestData);
+
+            $statusList = [
+                [ 'title' => 'Candidato' , 'color' => '#FF5733'], // Laranja
+                [ 'title' => 'Documentos' , 'color' => '#3498DB'], // Azul
+                [ 'title' => 'Entrevista' , 'color' => '#9B59B6'], // Verde
+                [ 'title' => 'Pré-Contrato' , 'color' => '#F1C40F'], // Amarelo
+                [ 'title' => 'Contrato' , 'color' =>'#2ECC71'], // Roxo
+            ];
+            
+            $selectionProcessStatus = [];
+            foreach($statusList as $status){
+                $selectionProcessStatus[] = Status::create([
+                    'title' => $status['title'],
+                    'color' => $status['color'],
+                   'selection_process_id' => $selectionProcess->id,
+                ]);
+            }
+
+            $selectionProcess['status'] = $selectionProcessStatus;
             
             return ['status' => true, 'data' => $selectionProcess];
         } catch (Exception $error) {
