@@ -26,7 +26,7 @@ class TravelService
             $purchase_status = $request->purchase_status ?? null;
 
             $travels = Travel::orderBy('id', 'desc')
-                ->with('user');
+                ->with('user', 'files');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
@@ -131,6 +131,8 @@ class TravelService
             if ($validator->fails()) throw new Exception($validator->errors());
 
             if(Carbon::parse($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
+                $requestData['purchase_status'] = 'RequestFinance';
+            }else{
                 $requestData['purchase_status'] = 'RequestManager';
             }
 
@@ -218,6 +220,32 @@ class TravelService
         }
     }
 
+    public function updateSolicitation($request, $id)
+    {
+        try {
+            $travelToUpdate = Travel::find($id);
+
+            if(!isset($travelToUpdate)) throw new Exception('Viagem não encontrada');
+
+            $rules = [
+                'solicitation_type' => ['required', 'string', 'in:Payment,Reimbursement'],
+            ];
+
+            $requestData = $request->all();
+            $requestData['purchase_status'] =  'RequestFinance';
+
+            $validator = Validator::make($requestData, $rules);
+
+            if ($validator->fails()) throw new Exception($validator->errors());
+
+            $travelToUpdate->update($requestData);
+
+            return ['status' => true, 'data' => $travelToUpdate];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
     public function deleteFile($id){
         try{
             $travelAttachment = TravelAttachment::find($id);
@@ -237,7 +265,6 @@ class TravelService
 
     public function upRelease($id) {
         try{
-            
             $travel = Travel::find($id);
 
             if(!isset($travel)) throw new Exception('Viagem não encontrada');

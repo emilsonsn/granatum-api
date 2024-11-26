@@ -80,11 +80,9 @@ class VacancyService
                 $query->where('is_active', true);
             })->count();
                 
-            
             $inactiveVacancys = Vacancy::whereDoesntHave('selectionProcesses', function($query) {
                 $query->where('is_active', true);
             })->count();
-            
 
             return [
                'status' => true,
@@ -105,7 +103,7 @@ class VacancyService
         try {
             $rules = [
                 'title' => ['required', 'string', 'max:255'],
-                'description' => ['required', 'string'], //@Tarcio -> Longtext (descrição da vaga, texto gigante)
+                'description' => ['required', 'string'],
                 'profession_id' => ['required', 'integer'],
             ];
 

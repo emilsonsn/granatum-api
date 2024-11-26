@@ -135,6 +135,7 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [TravelController::class, 'create']);
         Route::post('granatum/{orderId}', [TravelController::class, 'upRelease']);
         Route::patch('{id}', [TravelController::class, 'update']);
+        Route::patch('solicitation/{id}', [TravelController::class, 'updateSolicitation']);
         Route::delete('{id}', [TravelController::class, 'delete']);
         Route::delete('file/{id}', [TravelController::class, 'deleteFile']);
     });
@@ -166,7 +167,7 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('selection-process')->group(function(){
         Route::get('search', [SelectionProcessController::class, 'search']);
-        Route::get('cards', [VacancyController::class, 'cards']);
+        Route::get('cards', [SelectionProcessController::class, 'cards']);
         Route::get('{id}', [SelectionProcessController::class, 'getById']);        
         Route::post('create', [SelectionProcessController::class, 'create']);
         Route::patch('update-status', [SelectionProcessController::class, 'updateStatus']);

@@ -203,6 +203,12 @@ class TravelController extends Controller
         return $this->response($result);
     }
 
+    public function updateSolicitation(Request $request, $id) {
+        $result = $this->travelService->updateSolicitation($request, $id);
+        if ($result['status']) $result['message'] = "Viagem atualizada com sucesso";
+        return $this->response($result);
+    }
+
     /**
      * @OA\Delete(
      *     path="/travel/file/{id}",

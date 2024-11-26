@@ -26,6 +26,7 @@ class Travel extends Model
         'observations',
         'bank_id',
         'category_id',
+        'solicitation_type',
         'user_id',
     ];
 
