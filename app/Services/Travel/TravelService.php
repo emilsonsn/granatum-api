@@ -68,7 +68,6 @@ class TravelService
     public function getById($id)
     {
         try {
-
             $travel = Travel::where('id', $id)
                 ->with('user')
                 ->first();
@@ -102,7 +101,6 @@ class TravelService
                     'totalValueTravels' => $totalValueTravels,                    
                 ],
             ];
-            
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
@@ -111,7 +109,6 @@ class TravelService
     public function create($request)
     {
         try {
-            // 'Pending', 'Resolved', 'RequestFinance', 'RequestManager' Tarcio
             $rules = [
                 'description' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
@@ -165,7 +162,6 @@ class TravelService
     public function update($request, $id)
     {
         try {
-            // 'Pending', 'Resolved', 'RequestFinance', 'RequestManager' Tarcio
             $travelToUpdate = Travel::find($id);
 
             if(!isset($travelToUpdate)) throw new Exception('Viagem não encontrada');

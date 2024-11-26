@@ -52,6 +52,13 @@ Route::post('/evolution-data', function (Request $request) {
     return response()->json(['status' => 'success']);
 });
 
+Route::prefix('candidate')->group(function(){
+    Route::post('create', [CandidateController::class, 'create']);
+});
+
+Route::prefix('profession')->group(function(){   
+    Route::post('create', [ProfessionController::class, 'create']);
+});
 
 Route::middleware('jwt')->group(function(){
 
@@ -126,6 +133,7 @@ Route::middleware('jwt')->group(function(){
     Route::prefix('travel')->group(function(){
         Route::get('search', [TravelController::class, 'search']);
         Route::get('getBank', [OrderController::class, 'getBank']);
+        Route::get('cards', [TravelController::class, 'cards']);
         Route::get('getCategories', [OrderController::class, 'getCategories']);
         Route::get('{id}', [TravelController::class, 'getById']);        
         Route::post('create', [TravelController::class, 'create']);

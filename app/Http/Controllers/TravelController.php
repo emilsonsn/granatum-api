@@ -69,6 +69,12 @@ class TravelController extends Controller
         return $result;
     }
 
+    public function cards() {
+        $result = $this->travelService->cards();
+        return $result;
+    }
+    
+
     /**
      * @OA\Get(
      *     path="/travel/{id}",
