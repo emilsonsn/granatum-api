@@ -48,6 +48,31 @@ class CandidateService
         }
     }
 
+    public function cards()
+    {
+        try {
+            $totalCandidateActive = Candidate::where('is_active', true)
+                ->count();
+
+            $totalCandidateInactive = Candidate::where('is_active', false)
+                ->count();
+
+            $total = Candidate::count();
+
+            return [
+               'status' => true,
+                'data' => [
+                    'totalCandidates' => $total,
+                    'totalCandidatesActive' => $totalCandidateActive,
+                    'totalCandidatesInactive' => $totalCandidateInactive,
+                ],
+            ];
+            
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
     public function create($request)
     {
         try {

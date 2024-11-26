@@ -64,6 +64,12 @@ class CandidateController extends Controller
         return $result;
     }
 
+    public function cards(){
+        $result = $this->candidateService->cards();
+
+        return $result;
+    }
+
     /**
      * @OA\Post(
      *     path="/candidate/create",

@@ -138,6 +138,7 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('candidate')->group(function(){
         Route::get('search', [CandidateController::class, 'search']);
+        Route::get('cards', [CandidateController::class, 'cards']);
         Route::post('create', [CandidateController::class, 'create']);
         Route::patch('{id}', [CandidateController::class, 'update']);
         Route::delete('{id}', [CandidateController::class, 'delete']);
