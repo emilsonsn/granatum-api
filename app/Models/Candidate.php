@@ -21,6 +21,13 @@ class Candidate extends Model
         'email',
         'cpf',
         'phone',
+        'cep',
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+        'number',
+        'marital_status',
         'is_active',
         'profession_id',
     ];
