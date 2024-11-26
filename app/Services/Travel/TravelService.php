@@ -89,12 +89,10 @@ class TravelService
             $resolvedTravels = Travel::where('purchase_status', 'Resolved')
                 ->whereMonth('created_at', Carbon::now())
                 ->count();
-            $totalValueTravels = Travel::where('purchase_status', 'Resolved')
-                ->whereMonth('created_at', Carbon::now())
+            $totalValueTravels = Travel::whereMonth('created_at', Carbon::now())
                 ->count();
             // ----------- Dashboard 
-            $totalValueMonthTravelsSum = Travel::where('purchase_status', 'Resolved')
-                ->whereMonth('created_at', Carbon::now())
+            $totalValueMonthTravelsSum = Travel::whereMonth('created_at', Carbon::now())
                 ->sum('total_value');
             $pendingMonthTravelsSum = Travel::where('purchase_status', 'Pending')
                 ->whereMonth('created_at', Carbon::now())
