@@ -168,6 +168,12 @@ class SelectionProcessController extends Controller
         return $this->response($result);
     }
 
+    public function updateStatus(Request $request) {
+        $result = $this->selectionProcessService->updateStatus($request);
+        if ($result['status']) $result['message'] = "Candidato movido com sucesso";
+        return $this->response($result);
+    }
+
     /**
      * @OA\Delete(
      *     path="/selection-process/{id}",

@@ -177,6 +177,27 @@ class SelectionProcessService
         }
     }
 
+    public function updateStatus($request)
+    {
+        try {
+            $candidate_id = $request->candidate_id;
+            $status_id = $request->status_id;
+
+            $statusToUpdate = CandidateStatus::where('candidate_id', $candidate_id)
+                ->first();
+
+            if(!isset($statusToUpdate)) throw new Exception('Etapa do candidato não encontrada');
+
+            $statusToUpdate->update([
+                "status_id" => $status_id
+            ]);
+
+            return ['status' => true, 'data' => $statusToUpdate];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
     public function delete($id)
     {
         try {
