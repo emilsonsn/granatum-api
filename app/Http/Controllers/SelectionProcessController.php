@@ -90,7 +90,11 @@ class SelectionProcessController extends Controller
         $result = $this->selectionProcessService->getById($id);
         return $result;
     }
-
+    
+    public function cards() {
+        $result = $this->selectionProcessService->cards();
+        return $result;
+    }
     /**
      * @OA\Post(
      *     path="/selection-process/create",

@@ -70,9 +70,7 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [UserController::class, 'update']);
         Route::delete('{id}', [UserController::class, 'delete']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);
-
         Route::get('position/search', [UserController::class, 'positionSearch']);
-
         Route::get('sector/search', [UserController::class, 'sectorSearch']);
         Route::post('sector/create', [UserController::class, 'sectorCreate']);
         Route::delete('sector/{id}', [UserController::class, 'sectorDelete']);
@@ -83,7 +81,6 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [SupplierController::class, 'create']);
         Route::patch('{id}', [SupplierController::class, 'update']);
         Route::delete('{id}', [SupplierController::class, 'delete']);
-
         Route::get('type/search', [SupplierController::class, 'typeSearch']);
         Route::post('type/create', [SupplierController::class, 'typeCreate']);
         Route::delete('type/{id}', [SupplierController::class, 'typeDelete']);
@@ -94,7 +91,6 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [ServiceController::class, 'create']);
         Route::patch('{id}', [ServiceController::class, 'update']);
         Route::delete('{id}', [ServiceController::class, 'delete']);
-
         Route::get('type/search', [ServiceController::class, 'typeSearch']);
         Route::post('type/create', [ServiceController::class, 'typeCreate']);
         Route::delete('type/{id}', [ServiceController::class, 'typeDelete']);
