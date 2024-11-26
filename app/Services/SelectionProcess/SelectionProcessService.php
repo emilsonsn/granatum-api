@@ -65,13 +65,8 @@ class SelectionProcessService
             $totalSelectionProcesssMonth = SelectionProcess::whereMonth('created_at', Carbon::now())
                 ->count();
 
-            $activeSelectionProcesss = SelectionProcess::with('selectionProcesses', function($query){
-                $query->where('is_active', true);
-            })->count();
-                
-            $inactiveSelectionProcesss = SelectionProcess::whereDoesntHave('selectionProcesses', function($query){
-                $query->where('is_active', true);
-            })->count();
+            $activeSelectionProcesss = SelectionProcess::where('is_active', true)->count();
+            $inactiveSelectionProcesss = SelectionProcess::where('is_active', false)->count();
 
             return [
                'status' => true,
