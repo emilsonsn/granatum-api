@@ -2,6 +2,8 @@
 
 namespace App\Services\SelectionProcess;
 
+use App\Models\Candidate;
+use App\Models\CandidateStatus;
 use Exception;
 use App\Models\SelectionProcess;
 use App\Models\Status;
@@ -21,7 +23,7 @@ class SelectionProcessService
             $is_active = $request->is_active ?? null;
 
             $selectionProcesses = SelectionProcess::orderBy('id', 'desc')
-                ->with('vacancy');
+                ->with('vacancy', 'statuses');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
@@ -45,9 +47,8 @@ class SelectionProcessService
     public function getById($id)
     {
         try {
-
             $selectionProcess = SelectionProcess::where('id', $id)
-                ->with('vacancy')
+                ->with('vacancy', 'statuses')
                 ->first();
             
             if(!isset($selectionProcess)) throw new Exception('Processo seletivo não encontrado');
@@ -123,6 +124,17 @@ class SelectionProcessService
                     'color' => $status['color'],
                    'selection_process_id' => $selectionProcess->id,
                 ]);
+            }
+
+            $candidates = Candidate::where('profession_id', $selectionProcess->vacancy->profession_id)
+                ->where('is_active', true)
+                ->get();
+
+            foreach($candidates as $candidate){
+                CandidateStatus::create([
+                    'candidate_id' => $candidate->id,
+                    'status_id' => $selectionProcessStatus[0]->id
+                ]);                
             }
 
             $selectionProcess['status'] = $selectionProcessStatus;

@@ -36,6 +36,6 @@ class SelectionProcess extends Model
 
     public function statuses()
     {
-        return $this->hasMany(Status::class);
+        return $this->hasMany(Status::class)->with('candidateStatuses');
     }
 }

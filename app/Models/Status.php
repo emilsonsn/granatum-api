@@ -28,6 +28,6 @@ class Status extends Model
 
     public function candidateStatuses()
     {
-        return $this->hasMany(CandidateStatus::class);
+        return $this->hasMany(CandidateStatus::class)->with('candidate');
     }
 }
