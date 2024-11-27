@@ -27,6 +27,6 @@ class CandidateStatus extends Model
 
     public function status()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(Status::class)->with('selectionProcess');
     }
 }
