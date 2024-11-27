@@ -22,7 +22,7 @@ class CandidateService
             $profession_id = $request->profession_id;
 
             $candidates = Candidate::orderBy('id', 'desc')
-                ->with('profession', 'files');
+                ->with('profession', 'files', 'candidateStatuses');
 
             if(isset($search_term)){
                 $candidates->where('name', 'LIKE', "%{$search_term}%")

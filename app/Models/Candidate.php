@@ -39,7 +39,7 @@ class Candidate extends Model
 
     public function candidateStatuses()
     {
-        return $this->hasMany(CandidateStatus::class);
+        return $this->hasMany(CandidateStatus::class)->with('status');
     }
 
     public function files()
@@ -47,7 +47,4 @@ class Candidate extends Model
         return $this->hasMany(CandidateAttachment::class);
     }
 
-    public function process(){
-        return $this->hasMany(CandidateStatus::class)->with('status');
-    }
 }
