@@ -22,7 +22,7 @@ class CandidateService
             $profession_id = $request->profession_id;
 
             $candidates = Candidate::orderBy('id', 'desc')
-                ->with('profession', 'files', 'candidateStatuses');
+                ->with('profession', 'files');
 
             if(isset($search_term)){
                 $candidates->where('name', 'LIKE', "%{$search_term}%")
@@ -41,6 +41,10 @@ class CandidateService
             }
 
             $candidates = $candidates->paginate($perPage);
+
+            foreach($candidates as $candidate){
+                $candidate['processes'] = $candidate->getSelectionProcesses();
+            }
 
             return $candidates;
         } catch (Exception $error) {
@@ -152,7 +156,6 @@ class CandidateService
     public function update($request, $user_id)
     {
         try {
-
             $request['attachments'] = $request['attachments'] == 'null' ? null : $request['attachments'];
             $request['is_active'] = $request['is_active'] == 'null' ? null : $request['is_active'];
             $request['processes'] = $request['processes'] == 'null' ? null : $request['processes'];
@@ -212,10 +215,11 @@ class CandidateService
                         ->first();
             
                     if ($statusId) {
-                        CandidateStatus::create([
+                        $candidateStatus = [
                             'candidate_id' => $candidateToUpdate->id,
                             'status_id' => $statusId
-                        ]);
+                        ];
+                        CandidateStatus::updateOrcreate($candidateStatus, $candidateStatus);
                     }
                 }
             }

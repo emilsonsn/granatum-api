@@ -39,8 +39,20 @@ class Candidate extends Model
 
     public function candidateStatuses()
     {
-        return $this->hasMany(CandidateStatus::class)->with('status');
+        return $this->hasMany(CandidateStatus::class);
     }
+
+    public function getSelectionProcesses()
+    {
+        return SelectionProcess::query()
+            ->join('status', 'status.selection_process_id', '=', 'selection_process.id')
+            ->join('candidate_status', 'candidate_status.status_id', '=', 'status.id')
+            ->where('candidate_status.candidate_id', $this->id)
+            ->select('selection_process.*')
+            ->distinct()
+            ->get();
+    }
+    
 
     public function files()
     {
