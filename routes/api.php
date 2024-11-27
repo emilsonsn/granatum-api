@@ -3,6 +3,7 @@
 use App\Events\EvolutionEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
@@ -229,6 +230,14 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [FunnelStepController::class, 'create']);
         Route::patch('{id}', [FunnelStepController::class, 'update']);
         Route::delete('{id}', [FunnelStepController::class, 'delete']);
+    });
+
+    Route::prefix('bank')->group(function(){
+        Route::get('search', [BankController::class, 'search']);
+        Route::get('{id}', [BankController::class, 'getById']);
+        Route::post('create', [BankController::class, 'create']);
+        Route::patch('{id}', [BankController::class, 'update']);
+        Route::delete('{id}', [BankController::class, 'delete']);
     });
 
     Route::prefix('partner')->group(function(){

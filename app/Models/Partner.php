@@ -21,7 +21,7 @@ class Partner extends Model
         'email',
         'cnpj_cpf',
         'activity',
-        'photo',
+        'image',
         'is_active',
     ];
 }
