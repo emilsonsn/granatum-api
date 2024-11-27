@@ -9,6 +9,7 @@ use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\FunnelStepController;
+use App\Http\Controllers\HrCampaignController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
@@ -128,6 +129,14 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [OrderController::class, 'delete']);
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
         Route::delete('item/{id}', [OrderController::class, 'delete_order_item']);
+    });
+
+    Route::prefix('hr-campaign')->group(function(){
+        Route::get('search', [HrCampaignController::class, 'search']);
+        Route::get('{id}', [HrCampaignController::class, 'getById']);        
+        Route::post('create', [HrCampaignController::class, 'create']);
+        Route::patch('{id}', [HrCampaignController::class, 'update']);
+        Route::delete('{id}', [HrCampaignController::class, 'delete']);
     });
 
     Route::prefix('travel')->group(function(){
