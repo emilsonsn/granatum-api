@@ -61,6 +61,10 @@ Route::prefix('profession')->group(function(){
     Route::post('create', [ProfessionController::class, 'create']);
 });
 
+Route::prefix('selection-process')->group(function(){
+    Route::get('{id}', [SelectionProcessController::class, 'getById']);
+});
+
 Route::middleware('jwt')->group(function(){
 
     Route::middleware(AdminMiddleware::class)->group(function() {
