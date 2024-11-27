@@ -41,4 +41,9 @@ class Candidate extends Model
     {
         return $this->hasMany(CandidateStatus::class);
     }
+
+    public function files()
+    {
+        return $this->hasMany(CandidateAttachment::class);
+    }
 }
