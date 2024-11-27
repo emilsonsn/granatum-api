@@ -63,6 +63,7 @@ Route::prefix('profession')->group(function(){
 });
 
 Route::prefix('selection-process')->group(function(){
+    Route::get('search', [SelectionProcessController::class, 'search']);
     Route::get('{id}', [SelectionProcessController::class, 'getById']);
 });
 
