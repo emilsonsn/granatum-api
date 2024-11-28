@@ -2,6 +2,7 @@
 
 namespace App\Services\Travel;
 
+use App\Enums\PurchaseStatusEnum;
 use App\Models\Release;
 use Exception;
 use App\Models\Travel;
@@ -124,7 +125,7 @@ class TravelService
             $rules = [
                 'description' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
-                'transport' => ['required', 'string', 'max:255'],                
+                'transport' => ['required', 'string', 'max:255'],
                 'total_value' => ['required', 'numeric'],
                 'observations' => ['nullable', 'string'],
                 'purchase_date' => ['required', 'date'],
@@ -163,9 +164,9 @@ class TravelService
                     ]);
                 }
             }
-            
+
             DB::commit();
-            
+
             return ['status' => true, 'data' => $travel];
         } catch (Exception $error) {
             DB::rollBack();
@@ -200,9 +201,9 @@ class TravelService
             if ($validator->fails()) throw new Exception($validator->errors());
 
             if(Carbon::parse($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
-                $requestData['purchase_status'] = 'RequestFinance';
-            }else{
-                $requestData['purchase_status'] = 'RequestManager';
+                $requestData['purchase_status'] = PurchaseStatusEnum::RequestFinance->value;
+            }else if($travelToUpdate->purchase_status != PurchaseStatusEnum::RequestFinance->value)  {
+                $requestData['purchase_status'] = PurchaseStatusEnum::RequestManager->value;                
             }
 
             DB::beginTransaction();

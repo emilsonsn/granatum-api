@@ -111,7 +111,7 @@ class SelectionProcessService
                 [ 'title' => 'Pré-Contrato' , 'color' => '#F1C40F'], // Amarelo
                 [ 'title' => 'Contrato' , 'color' =>'#2ECC71'], // Roxo
             ];
-            
+
             $selectionProcessStatus = [];
             foreach($statusList as $status){
                 $selectionProcessStatus[] = Status::create([

@@ -42,7 +42,7 @@ class BankService
 
             $bank = Bank::find($id);
             
-            if(!isset($bank)) throw new Exception('Funil não encontrado');
+            if(!isset($bank)) throw new Exception('Banco não encontrado');
 
             return $bank;
         } catch (Exception $error) {
