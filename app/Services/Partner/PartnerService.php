@@ -63,7 +63,7 @@ class PartnerService
                 'email' => ['required', 'string', 'max:256'],
                 'cnpj_cpf' => ['required', 'string', 'max:18'],
                 'activity' => ['required', 'string', 'max:256'],
-                'photo' => ['nullable', 'string'],
+                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
                 'is_active' => ['boolean'],
             ];
 
@@ -71,7 +71,12 @@ class PartnerService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            $partner = Partner::create($validator->validated());            
+            $data = $validator->validated();
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('partners', 'public');
+            }
+
+            $partner = Partner::create($data);            
 
             return ['status' => true, 'data' => $partner];
         } catch (Exception $error) {
@@ -94,7 +99,7 @@ class PartnerService
                 'email' => ['required', 'string', 'max:256'],
                 'cnpj_cpf' => ['required', 'string', 'max:18'],
                 'activity' => ['required', 'string', 'max:256'],
-                'photo' => ['nullable', 'string'],
+                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
                 'is_active' => ['boolean'],
             ];
 
@@ -102,7 +107,12 @@ class PartnerService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            $partnerToUpdate->update($validator->validated());
+            $data = $validator->validated();
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('partners', 'public');
+            }
+
+            $partnerToUpdate->update($data);
 
             return ['status' => true, 'data' => $partnerToUpdate];
         } catch (Exception $error) {

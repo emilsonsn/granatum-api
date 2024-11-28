@@ -1,21 +1,30 @@
 <?php
 
+use App\Events\EvolutionEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\FunnelStepController;
+use App\Http\Controllers\HrCampaignController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\ProfessionController;
+use App\Http\Controllers\SelectionProcessController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SolicitationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TravelController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VacancyController;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +46,27 @@ Route::post('updatePassword', [UserController::class, 'updatePassword']);
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);
 
+Route::post('/evolution-data', function (Request $request) {
+    $data = $request->all();
+
+    broadcast(new EvolutionEvent($data));
+
+    return response()->json(['status' => 'success']);
+});
+
+Route::prefix('candidate')->group(function(){
+    Route::post('create', [CandidateController::class, 'create']);
+});
+
+Route::prefix('profession')->group(function(){   
+    Route::post('create', [ProfessionController::class, 'create']);
+});
+
+Route::prefix('selection-process')->group(function(){
+    Route::get('search', [SelectionProcessController::class, 'search']);
+    Route::get('{id}', [SelectionProcessController::class, 'getById']);
+});
+
 Route::middleware('jwt')->group(function(){
 
     Route::middleware(AdminMiddleware::class)->group(function() {
@@ -54,9 +84,7 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [UserController::class, 'update']);
         Route::delete('{id}', [UserController::class, 'delete']);
         Route::post('block/{id}', [UserController::class, 'userBlock']);
-
         Route::get('position/search', [UserController::class, 'positionSearch']);
-
         Route::get('sector/search', [UserController::class, 'sectorSearch']);
         Route::post('sector/create', [UserController::class, 'sectorCreate']);
         Route::delete('sector/{id}', [UserController::class, 'sectorDelete']);
@@ -67,7 +95,6 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [SupplierController::class, 'create']);
         Route::patch('{id}', [SupplierController::class, 'update']);
         Route::delete('{id}', [SupplierController::class, 'delete']);
-
         Route::get('type/search', [SupplierController::class, 'typeSearch']);
         Route::post('type/create', [SupplierController::class, 'typeCreate']);
         Route::delete('type/{id}', [SupplierController::class, 'typeDelete']);
@@ -78,7 +105,6 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [ServiceController::class, 'create']);
         Route::patch('{id}', [ServiceController::class, 'update']);
         Route::delete('{id}', [ServiceController::class, 'delete']);
-
         Route::get('type/search', [ServiceController::class, 'typeSearch']);
         Route::post('type/create', [ServiceController::class, 'typeCreate']);
         Route::delete('type/{id}', [ServiceController::class, 'typeDelete']);
@@ -100,8 +126,8 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('order')->group(function(){
         Route::get('search', [OrderController::class, 'search']);
-        Route::get('getBank', [OrderController::class, 'getBank']);
-        Route::get('getCategories', [OrderController::class, 'getCategories']);
+        Route::get('get-bank', [OrderController::class, 'getBank']);
+        Route::get('get-categories', [OrderController::class, 'getCategories']);
         Route::get('{id}', [OrderController::class, 'getById']);        
         Route::post('create', [OrderController::class, 'create']);
         Route::post('granatum/{orderId}', [OrderController::class, 'upRelease']);
@@ -109,6 +135,64 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [OrderController::class, 'delete']);
         Route::delete('file/{id}', [OrderController::class, 'delete_order_file']);
         Route::delete('item/{id}', [OrderController::class, 'delete_order_item']);
+    });
+
+    Route::prefix('hr-campaign')->group(function(){
+        Route::get('search', [HrCampaignController::class, 'search']);
+        Route::get('{id}', [HrCampaignController::class, 'getById']);        
+        Route::post('create', [HrCampaignController::class, 'create']);
+        Route::patch('{id}', [HrCampaignController::class, 'update']);
+        Route::delete('{id}', [HrCampaignController::class, 'delete']);
+    });
+
+    Route::prefix('travel')->group(function(){
+        Route::get('search', [TravelController::class, 'search']);
+        Route::get('get-bank', [OrderController::class, 'getBank']);
+        Route::get('cards', [TravelController::class, 'cards']);
+        Route::get('get-categories', [OrderController::class, 'getCategories']);
+        Route::get('{id}', [TravelController::class, 'getById']);        
+        Route::post('create', [TravelController::class, 'create']);
+        Route::post('granatum/{travel_id}', [TravelController::class, 'upRelease']);
+        Route::patch('{id}', [TravelController::class, 'update']);
+        Route::patch('solicitation/{id}', [TravelController::class, 'updateSolicitation']);
+        Route::delete('{id}', [TravelController::class, 'delete']);
+        Route::delete('file/{id}', [TravelController::class, 'deleteFile']);
+    });
+
+    Route::prefix('candidate')->group(function(){
+        Route::get('search', [CandidateController::class, 'search']);
+        Route::get('cards', [CandidateController::class, 'cards']);
+        Route::post('create', [CandidateController::class, 'create']);
+        Route::patch('{id}', [CandidateController::class, 'update']);
+        Route::delete('{id}', [CandidateController::class, 'delete']);
+    });
+
+    Route::prefix('profession')->group(function(){
+        Route::get('search', [ProfessionController::class, 'search']);
+        Route::get('cards', [ProfessionController::class, 'cards']);        
+        Route::get('{id}', [ProfessionController::class, 'getById']);        
+        Route::post('create', [ProfessionController::class, 'create']);
+        Route::patch('{id}', [ProfessionController::class, 'update']);
+        Route::delete('{id}', [ProfessionController::class, 'delete']);
+    });
+
+    Route::prefix('vacancy')->group(function(){
+        Route::get('search', [VacancyController::class, 'search']);
+        Route::get('cards', [VacancyController::class, 'cards']);        
+        Route::get('{id}', [VacancyController::class, 'getById']);        
+        Route::post('create', [VacancyController::class, 'create']);
+        Route::patch('{id}', [VacancyController::class, 'update']);
+        Route::delete('{id}', [VacancyController::class, 'delete']);
+    });
+
+    Route::prefix('selection-process')->group(function(){
+        Route::get('search', [SelectionProcessController::class, 'search']);
+        Route::get('cards', [SelectionProcessController::class, 'cards']);
+        Route::get('{id}', [SelectionProcessController::class, 'getById']);        
+        Route::post('create', [SelectionProcessController::class, 'create']);
+        Route::patch('update-status', [SelectionProcessController::class, 'updateStatus']);
+        Route::patch('{id}', [SelectionProcessController::class, 'update']);
+        Route::delete('{id}', [SelectionProcessController::class, 'delete']);
     });
 
     Route::prefix('dashboard')->group(function(){
@@ -147,6 +231,14 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [FunnelStepController::class, 'create']);
         Route::patch('{id}', [FunnelStepController::class, 'update']);
         Route::delete('{id}', [FunnelStepController::class, 'delete']);
+    });
+
+    Route::prefix('bank')->group(function(){
+        Route::get('search', [BankController::class, 'search']);
+        Route::get('{id}', [BankController::class, 'getById']);
+        Route::post('create', [BankController::class, 'create']);
+        Route::patch('{id}', [BankController::class, 'update']);
+        Route::delete('{id}', [BankController::class, 'delete']);
     });
 
     Route::prefix('partner')->group(function(){

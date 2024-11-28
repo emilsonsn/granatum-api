@@ -6,22 +6,27 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Partner extends Model
+class Profession extends Model
 {
     use HasFactory, SoftDeletes;
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    public $table = 'partners';
+    public $table = 'professions';
 
     protected $fillable = [
-        'name',
-        'phone',
-        'email',
-        'cnpj_cpf',
-        'activity',
-        'image',
-        'is_active',
+        'title',
+        'description',
     ];
+
+    public function vacancies()
+    {
+        return $this->hasMany(Vacancy::class);
+    }
+
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class);
+    }
 }

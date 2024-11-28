@@ -4,7 +4,7 @@ namespace App\Services\Funnel;
 
 use Exception;
 use App\Models\Funnel;
-use App\Trait\GranatumTrait;
+use App\Traits\GranatumTrait;
 use Illuminate\Support\Facades\Validator;
 
 class FunnelService

@@ -5,7 +5,7 @@ namespace App\Services\Lead;
 use Exception;
 use App\Models\Lead;
 use App\Models\LeadStep;
-use App\Trait\GranatumTrait;
+use App\Traits\GranatumTrait;
 use Illuminate\Support\Facades\Validator;
 
 class LeadService
