@@ -51,9 +51,9 @@ class SelectionProcessService
                 ->with('vacancy', 'statuses')
                 ->first();
             
-            if(!isset($selectionProcess)) throw new Exception('Processo seletivo não encontrado');
+            if(!isset($selectionProcess)) throw new Exception('Processo seletivo não encontrado');            
 
-            $selectionProcess->candidate['processes'] = $selectionProcess->candidate->getSelectionProcesses();
+            $selectionProcess->statues->candidateStatuses->candidate['processes'] = $selectionProcess->statues->candidateStatuses->candidate->getSelectionProcesses();
 
             return $selectionProcess;
         } catch (Exception $error) {
