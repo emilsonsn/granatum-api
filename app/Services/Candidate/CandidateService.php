@@ -42,10 +42,6 @@ class CandidateService
 
             $candidates = $candidates->paginate($perPage);
 
-            foreach($candidates as $candidate){
-                $candidate['processes'] = $candidate->getSelectionProcesses();
-            }
-
             return $candidates;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];

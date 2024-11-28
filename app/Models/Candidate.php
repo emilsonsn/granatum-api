@@ -32,6 +32,8 @@ class Candidate extends Model
         'profession_id',
     ];
 
+    protected $appends = ['processes'];
+
     public function profession()
     {
         return $this->belongsTo(Profession::class);
@@ -42,7 +44,7 @@ class Candidate extends Model
         return $this->hasMany(CandidateStatus::class);
     }
 
-    public function getSelectionProcesses()
+    public function getProcessesAttribute()
     {
         return SelectionProcess::query()
             ->join('status', 'status.selection_process_id', '=', 'selection_process.id')
@@ -52,7 +54,6 @@ class Candidate extends Model
             ->distinct()
             ->get();
     }
-    
 
     public function files()
     {
