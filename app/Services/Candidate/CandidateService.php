@@ -105,6 +105,10 @@ class CandidateService
                 throw new Exception($validator->errors(), 400);
             }
 
+            if(Candidate::where('cpf', $request->cpf)->count()){
+                throw new Exception('Candidato com esse cpf já cadastrado', 400);
+            }
+
             $data = $validator->validated();
 
             $candidate = Candidate::create($data);
@@ -121,7 +125,7 @@ class CandidateService
                             'name' => $filename,
                             'path' => $path,
                             'candidate_id' => $candidate->id,
-                            'selection_process_id' => $process
+                            'selection_process_id' => $process ?? null
                         ]);
                     }
                 }
@@ -197,7 +201,7 @@ class CandidateService
                             'name' => $filename,
                             'path' => $path,
                             'candidate_id' => $candidateToUpdate->id,
-                            'selection_process_id' => $process
+                            'selection_process_id' => $process ?? null
                         ]);
                     }
                 }

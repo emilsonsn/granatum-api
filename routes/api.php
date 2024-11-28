@@ -126,8 +126,8 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('order')->group(function(){
         Route::get('search', [OrderController::class, 'search']);
-        Route::get('getBank', [OrderController::class, 'getBank']);
-        Route::get('getCategories', [OrderController::class, 'getCategories']);
+        Route::get('get-bank', [OrderController::class, 'getBank']);
+        Route::get('get-categories', [OrderController::class, 'getCategories']);
         Route::get('{id}', [OrderController::class, 'getById']);        
         Route::post('create', [OrderController::class, 'create']);
         Route::post('granatum/{orderId}', [OrderController::class, 'upRelease']);
@@ -147,12 +147,12 @@ Route::middleware('jwt')->group(function(){
 
     Route::prefix('travel')->group(function(){
         Route::get('search', [TravelController::class, 'search']);
-        Route::get('getBank', [OrderController::class, 'getBank']);
+        Route::get('get-bank', [OrderController::class, 'getBank']);
         Route::get('cards', [TravelController::class, 'cards']);
-        Route::get('getCategories', [OrderController::class, 'getCategories']);
+        Route::get('get-categories', [OrderController::class, 'getCategories']);
         Route::get('{id}', [TravelController::class, 'getById']);        
         Route::post('create', [TravelController::class, 'create']);
-        Route::post('granatum/{orderId}', [TravelController::class, 'upRelease']);
+        Route::post('granatum/{travel_id}', [TravelController::class, 'upRelease']);
         Route::patch('{id}', [TravelController::class, 'update']);
         Route::patch('solicitation/{id}', [TravelController::class, 'updateSolicitation']);
         Route::delete('{id}', [TravelController::class, 'delete']);

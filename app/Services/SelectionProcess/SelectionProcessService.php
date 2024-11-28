@@ -23,7 +23,7 @@ class SelectionProcessService
             $is_active = $request->is_active ?? null;
 
             $selectionProcesses = SelectionProcess::orderBy('id', 'desc')
-                ->with('vacancy', 'statuses');
+                ->with('vacancy.profession', 'statuses');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;

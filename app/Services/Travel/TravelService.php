@@ -125,10 +125,12 @@ class TravelService
                 'description' => ['required', 'string', 'max:255'],
                 'type' => ['required', 'string', 'max:255'],
                 'transport' => ['required', 'string', 'max:255'],                
-                'total_value' => ['required', 'numeric'],                                
+                'total_value' => ['required', 'numeric'],
                 'observations' => ['nullable', 'string'],
                 'purchase_date' => ['required', 'date'],
-                'attachments' => ['nullable', 'array']
+                'attachments' => ['nullable', 'array'],
+                'bank_id' => ['nullable', 'integer'],
+                'category_id' => ['nullable', 'integer'],
             ];
 
             $requestData = $request->all();
@@ -152,7 +154,7 @@ class TravelService
             if(isset($requestData['attachments'])){
                 foreach($requestData['attachments'] as $attachment){
                     $name = $attachment->getClientOriginalName();
-                    $path = $attachment->store('attachments');
+                    $path = $attachment->store('attachments', 'public');
 
                     TravelAttachment::create([            
                         'name' => $name,
@@ -184,7 +186,9 @@ class TravelService
                 'transport' => ['required', 'string', 'max:255'],
                 'total_value' => ['required', 'numeric'],
                 'observations' => ['nullable', 'string'],
-                'purchase_date' => ['required', 'date']
+                'purchase_date' => ['required', 'date'],
+                'bank_id' => ['nullable', 'integer'],
+                'category_id' => ['nullable', 'integer'],
             ];
 
             $requestData = $request->all();
@@ -196,6 +200,8 @@ class TravelService
             if ($validator->fails()) throw new Exception($validator->errors());
 
             if(Carbon::parse($request->purchase_date)->format('Y-m-d') == Carbon::now()->format('Y-m-d')){
+                $requestData['purchase_status'] = 'RequestFinance';
+            }else{
                 $requestData['purchase_status'] = 'RequestManager';
             }
 
@@ -207,7 +213,7 @@ class TravelService
             if(isset($requestData['attachments'])){
                 foreach($requestData['attachments'] as $attachment){
                     $name = $attachment->getClientOriginalName();
-                    $path = $attachment->store('attachments');
+                    $path = $attachment->store('attachments', 'public');
                     
                     $attachments[] = TravelAttachment::create([
                         'name' => $name,
@@ -278,6 +284,18 @@ class TravelService
             if(!isset($travel)) throw new Exception('Viagem não encontrada');
 
             if(count($travel->releases)) throw new Exception('Lançamento já foi efetuado');
+
+            if(!isset($travel->bank_id)){
+                throw new Exception('Escolha uma banco para continuar');
+            }
+
+            if(!isset($travel->category_id)){
+                throw new Exception('Escolha uma categoria para continuar');
+            }
+
+            if(Carbon::parse($travel->purchase_date)->greaterThanOrEqualTo(Carbon::today()->addDay())) {
+                throw new Exception('A data da compra precisa ser igual ou menor que hoje');
+            }
             
             $description = $travel->description;
             $value = $travel->total_value;
