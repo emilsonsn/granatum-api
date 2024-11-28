@@ -53,6 +53,8 @@ class SelectionProcessService
             
             if(!isset($selectionProcess)) throw new Exception('Processo seletivo não encontrado');
 
+            $selectionProcess->candidate['processes'] = $selectionProcess->candidate->getSelectionProcesses();
+
             return $selectionProcess;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
