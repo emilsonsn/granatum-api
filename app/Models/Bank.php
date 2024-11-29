@@ -21,4 +21,8 @@ class Bank extends Model
         'is_active',
     ];
 
+    public function getImageAttribute($value){
+        return isset($value) ? asset("storage/$value") : '';
+    }
+
 }
