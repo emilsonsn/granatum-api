@@ -26,6 +26,6 @@ class Partner extends Model
     ];
 
     public function getImageAtributte($value){
-        return $value ? asset("storage/$value") : '';
+        return isset($value) ? asset("storage/$value") : '';
     }
 }
