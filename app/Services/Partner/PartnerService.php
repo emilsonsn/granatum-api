@@ -99,7 +99,7 @@ class PartnerService
                 'email' => ['required', 'string', 'max:256'],
                 'cnpj_cpf' => ['required', 'string', 'max:18'],
                 'activity' => ['required', 'string', 'max:256'],
-                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
                 'is_active' => ['boolean'],
             ];
 

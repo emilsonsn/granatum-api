@@ -24,4 +24,8 @@ class Partner extends Model
         'image',
         'is_active',
     ];
+
+    public function getImageAtributte($value){
+        return $value ? asset("storage/$value") : '';
+    }
 }
