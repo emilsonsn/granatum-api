@@ -89,7 +89,7 @@ class BankService
 
             $bankToUpdate = Bank::find($id);
 
-            if(isset($bankToUpdate)) throw new Exception('Banco não encontrado');
+            if(!isset($bankToUpdate)) throw new Exception('Banco não encontrado');
 
             $rules = [
                 'name' => ['required', 'string', 'max:256'],
@@ -121,7 +121,7 @@ class BankService
         try{
             $bank = Bank::find($id);
 
-            if(!$bank) throw new Exception('Banco não encontrado');
+            if(!isset($bank)) throw new Exception('Banco não encontrado');
 
             $bankName = $bank->name;
             $bank->delete();
