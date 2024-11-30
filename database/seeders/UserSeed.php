@@ -27,8 +27,6 @@ class UserSeed extends Seeder
             'company_position_id' => 1,
             'sector_id' => null,
             'is_active' => true,
-        ]);        
-
-       
+        ]);
     }
 }
