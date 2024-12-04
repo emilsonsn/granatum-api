@@ -11,7 +11,7 @@ socket.on('connect', () => {});
 socket.onAny((eventName, data) => {
     console.log(`Evento recebido: ${eventName}`, data);
     
-    axios.post('http://localhost:8000/api/evolution-data', { ...data })
+    axios.post('http://localhost:8000/api/evolution-data', { event: eventName, data })
         .then(response => {
             console.log(response.data);
         })
