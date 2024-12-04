@@ -46,6 +46,11 @@ Route::get('validateToken', [AuthController::class, 'validateToken']);
 Route::post('recoverPassword', [UserController::class, 'passwordRecovery']);
 Route::post('updatePassword', [UserController::class, 'updatePassword']);
 
+Route::prefix('whatsapp')->group(function(){
+    Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
+    Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
+    Route::post('send-message', [WhatsappController::class, 'sendMessage']);
+});
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);
 
@@ -262,11 +267,11 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [LabelController::class, 'delete']);
     });
 
-    Route::prefix('whatsapp')->group(function(){
-        Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
-        Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
-        Route::post('send-message', [WhatsappController::class, 'sendMessage']);
-    });
+    // Route::prefix('whatsapp')->group(function(){
+    //     Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
+    //     Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
+    //     Route::post('send-message', [WhatsappController::class, 'sendMessage']);
+    // });
 
     Route::prefix('task')->group(function(){
         Route::get('search', [TaskController::class, 'search']);

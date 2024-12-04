@@ -6,6 +6,7 @@ use App\Models\ChatMessage;
 use Exception;
 use App\Models\WhatsappChat;
 use App\Traits\EvolutionTrait;
+use Illuminate\Support\Facades\Validator;
 
 class WhatsappService
 {
@@ -52,9 +53,36 @@ class WhatsappService
                 $messages->where('status', $status);
             }
 
-            $status = $messages->paginate($perPage);
+            $messages = $messages->paginate($perPage);
 
             return $messages;
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function updateStatus($request, $id)
+    {
+        try {
+            $rules = [
+                'status' => ['required', 'string', 'in:Waiting,Responding,Finished']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+            
+            $chat = WhatsappChat::find($id);                             
+
+            if(!isset($chat)){
+                throw new Exception('Chat não encontrado');
+            }
+
+            $chat->update($validator->validated());
+
+            return $chat;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
