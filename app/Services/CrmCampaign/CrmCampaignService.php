@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\HrCampaign;
+namespace App\Services\CrmCampaign;
 
 use Exception;
-use App\Models\HrCampaign;
+use App\Models\CrmCampaign;
 use Illuminate\Support\Facades\Validator;
 
-class HrCampaignService
+class CrmCampaignService
 {
 
     public function search($request)
@@ -14,31 +14,31 @@ class HrCampaignService
         try {
             $perPage = $request->input('take', 10);
 
-            $hrCampaigns = HrCampaign::orderBy('id', 'desc');
+            $crmCampaigns = CrmCampaign::orderBy('id', 'desc');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
-                $hrCampaigns->where(function($query) use($search_term){
+                $crmCampaigns->where(function($query) use($search_term){
                     $query->where('title', 'LIKE', "%$search_term%")
                         ->orWhere('message', 'LIKE', "%$search_term%");
                 });
             }
 
             if($request->filled('type')){
-                $hrCampaigns->where('type', $request->type);
+                $crmCampaigns->where('type', $request->type);
+            }
+
+            if($request->filled('funnel_id')){
+                $crmCampaigns->where('funnel_id', $request->funnel_id);
             }
 
             if($request->filled('recurrence_type')){
-                $hrCampaigns->where('recurrence_type', $request->recurrence_type);
+                $crmCampaigns->where('recurrence_type', $request->recurrence_type);
             }
 
-            if($request->filled('selection_process_id')){
-                $hrCampaigns->where('selection_process_id', $request->selection_process_id);
-            }
+            $crmCampaigns = $crmCampaigns->paginate($perPage);
 
-            $hrCampaigns = $hrCampaigns->paginate($perPage);
-
-            return $hrCampaigns;
+            return $crmCampaigns;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
@@ -48,11 +48,11 @@ class HrCampaignService
     {
         try {
 
-            $hrCampaign = HrCampaign::find($id);
+            $crmCampaign = CrmCampaign::find($id);
             
-            if(!isset($hrCampaign)) throw new Exception('Campanha de RH não encontrada');
+            if(!isset($crmCampaign)) throw new Exception('Campanha de CRM não encontrada');
 
-            return $hrCampaign;
+            return $crmCampaign;
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
@@ -66,8 +66,8 @@ class HrCampaignService
                 'message' => ['required', 'string'],
                 'type' => ['required', 'string', 'in:Single,Recurrence'],
                 'recurrence_type' => ['nullable', 'string', 'in:Monthly,Fortnightly,Weekly'],
-                'selection_process_id' => ['required', 'integer'],
-                'status_id' => ['nullable', 'integer'],
+                'funnel_id' => ['required', 'integer'],
+                'funnel_step_id' => ['nullable', 'integer'],
                 'channels' => ['required', 'string'],
                 'start_date' => ['required', 'date'],
             ];
@@ -76,9 +76,9 @@ class HrCampaignService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            $hrCampaign = HrCampaign::create($validator->validated());            
+            $crmCampaign = CrmCampaign::create($validator->validated());            
 
-            return ['status' => true, 'data' => $hrCampaign];
+            return ['status' => true, 'data' => $crmCampaign];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
@@ -87,16 +87,17 @@ class HrCampaignService
     public function update($request, $id)
     {
         try {
-            $hrCampaignToUpdate = HrCampaign::find($id);
+            $crmCampaignToUpdate = CrmCampaign::find($id);
 
-            if(isset($hrCampaignToUpdate)) throw new Exception('Campanha de RH não encontrada');
+            if(isset($crmCampaignToUpdate)) throw new Exception('Campanha de CRM não encontrada');
+
             $rules = [
                 'title' => ['required', 'string', 'max:255'],
                 'message' => ['required', 'string'],
                 'type' => ['required', 'string', 'in:Single,Recurrence'],
                 'recurrence_type' => ['nullable', 'string', 'in:Monthly,Fortnightly,Weekly'],
-                'selection_process_id' => ['required', 'integer'],
-                'status_id' => ['nullable', 'integer'],
+                'funnel_id' => ['required', 'integer'],
+                'funnel_step_id' => ['nullable', 'integer'],
                 'channels' => ['required', 'string'],
                 'start_date' => ['required', 'date'],
             ];
@@ -105,23 +106,24 @@ class HrCampaignService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            $hrCampaignToUpdate = $hrCampaignToUpdate->update($validator->validated());
+            $crmCampaignToUpdate = $crmCampaignToUpdate->update($validator->validated());
 
-            return ['status' => true, 'data' => $hrCampaignToUpdate];
+            return ['status' => true, 'data' => $crmCampaignToUpdate];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+    
     public function delete($id){
         try{
-            $hrCampaign = HrCampaign::find($id);
+            $crmCampaign = CrmCampaign::find($id);
 
-            if(!$hrCampaign) throw new Exception('Campanha de RH não encontrada');
+            if(!$crmCampaign) throw new Exception('Campanha de CRM não encontrada');
 
-            $hrCampaignName = $hrCampaign->name;
-            $hrCampaign->delete();
+            $crmCampaignName = $crmCampaign->name;
+            $crmCampaign->delete();
 
-            return ['status' => true, 'data' => $hrCampaignName];
+            return ['status' => true, 'data' => $crmCampaignName];
         }catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
