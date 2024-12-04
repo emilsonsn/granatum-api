@@ -5,17 +5,15 @@ import axios from 'axios';
 const socket = io('https://api.andradeengenhariaeletrica.com.br/teste123'); 
 
 // Quando conectado
-socket.on('connect', () => {
-    console.log('Conectado ao WebSocket da Evolution API');
-});
+socket.on('connect', () => {});
 
 // Ouvir todos os eventos
 socket.onAny((eventName, data) => {
     console.log(`Evento recebido: ${eventName}`, data);
     
-    axios.post('http://localhost:8000/api/evolution-data', { event: eventName, data: data })
+    axios.post('http://localhost:8000/api/evolution-data', { ...data })
         .then(response => {
-            console.log('Dados enviados para o Laravel:', response.data);
+            console.log(response.data);
         })
         .catch(error => {
             console.error('Erro ao enviar dados para o Laravel:', error.message);

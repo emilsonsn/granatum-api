@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class EvolutionEvent implements ShouldBroadcast
 {
@@ -16,6 +17,7 @@ class EvolutionEvent implements ShouldBroadcast
 
     public function __construct($data)
     {
+        Log::info($data);
         $this->data = $data;
     }
 

@@ -1,16 +1,17 @@
 <?php
 
-use App\Events\EvolutionEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
+use App\Http\Controllers\CrmCampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\FunnelStepController;
 use App\Http\Controllers\HrCampaignController;
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TravelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
+use App\Http\Controllers\WebsocketController;
+use App\Http\Controllers\WhatsappController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Http\Request;
 
@@ -46,13 +49,7 @@ Route::post('updatePassword', [UserController::class, 'updatePassword']);
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);
 
-Route::post('/evolution-data', function (Request $request) {
-    $data = $request->all();
-
-    broadcast(new EvolutionEvent($data));
-
-    return response()->json(['status' => 'success']);
-});
+Route::post('/evolution-data', [WebsocketController::class, 'handle']);
 
 Route::prefix('candidate')->group(function(){
     Route::post('create', [CandidateController::class, 'create']);
@@ -143,6 +140,14 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [HrCampaignController::class, 'create']);
         Route::patch('{id}', [HrCampaignController::class, 'update']);
         Route::delete('{id}', [HrCampaignController::class, 'delete']);
+    });
+
+    Route::prefix('crm-campaign')->group(function(){
+        Route::get('search', [CrmCampaignController::class, 'search']);
+        Route::get('{id}', [CrmCampaignController::class, 'getById']);        
+        Route::post('create', [CrmCampaignController::class, 'create']);
+        Route::patch('{id}', [CrmCampaignController::class, 'update']);
+        Route::delete('{id}', [CrmCampaignController::class, 'delete']);
     });
 
     Route::prefix('travel')->group(function(){
@@ -247,6 +252,20 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [PartnerController::class, 'create']);
         Route::patch('{id}', [PartnerController::class, 'update']);
         Route::delete('{id}', [PartnerController::class, 'delete']);
+    });
+
+    Route::prefix('label')->group(function(){
+        Route::get('search', [LabelController::class, 'search']);
+        Route::get('{id}', [LabelController::class, 'getById']);
+        Route::post('create', [LabelController::class, 'create']);
+        Route::patch('{id}', [LabelController::class, 'update']);
+        Route::delete('{id}', [LabelController::class, 'delete']);
+    });
+
+    Route::prefix('whatsapp')->group(function(){
+        Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
+        Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
+        Route::post('send-message', [WhatsappController::class, 'sendMessage']);
     });
 
     Route::prefix('task')->group(function(){
