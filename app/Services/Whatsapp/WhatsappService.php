@@ -25,7 +25,8 @@ class WhatsappService
                 $chats->where('name','LIKE', "%$instance%");
             }
 
-            $chats = $chats->paginate($perPage);
+            $chats = $chats->with('lastMessage')
+                ->paginate($perPage);
 
             return $chats;
         } catch (Exception $error) {
