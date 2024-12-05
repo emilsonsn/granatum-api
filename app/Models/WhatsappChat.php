@@ -36,7 +36,6 @@ class WhatsappChat extends Model
 
     public function lastMessage()
     {
-        return $this->hasOne(ChatMessage::class, 'id', 'whatsapp_chat_id')->latestOfMany();
+        return $this->hasOne(ChatMessage::class, 'whatsapp_chat_id','id')->latestOfMany();
     }
-
 }
