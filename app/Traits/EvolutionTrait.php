@@ -33,7 +33,7 @@ trait EvolutionTrait
         ];
 
         $response = $this->client->request('POST', $url, $data);
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     public function updateMessage($instance, $number, $text, $remoteJid, $fromMe, $id)

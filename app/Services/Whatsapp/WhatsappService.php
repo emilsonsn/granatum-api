@@ -110,7 +110,7 @@ class WhatsappService
             $this->prepareDataEvolution($instance);
             $result = $this->sendMessage($number, $message);
 
-            if(isset($result['status']) || $result['status'] != 200){
+            if(!isset($result['key'])){
                 $error = $result['response']['message'][0] ?? 'Erro não identificado';                
                 throw new Exception($error, 400);
             }
