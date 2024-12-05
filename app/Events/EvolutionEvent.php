@@ -17,7 +17,6 @@ class EvolutionEvent implements ShouldBroadcast
 
     public function __construct($data)
     {
-        Log::info($data);
         $this->data = $data;
     }
 

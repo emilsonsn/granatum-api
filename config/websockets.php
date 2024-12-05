@@ -51,6 +51,8 @@ return [
         //
     ],
 
+    'host' => "0.0.0.0",
+
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
      */
