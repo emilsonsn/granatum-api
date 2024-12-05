@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class WhatsappService
 {
-
     use EvolutionTrait;
 
     public function searchChat($request, $instance)
@@ -113,6 +112,22 @@ class WhatsappService
             if(!isset($result['key'])){
                 $error = $result['response']['message'][0] ?? 'Erro não identificado';                
                 throw new Exception($error, 400);
+            }
+
+            $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])
+                ->first();
+
+            if(isset($whatsappChat)){
+                $result['internalMessage'] = ChatMessage::create([
+                    'remoteJid' => $whatsappChat->remoteJid,
+                    'externalId' => $result['key']['id'],
+                    'instanceId' => $whatsappChat->instanceId,
+                    'fromMe' => true,
+                    'message' => $result['message']['extendedTextMessage']['text'],
+                    'messageReplied' => null,
+                    'unread' => false,
+                    'whatsapp_chat_id' => $whatsappChat->id,
+                ]);
             }
 
             return ['status' => true, 'data' => $result];

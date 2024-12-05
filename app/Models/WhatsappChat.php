@@ -23,6 +23,7 @@ class WhatsappChat extends Model
         'instanceId',
         'profilePicUrl',
         'apiKey',
+        'status',
         'user_id',
     ];
 

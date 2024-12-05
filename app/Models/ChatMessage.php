@@ -23,7 +23,7 @@ class ChatMessage extends Model
         'fromMe',
         'message',
         'messageReplied',
-        'status',
+        'unread',
         'whatsapp_chat_id',
     ];
 
