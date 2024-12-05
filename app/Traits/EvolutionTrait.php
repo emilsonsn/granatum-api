@@ -13,7 +13,7 @@ trait EvolutionTrait
 
     public function prepareDataEvolution($instance)
     {
-        $this->baseUrl = "https://evo.localizadordeeditais.com.br";
+        $this->baseUrl = "https://api.andradeengenhariaeletrica.com.br";
         $this->apiKey = env('EVO_API_KEY');
         $this->accountName = $instance;
         $this->client = new Client();
