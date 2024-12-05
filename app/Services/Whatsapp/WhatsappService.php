@@ -91,14 +91,13 @@ class WhatsappService
     public function createMessage($request)
     {
         try {
-
             $request->validate([
                 'number' => "required|string",
                 'message' => "required|string",
                 'instance' => "required|string"
             ]);
 
-            if($request->fail()){
+            if($request->fails()){
                 throw new Exception($request->validateErros(), 400);
             }
 
