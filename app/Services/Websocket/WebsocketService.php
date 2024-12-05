@@ -28,23 +28,20 @@ class WebsocketService
     public function updateChat($request){
         try{
             $remoteJid = $request['data']['remoteJid'];
-            $chat = WhatsappChat::where('remoteJid', $remoteJid)->first();
     
-            if(!$chat){
-                $chat = WhatsappChat::updateOrcreate(
-                    [
-                        'remoteJid' => $remoteJid,
-                    ],
-                    [
-                        'name' => $request['data']['pushName'],
-                        'instance' => $request['instance'] ?? null,
-                        'instanceId' => $request['data']['instanceId'],
-                        'profilePicUrl' => $request['data']['profilePicUrl'],
-                        'apiKey' => $request['apikey'] ,
-                    ]
-                );
-            }
-    
+            $chat = WhatsappChat::updateOrcreate(
+                [
+                    'remoteJid' => $remoteJid,
+                ],
+                [
+                    'name' => $request['data']['pushName'],
+                    'instance' => $request['instance'] ?? null,
+                    'instanceId' => $request['data']['instanceId'],
+                    'profilePicUrl' => $request['data']['profilePicUrl'],
+                    'apiKey' => $request['apikey'] ,
+                ]
+            );
+            
             return $chat;        
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
