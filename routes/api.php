@@ -49,6 +49,7 @@ Route::post('updatePassword', [UserController::class, 'updatePassword']);
 Route::prefix('whatsapp')->group(function(){
     Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
     Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
+    Route::post('read-message', [WhatsappController::class, 'readMessage']);
     Route::post('send-message', [WhatsappController::class, 'sendMessage']);
     Route::post('send-audio', [WhatsappController::class, 'sendAudio']);
 });

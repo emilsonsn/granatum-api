@@ -59,6 +59,26 @@ trait EvolutionTrait
         return $response->getBody()->getContents();
     }
 
+    public function readMessages($instance, $messages)
+    {
+        $url = $this->baseUrl . "/chat/markMessageAsRead/{$instance}";
+        $data = [
+            'headers' => [
+                'apiKey' => $this->apiKey,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'readMessages' => [
+                    $messages
+                ],
+            ]
+        ];
+
+        $response = $this->client->request('POST', $url, $data);
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+
     public function fetchInstances()
     {
         $url = $this->baseUrl . "/instance/fetchInstances";

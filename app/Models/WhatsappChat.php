@@ -16,6 +16,8 @@ class WhatsappChat extends Model
 
     public $table = 'whatsapp_chats';
 
+    protected $appends = ['unread_count'];
+
     protected $fillable = [
         'name',
         'remoteJid',
@@ -38,5 +40,10 @@ class WhatsappChat extends Model
     public function lastMessage()
     {
         return $this->hasOne(ChatMessage::class, 'whatsapp_chat_id','id')->latestOfMany();
+    }
+
+    public function getUnreadCountAttribute()
+    {
+        return $this->messages()->where('read', false)->count();
     }
 }

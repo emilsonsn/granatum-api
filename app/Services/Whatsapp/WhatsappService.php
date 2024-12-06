@@ -126,7 +126,6 @@ class WhatsappService
                     'fromMe' => true,
                     'message' => $result['message']['extendedTextMessage']['text'],
                     'messageReplied' => null,
-                    'unread' => false,
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
             }
@@ -179,7 +178,6 @@ class WhatsappService
                     'instanceId' => $whatsappChat->instanceId,                    
                     'fromMe' => true,
                     'messageReplied' => null,
-                    'unread' => false,
                     'type' => MessageType::Audio->value,
                     'path' => $audioPath,
                     'whatsapp_chat_id' => $whatsappChat->id,
@@ -192,4 +190,100 @@ class WhatsappService
         }
     }
 
+    public function read($request)
+    {
+        try {
+            $rules = [
+                'number' => "required|string",
+                'instance' => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()){
+                throw new Exception($validator->errors()->first());
+            }
+
+            $number = $request->number;
+            $instance = $request->instance;
+
+            $messages = ChatMessage::where('remoteJid', $number)
+                ->where('read', false)
+                ->select('remoteJid', 'fromMe', 'externalId');                
+
+            $messagesData = array_map(function ($message) {
+                $message['id'] = $message['externalId'];
+                unset($message['externalId']);
+                return $message;
+            }, $messages->get()->toArray());
+        
+            $this->prepareDataEvolution($instance);
+            $result = $this->readMessages($instance, $messagesData);
+
+            if(!isset($result['read']) || $result['read'] !== 'success'){
+                $error = $result['response']['message'][0] ?? 'Erro não identificado';                
+                throw new Exception($error, 400);
+            }
+            
+            $messages->update([ 'read' => true ]);
+
+            return ['status' => true, 'data' => $result];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function midia($request)
+    {
+        try {
+            $rules = [
+                'number' => "required|string",
+                'instance' => "required|string",
+                'audio' => "required|file|mimes:mp3|max:10240"
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()){
+                throw new Exception($validator->errors()->first());
+            }
+
+            $audio = $request->audio;
+            $number = $request->number;
+            $instance = $request->instance;
+
+            $audioPath = $audio->store('audios', 'public');
+
+            $fullAudioPath = asset('storage/' . $audioPath);
+            $fullAudioPath = "https://filesamples.com/samples/audio/mp3/sample4.mp3";
+
+            $this->prepareDataEvolution($instance);
+            $result = $this->sendAudio($instance, $number, $fullAudioPath);
+
+            if(!isset($result['key'])){
+                $error = $result['response']['message'][0] ?? 'Erro não identificado';                
+                throw new Exception($error, 400);
+            }
+
+            $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])
+                ->first();
+
+            if(isset($whatsappChat)){
+                $result['internalMessage'] = ChatMessage::create([
+                    'remoteJid' => $whatsappChat->remoteJid,
+                    'externalId' => $result['key']['id'],
+                    'instanceId' => $whatsappChat->instanceId,                    
+                    'fromMe' => true,
+                    'messageReplied' => null,
+                    'type' => MessageType::Audio->value,
+                    'path' => $audioPath,
+                    'whatsapp_chat_id' => $whatsappChat->id,
+                ]);
+            }
+
+            return ['status' => true, 'data' => $result];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
 }
