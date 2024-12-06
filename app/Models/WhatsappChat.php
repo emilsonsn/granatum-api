@@ -44,6 +44,9 @@ class WhatsappChat extends Model
 
     public function getUnreadCountAttribute()
     {
-        return $this->messages()->where('read', false)->count();
+        return $this->messages()
+            ->where('read', false)
+            ->where('fromMe', false)
+            ->count();
     }
 }
