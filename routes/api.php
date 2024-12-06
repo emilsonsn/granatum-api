@@ -50,6 +50,7 @@ Route::prefix('whatsapp')->group(function(){
     Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
     Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
     Route::post('send-message', [WhatsappController::class, 'sendMessage']);
+    Route::post('send-audio', [WhatsappController::class, 'sendAudio']);
 });
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);

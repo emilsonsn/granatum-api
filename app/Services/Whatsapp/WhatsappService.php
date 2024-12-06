@@ -2,6 +2,7 @@
 
 namespace App\Services\Whatsapp;
 
+use App\Enums\MessageType;
 use App\Models\ChatMessage;
 use Exception;
 use App\Models\WhatsappChat;
@@ -126,6 +127,61 @@ class WhatsappService
                     'message' => $result['message']['extendedTextMessage']['text'],
                     'messageReplied' => null,
                     'unread' => false,
+                    'whatsapp_chat_id' => $whatsappChat->id,
+                ]);
+            }
+
+            return ['status' => true, 'data' => $result];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }
+
+    public function audio($request)
+    {
+        try {
+            $rules = [
+                'number' => "required|string",
+                'instance' => "required|string",
+                'audio' => "required|file|mimes:mp3|max:10240"
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()){
+                throw new Exception($validator->errors()->first());
+            }
+
+            $audio = $request->audio;
+            $number = $request->number;
+            $instance = $request->instance;
+
+            $audioPath = $audio->store('audios', 'public');
+
+            $fullAudioPath = asset('storage/' . $audioPath);
+            $fullAudioPath = "https://filesamples.com/samples/audio/mp3/sample4.mp3";
+
+            $this->prepareDataEvolution($instance);
+            $result = $this->sendAudio($instance, $number, $fullAudioPath);
+
+            if(!isset($result['key'])){
+                $error = $result['response']['message'][0] ?? 'Erro não identificado';                
+                throw new Exception($error, 400);
+            }
+
+            $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])
+                ->first();
+
+            if(isset($whatsappChat)){
+                $result['internalMessage'] = ChatMessage::create([
+                    'remoteJid' => $whatsappChat->remoteJid,
+                    'externalId' => $result['key']['id'],
+                    'instanceId' => $whatsappChat->instanceId,                    
+                    'fromMe' => true,
+                    'messageReplied' => null,
+                    'unread' => false,
+                    'type' => MessageType::Audio->value,
+                    'path' => $audioPath,
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
             }

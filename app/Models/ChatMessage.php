@@ -24,6 +24,8 @@ class ChatMessage extends Model
         'message',
         'messageReplied',
         'unread',
+        'type',
+        'path',
         'whatsapp_chat_id',
     ];
 

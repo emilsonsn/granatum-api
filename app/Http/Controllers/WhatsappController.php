@@ -28,7 +28,14 @@ class WhatsappController extends Controller
     public function sendMessage(Request $request){
         $result = $this->whatsappService->createMessage($request);
 
-        if($result['status']) $result['message'] = "Mensagem criada com sucesso";
+        if($result['status']) $result['message'] = "Mensagem enviada com sucesso";
+        return $this->response($result);
+    }
+
+    public function sendAudio(Request $request){
+        $result = $this->whatsappService->audio($request);
+
+        if($result['status']) $result['message'] = "Audio enviado com sucesso";
         return $this->response($result);
     }
 

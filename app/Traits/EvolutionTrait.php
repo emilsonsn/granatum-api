@@ -103,7 +103,7 @@ trait EvolutionTrait
         ];
 
         $response = $this->client->request('POST', $url, $data);
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     public function sendMedia($instance, $number, $mediaType, $media, $caption = null, $mimeType = null, $fileName = null)
@@ -125,7 +125,7 @@ trait EvolutionTrait
         ];
 
         $response = $this->client->request('POST', $url, $data);
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     public function sendAudio($instance, $number, $audio, $delay = null, $encoding = null, $quoted = null, $mentionsEveryOne = null, $mentioned = null)
@@ -139,16 +139,16 @@ trait EvolutionTrait
             'json' => [
                 'number' => $number,
                 'audio' => $audio,
-                'delay' => $delay,
-                'encoding' => $encoding,
-                'quoted' => $quoted,
-                'mentionsEveryOne' => $mentionsEveryOne,
-                'mentioned' => $mentioned,
+                // 'delay' => $delay,
+                // 'encoding' => $encoding,
+                // 'quoted' => $quoted,
+                // 'mentionsEveryOne' => $mentionsEveryOne,
+                // 'mentioned' => $mentioned,
             ]
         ];
 
         $response = $this->client->request('POST', $url, $data);
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     public function sendSticker($instance, $number, $sticker, $delay = null, $quoted = null, $mentionsEveryOne = null, $mentioned = null)
@@ -170,6 +170,6 @@ trait EvolutionTrait
         ];
 
         $response = $this->client->request('POST', $url, $data);
-        return $response->getBody()->getContents();
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
