@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
@@ -156,6 +157,14 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [CrmCampaignController::class, 'update']);
         Route::delete('{id}', [CrmCampaignController::class, 'delete']);
     });
+
+    Route::prefix('budget')->group(function(){
+        Route::get('search', [BudgetController::class, 'search']);
+        Route::get('{id}', [BudgetController::class, 'getById']);        
+        Route::post('create', [BudgetController::class, 'create']);
+        Route::patch('{id}', [BudgetController::class, 'update']);
+        Route::delete('{id}', [BudgetController::class, 'delete']);
+    });    
 
     Route::prefix('travel')->group(function(){
         Route::get('search', [TravelController::class, 'search']);

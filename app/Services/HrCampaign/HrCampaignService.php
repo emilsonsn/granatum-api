@@ -14,7 +14,8 @@ class HrCampaignService
         try {
             $perPage = $request->input('take', 10);
 
-            $hrCampaigns = HrCampaign::orderBy('id', 'desc');
+            $hrCampaigns = HrCampaign::with('selectionProcess', 'status')
+                ->orderBy('id', 'desc');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
@@ -89,7 +90,8 @@ class HrCampaignService
         try {
             $hrCampaignToUpdate = HrCampaign::find($id);
 
-            if(isset($hrCampaignToUpdate)) throw new Exception('Campanha de RH não encontrada');
+            if(!isset($hrCampaignToUpdate)) throw new Exception('Campanha de RH não encontrada');
+            
             $rules = [
                 'title' => ['required', 'string', 'max:255'],
                 'message' => ['required', 'string'],
