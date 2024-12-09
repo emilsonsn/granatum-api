@@ -4,10 +4,14 @@ use BeyondCode\LaravelWebSockets\Dashboard\Http\Middleware\Authorize;
 
 return [
 
+    'host' => "0.0.0.0",
+    'port' => 6001,
+
     /*
      * Set a custom dashboard configuration
      */
     'dashboard' => [
+        'host' => "0.0.0.0",
         'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
     ],
 
@@ -24,7 +28,7 @@ return [
     'apps' => [
         [
             'id' => env('PUSHER_APP_ID'),
-            'name' => env('APP_NAME'),
+            'name' => env('WEBSOCKET_APP_NAME', 'websocket'),
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
             'path' => env('PUSHER_APP_PATH'),
@@ -50,8 +54,6 @@ return [
     'allowed_origins' => [
         //
     ],
-
-    'host' => "0.0.0.0",
 
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
@@ -130,6 +132,8 @@ return [
          * Passphrase for your local_cert file.
          */
         'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
+        
+        'verify_peer' => false,
     ],
 
     /*

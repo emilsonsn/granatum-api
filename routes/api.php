@@ -58,9 +58,6 @@ Route::get('validateToken', [AuthController::class, 'validateToken']);
 
 Route::post('/evolution-data', [WebsocketController::class, 'handle']);
 
-Route::get('/evolution-data', [WebsocketController::class, 'handle']);
-
-
 Route::prefix('candidate')->group(function(){
     Route::post('create', [CandidateController::class, 'create']);
 });
