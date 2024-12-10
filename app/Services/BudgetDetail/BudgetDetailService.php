@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Services\BudgetDetailDetail;
+namespace App\Services\BudgetDetail;
 
 use Exception;
 use App\Models\BudgetDetail;
 use Illuminate\Support\Facades\Validator;
 
-class BudgetDetailDetailService
+class BudgetDetailService
 {
 
-    public function getById($id)
+    public function getById($budget_id)
     {
         try {
-            $budgetDetail = BudgetDetail::with('budget')->find($id);
+            $budgetDetail = BudgetDetail::with('budget')
+                ->where('budget_id', $budget_id)
+                ->first();
             
             if(!isset($budgetDetail)) throw new Exception('Orçamento não encontrado');
 

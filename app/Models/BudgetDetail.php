@@ -36,6 +36,11 @@ class BudgetDetail extends Model
         'final_cover',
     ];
 
+    public function getCoverAttribute($value)
+    {
+        return $value ? asset($value) : null;
+    }
+    
     public function budget(){
         return $this->belongsTo(Budget::class);
     }

@@ -89,7 +89,7 @@ class CrmCampaignService
         try {
             $crmCampaignToUpdate = CrmCampaign::find($id);
 
-            if(isset($crmCampaignToUpdate)) throw new Exception('Campanha de CRM não encontrada');
+            if(!isset($crmCampaignToUpdate)) throw new Exception('Campanha de CRM não encontrada');
 
             $rules = [
                 'title' => ['required', 'string', 'max:255'],
@@ -106,7 +106,7 @@ class CrmCampaignService
 
             if ($validator->fails()) throw new Exception($validator->errors());
 
-            $crmCampaignToUpdate = $crmCampaignToUpdate->update($validator->validated());
+            $crmCampaignToUpdate->update($validator->validated());
 
             return ['status' => true, 'data' => $crmCampaignToUpdate];
         } catch (Exception $error) {

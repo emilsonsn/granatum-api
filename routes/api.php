@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\BudgetDetailController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
@@ -53,6 +54,7 @@ Route::prefix('whatsapp')->group(function(){
     Route::post('read-message', [WhatsappController::class, 'readMessage']);
     Route::post('send-message', [WhatsappController::class, 'sendMessage']);
     Route::post('send-audio', [WhatsappController::class, 'sendAudio']);
+    Route::patch('update-status/{id}', [WhatsappController::class, 'updateStatus']);
 });
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);
@@ -164,6 +166,12 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [BudgetController::class, 'create']);
         Route::patch('{id}', [BudgetController::class, 'update']);
         Route::delete('{id}', [BudgetController::class, 'delete']);
+    });    
+
+    Route::prefix('budget-detail')->group(function(){
+        Route::get('{id}', [BudgetDetailController::class, 'getById']);        
+        Route::post('create', [BudgetDetailController::class, 'create']);
+        Route::patch('{id}', [BudgetDetailController::class, 'update']);
     });    
 
     Route::prefix('travel')->group(function(){
