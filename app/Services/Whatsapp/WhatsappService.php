@@ -109,12 +109,12 @@ class WhatsappService
             $message = $request->message;
             $instance = $request->instance;
 
-            if($request->filled('sign') && $request->sing){
+            if($request->filled('sign') && $request->sign){
                 $fullName = Auth::user()->name;
                 $nameList = explode(',' ,$fullName);
                 $name = $nameList[0] . ($nameList[1] ?? '');
-                $sing = "*$name*:\n";
-                $message = $sing . $message;
+                $sign = "*$name*:\n";
+                $message = $sign . $message;
             }
 
             $this->prepareDataEvolution($instance);

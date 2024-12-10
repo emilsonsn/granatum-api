@@ -48,15 +48,6 @@ Route::get('validateToken', [AuthController::class, 'validateToken']);
 Route::post('recoverPassword', [UserController::class, 'passwordRecovery']);
 Route::post('updatePassword', [UserController::class, 'updatePassword']);
 
-Route::prefix('whatsapp')->group(function(){
-    Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
-    Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
-    Route::post('read-message', [WhatsappController::class, 'readMessage']);
-    Route::post('send-message', [WhatsappController::class, 'sendMessage']);
-    Route::post('send-audio', [WhatsappController::class, 'sendAudio']);
-    Route::patch('update-status/{id}', [WhatsappController::class, 'updateStatus']);
-});
-
 Route::get('validateToken', [AuthController::class, 'validateToken']);
 
 Route::post('/evolution-data', [WebsocketController::class, 'handle']);
@@ -285,12 +276,15 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [LabelController::class, 'update']);
         Route::delete('{id}', [LabelController::class, 'delete']);
     });
-
-    // Route::prefix('whatsapp')->group(function(){
-    //     Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
-    //     Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
-    //     Route::post('send-message', [WhatsappController::class, 'sendMessage']);
-    // });
+    
+    Route::prefix('whatsapp')->group(function(){
+        Route::get('chats/{instance}', [WhatsappController::class, 'searchChat']);
+        Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
+        Route::post('read-message', [WhatsappController::class, 'readMessage']);
+        Route::post('send-message', [WhatsappController::class, 'sendMessage']);
+        Route::post('send-audio', [WhatsappController::class, 'sendAudio']);
+        Route::patch('update-status/{id}', [WhatsappController::class, 'updateStatus']);
+    });
 
     Route::prefix('task')->group(function(){
         Route::get('search', [TaskController::class, 'search']);
