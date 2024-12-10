@@ -7,6 +7,7 @@ use App\Models\ChatMessage;
 use Exception;
 use App\Models\WhatsappChat;
 use App\Traits\EvolutionTrait;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class WhatsappService
@@ -94,7 +95,8 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'message' => "required|string",
-                'instance' => "required|string"
+                'instance' => "required|string",
+                'sign' => "nullable|boolean",
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -106,6 +108,14 @@ class WhatsappService
             $number = $request->number;
             $message = $request->message;
             $instance = $request->instance;
+
+            if($request->filled('sign') && $request->sing){
+                $fullName = Auth::user()->name;
+                $nameList = explode(',' ,$fullName);
+                $name = $nameList[0] . ($nameList[1] ?? '');
+                $sing = "*$name*:\n";
+                $message = $sing . $message;
+            }
 
             $this->prepareDataEvolution($instance);
             $result = $this->sendMessage($number, $message);
@@ -287,3 +297,4 @@ class WhatsappService
         }
     }
 }
+
