@@ -19,12 +19,17 @@ class WhatsappService
         try {
             $perPage = $request->input('take', 20);            
             $name = $request->input('name', null);
+            $remoteJid = $request->input('remoteJid', null);
             
             $chats = WhatsappChat::where('instance', $instance)
-                ->orderBy('id', 'desc');                
+                ->orderBy('id', 'desc');
 
             if($name){
                 $chats->where('name','LIKE', "%$instance%");
+            }
+
+            if($remoteJid){
+                $chats->where('remoteJid', $remoteJid);
             }
 
             $chats = $chats->with('lastMessage')
