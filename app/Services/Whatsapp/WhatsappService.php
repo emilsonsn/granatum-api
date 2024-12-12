@@ -3,6 +3,7 @@
 namespace App\Services\Whatsapp;
 
 use App\Enums\MessageType;
+use App\Events\EvolutionEvent;
 use App\Models\ChatMessage;
 use Exception;
 use App\Models\WhatsappChat;
@@ -144,6 +145,14 @@ class WhatsappService
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
             }
+
+            $push = [
+                'event' => 'chats.update',
+                'remoteJid' => $whatsappChat->remoteJid ?? null,
+                'instance' => $whatsappChat->instanceId ?? null
+            ];
+
+            broadcast(new EvolutionEvent($push));
 
             return ['status' => true, 'data' => $result];
         } catch (Exception $error) {
