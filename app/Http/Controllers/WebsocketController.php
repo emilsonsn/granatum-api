@@ -20,7 +20,14 @@ class WebsocketController extends Controller
 
         $this->websocketService->handle($requestData['data']);
     
-        broadcast(new EvolutionEvent($requestData['data']));
+        if($requestData['data']['event'] == "chats.update"){
+            $push = [
+                'event' => $requestData['data']['event'],
+                'remoteJid' => $requestData['data']['data'][0]['remoteJid'],
+                'instance' => $requestData['data']['instance']
+            ];
+            broadcast(new EvolutionEvent($push));
+        }
     
         return response()->json(['status' => 'success']);
     }
