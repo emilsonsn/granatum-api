@@ -24,6 +24,8 @@ class HrCampaign extends Model
         'status_id',
         'channels',
         'start_date',
+        'start_time',
+        'is_active'
     ];
 
     public function selectionProcess(){

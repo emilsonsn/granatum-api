@@ -70,6 +70,8 @@ class CrmCampaignService
                 'funnel_step_id' => ['nullable', 'integer'],
                 'channels' => ['required', 'string'],
                 'start_date' => ['required', 'date'],
+                'start_time' => ['required','regex:/^(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/',],
+                'is_active' => ['nullable', 'boolean'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -100,6 +102,8 @@ class CrmCampaignService
                 'funnel_step_id' => ['nullable', 'integer'],
                 'channels' => ['required', 'string'],
                 'start_date' => ['required', 'date'],
+                'start_time' => ['required','regex:/^(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/',],
+                'is_active' => ['nullable', 'boolean'],
             ];
 
             $validator = Validator::make($request->all(), $rules);

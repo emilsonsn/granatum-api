@@ -24,6 +24,8 @@ class CrmCampaign extends Model
         'funnel_step_id',
         'channels',
         'start_date',
+        'start_time',
+        'is_active'
     ];
 
     public function funnel(){
