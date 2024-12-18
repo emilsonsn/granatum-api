@@ -158,6 +158,49 @@ class WhatsappService
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
+    }    
+
+    public function read($request)
+    {
+        try {
+            $rules = [
+                'number' => "required|string",
+                'instance' => "required|string",
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()){
+                throw new Exception($validator->errors()->first());
+            }
+
+            $number = $request->number;
+            $instance = $request->instance;
+
+            $messages = ChatMessage::where('remoteJid', $number)
+                ->where('read', false)
+                ->select('remoteJid', 'fromMe', 'externalId');                
+
+            $messagesData = array_map(function ($message) {
+                $message['id'] = $message['externalId'];
+                unset($message['externalId']);
+                return $message;
+            }, $messages->get()->toArray());
+        
+            $this->prepareDataEvolution($instance);
+            $result = $this->readMessages($instance, $messagesData);
+
+            if(!isset($result['read']) || $result['read'] !== 'success'){
+                $error = $result['response']['message'][0] ?? 'Erro não identificado';                
+                throw new Exception($error, 400);
+            }
+            
+            $messages->update([ 'read' => true ]);
+
+            return ['status' => true, 'data' => $result];
+        } catch (Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
     }
 
     public function audio($request)
@@ -166,7 +209,7 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'audio' => "required|file|mimes:mp3|max:10240"
+                'audio' => "required|file|mimes:mp3,ogg|max:10240"
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -214,56 +257,13 @@ class WhatsappService
         }
     }
 
-    public function read($request)
-    {
-        try {
-            $rules = [
-                'number' => "required|string",
-                'instance' => "required|string",
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if($validator->fails()){
-                throw new Exception($validator->errors()->first());
-            }
-
-            $number = $request->number;
-            $instance = $request->instance;
-
-            $messages = ChatMessage::where('remoteJid', $number)
-                ->where('read', false)
-                ->select('remoteJid', 'fromMe', 'externalId');                
-
-            $messagesData = array_map(function ($message) {
-                $message['id'] = $message['externalId'];
-                unset($message['externalId']);
-                return $message;
-            }, $messages->get()->toArray());
-        
-            $this->prepareDataEvolution($instance);
-            $result = $this->readMessages($instance, $messagesData);
-
-            if(!isset($result['read']) || $result['read'] !== 'success'){
-                $error = $result['response']['message'][0] ?? 'Erro não identificado';                
-                throw new Exception($error, 400);
-            }
-            
-            $messages->update([ 'read' => true ]);
-
-            return ['status' => true, 'data' => $result];
-        } catch (Exception $error) {
-            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
-        }
-    }
-
     public function midia($request)
     {
         try {
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'audio' => "required|file|mimes:mp3|max:10240"
+                'midia' => "required|file|mimes:mp3|max:10240"
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -272,17 +272,21 @@ class WhatsappService
                 throw new Exception($validator->errors()->first());
             }
 
-            $audio = $request->audio;
             $number = $request->number;
             $instance = $request->instance;
+            $mediaType = '';
 
-            $audioPath = $audio->store('audios', 'public');
+            if(!$request->hasFile('midia')){
+                throw new Exception('Mídia não encontrada');
+            }
 
-            $fullAudioPath = asset('storage/' . $audioPath);
-            $fullAudioPath = "https://filesamples.com/samples/audio/mp3/sample4.mp3";
+            $mediaPath = $request->file('midia')->store('media', 'public');
+
+            $fullMidiaPath = asset('storage/' . $mediaPath);
+
 
             $this->prepareDataEvolution($instance);
-            $result = $this->sendAudio($instance, $number, $fullAudioPath);
+            $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath);
 
             if(!isset($result['key'])){
                 $error = $result['response']['message'][0] ?? 'Erro não identificado';                
@@ -300,7 +304,7 @@ class WhatsappService
                     'fromMe' => true,
                     'messageReplied' => null,
                     'type' => MessageType::Audio->value,
-                    'path' => $audioPath,
+                    'path' => $fullMidiaPath,
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
             }
