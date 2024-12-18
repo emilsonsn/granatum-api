@@ -225,7 +225,6 @@ class WhatsappService
             $audioPath = $audio->store('audios', 'public');
 
             $fullAudioPath = asset('storage/' . $audioPath);
-            $fullAudioPath = "https://filesamples.com/samples/audio/mp3/sample4.mp3";
 
             $this->prepareDataEvolution($instance);
             $result = $this->sendAudio($instance, $number, $fullAudioPath);
@@ -263,47 +262,50 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'midia' => "required|file|mimes:mp3|max:10240"
+                'media' => "required|file|mimes:mp3,jpg,png,webp|max:10240"
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 throw new Exception($validator->errors()->first());
             }
 
             $number = $request->number;
             $instance = $request->instance;
-            $mediaType = '';
 
-            if(!$request->hasFile('midia')){
+            if (!$request->hasFile('media')) {
                 throw new Exception('Mídia não encontrada');
             }
 
-            $mediaPath = $request->file('midia')->store('media', 'public');
-
+            // Salva o arquivo
+            $mediaPath = $request->file('media')->store('media', 'public');
             $fullMidiaPath = asset('storage/' . $mediaPath);
 
+            // Define o tipo MIME da mídia
+            $filePath = storage_path('app/public/' . $mediaPath);
+            $mediaType = mime_content_type($filePath);
 
+            // Preparação e envio
             $this->prepareDataEvolution($instance);
             $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath);
 
-            if(!isset($result['key'])){
-                $error = $result['response']['message'][0] ?? 'Erro não identificado';                
+            if (!isset($result['key'])) {
+                $error = $result['response']['message'][0] ?? 'Erro não identificado';
                 throw new Exception($error, 400);
             }
 
             $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])
                 ->first();
 
-            if(isset($whatsappChat)){
+            if (isset($whatsappChat)) {
                 $result['internalMessage'] = ChatMessage::create([
                     'remoteJid' => $whatsappChat->remoteJid,
                     'externalId' => $result['key']['id'],
-                    'instanceId' => $whatsappChat->instanceId,                    
+                    'instanceId' => $whatsappChat->instanceId,
                     'fromMe' => true,
                     'messageReplied' => null,
-                    'type' => MessageType::Audio->value,
+                    'type' => MessageType::Midea->value,
                     'path' => $fullMidiaPath,
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
@@ -314,5 +316,6 @@ class WhatsappService
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+
 }
 
