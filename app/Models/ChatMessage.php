@@ -32,4 +32,9 @@ class ChatMessage extends Model
     public function chat(){
         return $this->belongsTo(WhatsappChat::class);
     }
+
+    public function getPathAttribute($value)
+    {
+        return isset($value) ? asset('storage/' . $value) : null;
+    }
 }
