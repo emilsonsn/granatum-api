@@ -1,7 +1,8 @@
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
-const instances = ['escritorio', 'teste123', 'mel'];
+// const instances = ['escritorio', 'teste123', 'mel'];
+const instances = ['teste123'];
 
 // const baseUrl = "https://app.andradeengenhariaeletrica.com.br:3001";
 const baseUrl = "http://localhost:8000";
