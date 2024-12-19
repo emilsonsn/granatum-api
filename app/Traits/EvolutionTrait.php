@@ -126,7 +126,7 @@ trait EvolutionTrait
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function sendMedia($instance, $number, $mediaType, $media, $caption = null, $mimeType = null, $fileName = null)
+    public function sendMedia($instance, $number, $mediaType, $media, $caption, $mimeType = null, $fileName = null)
     {
         $url = $this->baseUrl . "/message/sendMedia/{$instance}";
         $data = [
@@ -148,7 +148,7 @@ trait EvolutionTrait
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function sendAudio($instance, $number, $audio, $delay = null, $encoding = null, $quoted = null, $mentionsEveryOne = null, $mentioned = null)
+    public function sendAudio($instance, $number, $audio)
     {
         $url = $this->baseUrl . "/message/sendWhatsAppAudio/{$instance}";
         $data = [
@@ -159,33 +159,6 @@ trait EvolutionTrait
             'json' => [
                 'number' => $number,
                 'audio' => $audio,
-                // 'delay' => $delay,
-                // 'encoding' => $encoding,
-                // 'quoted' => $quoted,
-                // 'mentionsEveryOne' => $mentionsEveryOne,
-                // 'mentioned' => $mentioned,
-            ]
-        ];
-
-        $response = $this->client->request('POST', $url, $data);
-        return json_decode($response->getBody()->getContents(), true);
-    }
-
-    public function sendSticker($instance, $number, $sticker, $delay = null, $quoted = null, $mentionsEveryOne = null, $mentioned = null)
-    {
-        $url = $this->baseUrl . "/message/sendSticker/{$instance}";
-        $data = [
-            'headers' => [
-                'apiKey' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'number' => $number,
-                'sticker' => $sticker,
-                'delay' => $delay,
-                'quoted' => $quoted,
-                'mentionsEveryOne' => $mentionsEveryOne,
-                'mentioned' => $mentioned,
             ]
         ];
 

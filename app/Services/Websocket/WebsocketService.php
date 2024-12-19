@@ -157,6 +157,8 @@ class WebsocketService
             'text/plain' => 'txt',
             'text/html' => 'html',
             'application/json' => 'json',
+            'audio/ogg; codecs=opus' => 'ogg',
+            'audio/ogg;' => 'ogg',
         ];
     
         return $mimeToExtension[$mimeType] ?? null;

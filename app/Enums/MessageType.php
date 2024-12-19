@@ -6,6 +6,7 @@ enum MessageType: string
 {
     case Text = 'Text';
     case Audio = 'Audio';
-    case Midea = 'Midea';
+    case Image = 'Image';
+    case Video = 'Video';
     case File = 'File';
 }

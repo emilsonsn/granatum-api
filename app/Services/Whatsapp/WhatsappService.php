@@ -262,7 +262,9 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'media' => "required|file|mimes:mp3,jpg,png,webp|max:10240"
+                'media' => "required|file|mimes:mp3,jpg,png,webp|max:10240",
+                'message' => "nullable|'string",
+                'type' => 'required|in:Video,Image'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -273,22 +275,21 @@ class WhatsappService
 
             $number = $request->number;
             $instance = $request->instance;
+            $message = $request->message ?? '';
 
             if (!$request->hasFile('media')) {
                 throw new Exception('Mídia não encontrada');
             }
 
-            // Salva o arquivo
             $mediaPath = $request->file('media')->store('media', 'public');
             $fullMidiaPath = asset('storage/' . $mediaPath);
 
-            // Define o tipo MIME da mídia
             $filePath = storage_path('app/public/' . $mediaPath);
             $mediaType = mime_content_type($filePath);
 
-            // Preparação e envio
             $this->prepareDataEvolution($instance);
-            $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath);
+            
+            $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath, $message);
 
             if (!isset($result['key'])) {
                 $error = $result['response']['message'][0] ?? 'Erro não identificado';
@@ -305,7 +306,7 @@ class WhatsappService
                     'instanceId' => $whatsappChat->instanceId,
                     'fromMe' => true,
                     'messageReplied' => null,
-                    'type' => MessageType::Midea->value,
+                    'type' => $request['type'],
                     'path' => $fullMidiaPath,
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
