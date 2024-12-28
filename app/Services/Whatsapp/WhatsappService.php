@@ -262,61 +262,78 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'media' => "required|file|mimes:mp3,jpg,png,webp|max:10240",
-                'message' => "nullable|'string",
-                'type' => 'required|in:Video,Image'
+                'medias' => "required|array",
+                'medias.*' => 'file|max:10240',
+                'message' => "nullable|string",
             ];
-
+    
             $validator = Validator::make($request->all(), $rules);
-
+    
             if ($validator->fails()) {
                 throw new Exception($validator->errors()->first());
             }
-
+    
             $number = $request->number;
             $instance = $request->instance;
             $message = $request->message ?? '';
-
-            if (!$request->hasFile('media')) {
-                throw new Exception('Mídia não encontrada');
+    
+            if (!$request->hasFile('medias')) {
+                throw new Exception('Mídias não encontradas');
             }
-
-            $mediaPath = $request->file('media')->store('media', 'public');
-            $fullMidiaPath = asset('storage/' . $mediaPath);
-
-            $filePath = storage_path('app/public/' . $mediaPath);
-            $mediaType = mime_content_type($filePath);
-
+    
+            $fullMidiaPaths = [];
+            $mediaCategories = [];
+    
+            foreach ($request->medias as $media) {
+                $mediaPath = $media->store('media', 'public');
+                $fullMidiaPath = asset('storage/' . $mediaPath);
+                $fullMidiaPaths[] = $fullMidiaPath;
+    
+                $filePath = storage_path('app/public/' . $mediaPath);
+                $mimeType = mime_content_type($filePath);
+    
+                if (str_starts_with($mimeType, 'image/')) {
+                    $mediaCategories[] = 'Image';
+                } elseif (str_starts_with($mimeType, 'video/')) {
+                    $mediaCategories[] = 'Video';
+                } else {
+                    $mediaCategories[] = 'File';
+                }
+            }
+    
             $this->prepareDataEvolution($instance);
-            
-            $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath, $message);
-
-            if (!isset($result['key'])) {
-                $error = $result['response']['message'][0] ?? 'Erro não identificado';
-                throw new Exception($error, 400);
+    
+            foreach ($fullMidiaPaths as $index => $fullMidiaPath) {
+                $mediaType = $mediaCategories[$index];
+                $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath, $message);
+    
+                if (!isset($result['key'])) {
+                    $error = $result['response']['message'][0] ?? 'Erro não identificado';
+                    throw new Exception($error, 400);
+                }
+    
+                $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])->first();
+    
+                if (isset($whatsappChat)) {
+                    $result['internalMessage'] = ChatMessage::create([
+                        'remoteJid' => $whatsappChat->remoteJid,
+                        'externalId' => $result['key']['id'],
+                        'instanceId' => $whatsappChat->instanceId,
+                        'fromMe' => true,
+                        'messageReplied' => null,
+                        'type' => $mediaType,
+                        'path' => $fullMidiaPath,
+                        'whatsapp_chat_id' => $whatsappChat->id,
+                    ]);
+                }
             }
-
-            $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])
-                ->first();
-
-            if (isset($whatsappChat)) {
-                $result['internalMessage'] = ChatMessage::create([
-                    'remoteJid' => $whatsappChat->remoteJid,
-                    'externalId' => $result['key']['id'],
-                    'instanceId' => $whatsappChat->instanceId,
-                    'fromMe' => true,
-                    'messageReplied' => null,
-                    'type' => $request['type'],
-                    'path' => $fullMidiaPath,
-                    'whatsapp_chat_id' => $whatsappChat->id,
-                ]);
-            }
-
+    
             return ['status' => true, 'data' => $result];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+
 
 }
 
