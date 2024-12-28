@@ -5,7 +5,6 @@ namespace App\Services\Websocket;
 use Exception;
 use App\Models\ChatMessage;
 use App\Models\WhatsappChat;
-use Illuminate\Support\Facades\Log;
 
 class WebsocketService
 {
@@ -86,12 +85,17 @@ class WebsocketService
                 $messageType = 'imageMessage';
                 $mimeType = $request['data']['message']['imageMessage']['mimetype'];
                 $base64Data = $request['data']['message']['base64'];
-            } elseif (isset($request['data']['message']['documentWithCaptionMessage'])) {
+            } elseif (isset($request['data']['message']['documentWithCaptionMessage'])) {                            
                 $type = 'file';
                 $messageType = 'fileMessage';
                 $mimeType = $request['data']['message']['documentWithCaptionMessage']['message']['documentMessage']['mimetype'];
                 $base64Data = $request['data']['message']['base64'];
-            } else {
+            } elseif(isset($request['data']['message']['documentMessage'])) {
+                $type = 'file';
+                $messageType = 'fileMessage';
+                $mimeType = $request['data']['message']['documentMessage']['mimetype'];
+                $base64Data = $request['data']['message']['base64'];
+            }else {
                 $messageType = null;
                 $mimeType = null;
                 $base64Data = null;
