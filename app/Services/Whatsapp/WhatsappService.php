@@ -209,7 +209,7 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'audio' => "required|file|mimes:mp3,ogg|max:10240"
+                'audio' => "required|file|mimes:mp3,ogg,wav|max:10240"
             ];
 
             $validator = Validator::make($request->all(), $rules);
