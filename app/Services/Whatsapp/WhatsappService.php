@@ -282,7 +282,8 @@ class WhatsappService
             }
     
             $fullMidiaPaths = [];
-            $mediaCategories = [];
+            $mimeTypes = [];
+            $categories = [];
     
             foreach ($request->medias as $media) {
                 $mediaPath = $media->store('media', 'public');
@@ -291,21 +292,23 @@ class WhatsappService
     
                 $filePath = storage_path('app/public/' . $mediaPath);
                 $mimeType = mime_content_type($filePath);
+                $mimeTypes[] = $mimeType;
     
                 if (str_starts_with($mimeType, 'image/')) {
-                    $mediaCategories[] = 'Image';
+                    $categories[] = 'Image';
                 } elseif (str_starts_with($mimeType, 'video/')) {
-                    $mediaCategories[] = 'Video';
+                    $categories[] = 'Video';
                 } else {
-                    $mediaCategories[] = 'File';
+                    $categories[] = 'File';
                 }
             }
     
             $this->prepareDataEvolution($instance);
     
             foreach ($fullMidiaPaths as $index => $fullMidiaPath) {
-                $mediaType = $mediaCategories[$index];
-                $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath, $message);
+                $mimeType = $mimeTypes[$index];
+                $category = $categories[$index];
+                $result = $this->sendMedia($instance, $number, $mimeType, $fullMidiaPath, $message);
     
                 if (!isset($result['key'])) {
                     $error = $result['response']['message'][0] ?? 'Erro não identificado';
@@ -321,19 +324,26 @@ class WhatsappService
                         'instanceId' => $whatsappChat->instanceId,
                         'fromMe' => true,
                         'messageReplied' => null,
-                        'type' => $mediaType,
+                        'type' => $category,
                         'path' => $fullMidiaPath,
                         'whatsapp_chat_id' => $whatsappChat->id,
                     ]);
                 }
             }
+
+
+            $push = [
+                'event' => 'chats.update',
+                'remoteJid' => $whatsappChat->remoteJid ?? null,
+                'instance' => $whatsappChat->instanceId ?? null
+            ];
+
+            broadcast(new EvolutionEvent($push));
     
             return ['status' => true, 'data' => $result];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
-
-
 }
 
