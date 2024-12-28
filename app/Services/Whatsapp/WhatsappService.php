@@ -226,6 +226,9 @@ class WhatsappService
 
             $fullAudioPath = asset('storage/' . $audioPath);
 
+            // Mock de envio de audio
+            $fullAudioPath = 'https://tuningmania.com.br/autosom/mp3/16kHz.mp3';
+
             $this->prepareDataEvolution($instance);
             $result = $this->sendAudio($instance, $number, $fullAudioPath);
 
@@ -250,6 +253,15 @@ class WhatsappService
                 ]);
             }
 
+
+            $push = [
+                'event' => 'chats.update',
+                'remoteJid' => $whatsappChat->remoteJid ?? null,
+                'instance' => $whatsappChat->instanceId ?? null,
+            ];
+
+            broadcast(new EvolutionEvent($push));
+
             return ['status' => true, 'data' => $result];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
@@ -266,59 +278,66 @@ class WhatsappService
                 'medias.*' => 'file|max:10240',
                 'message' => "nullable|string",
             ];
-    
+
             $validator = Validator::make($request->all(), $rules);
-    
+
             if ($validator->fails()) {
                 throw new Exception($validator->errors()->first());
             }
-    
+
             $number = $request->number;
             $instance = $request->instance;
             $message = $request->message ?? '';
-    
+
             if (!$request->hasFile('medias')) {
                 throw new Exception('Mídias não encontradas');
             }
-    
+
             $fullMidiaPaths = [];
             $mimeTypes = [];
+            $mediaTypes = [];
             $categories = [];
-    
+
             foreach ($request->medias as $media) {
                 $mediaPath = $media->store('media', 'public');
                 $fullMidiaPath = asset('storage/' . $mediaPath);
                 $fullMidiaPaths[] = $fullMidiaPath;
-    
+
                 $filePath = storage_path('app/public/' . $mediaPath);
                 $mimeType = mime_content_type($filePath);
                 $mimeTypes[] = $mimeType;
-    
+
                 if (str_starts_with($mimeType, 'image/')) {
+                    $mediaTypes[] = 'image';
                     $categories[] = 'Image';
                 } elseif (str_starts_with($mimeType, 'video/')) {
+                    $mediaTypes[] = 'video';
                     $categories[] = 'Video';
                 } else {
+                    $mediaTypes[] = 'document';
                     $categories[] = 'File';
                 }
             }
-    
+
             $this->prepareDataEvolution($instance);
-    
+
             foreach ($fullMidiaPaths as $index => $fullMidiaPath) {
                 $mimeType = $mimeTypes[$index];
-                $midiaType = "document";
-                $category = $categories[$index];
+                $mediaType = $mediaTypes[$index]; // Pega o mediaType dinâmico (image, video, document)
+                $category = $categories[$index]; // Pega a categoria para salvar no banco
+
+                // Mock do caminho para teste (remova esta linha quando estiver em produção)
                 $fullMidiaPath = 'https://eppg.fgv.br/sites/default/files/teste.pdf';
-                $result = $this->sendMedia($instance, $number, $midiaType, $fullMidiaPath, $message, $mimeType);
-    
+
+                $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath, $message, $mimeType);
+
                 if (!isset($result['key'])) {
                     $error = $result['response']['message'][0] ?? 'Erro não identificado';
                     throw new Exception($error, 400);
                 }
-    
+
                 $whatsappChat = WhatsappChat::where('remoteJid', $result['key']['remoteJid'])->first();
-    
+
                 if (isset($whatsappChat)) {
                     $result['internalMessage'] = ChatMessage::create([
                         'remoteJid' => $whatsappChat->remoteJid,
@@ -326,26 +345,26 @@ class WhatsappService
                         'instanceId' => $whatsappChat->instanceId,
                         'fromMe' => true,
                         'messageReplied' => null,
-                        'type' => $category,
+                        'type' => $category, // Salva apenas Image, Video ou File no banco
                         'path' => $fullMidiaPath,
                         'whatsapp_chat_id' => $whatsappChat->id,
                     ]);
                 }
             }
 
-
             $push = [
                 'event' => 'chats.update',
                 'remoteJid' => $whatsappChat->remoteJid ?? null,
-                'instance' => $whatsappChat->instanceId ?? null
+                'instance' => $whatsappChat->instanceId ?? null,
             ];
 
             broadcast(new EvolutionEvent($push));
-    
+
             return ['status' => true, 'data' => $result];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
+
 }
 
