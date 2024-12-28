@@ -307,8 +307,10 @@ class WhatsappService
     
             foreach ($fullMidiaPaths as $index => $fullMidiaPath) {
                 $mimeType = $mimeTypes[$index];
+                $midiaType = "document";
                 $category = $categories[$index];
-                $result = $this->sendMedia($instance, $number, $mimeType, $fullMidiaPath, $message);
+                $fullMidiaPath = 'https://eppg.fgv.br/sites/default/files/teste.pdf';
+                $result = $this->sendMedia($instance, $number, $midiaType, $fullMidiaPath, $message, $mimeType);
     
                 if (!isset($result['key'])) {
                     $error = $result['response']['message'][0] ?? 'Erro não identificado';

@@ -126,7 +126,7 @@ trait EvolutionTrait
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function sendMedia($instance, $number, $mediaType, $media, $caption, $mimeType = null, $fileName = null)
+    public function sendMedia($instance, $number, $mediaType, $media, $caption, $mimeType = '', $fileName = '')
     {
         $url = $this->baseUrl . "/message/sendMedia/{$instance}";
         $data = [
