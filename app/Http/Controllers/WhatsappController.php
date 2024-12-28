@@ -39,6 +39,13 @@ class WhatsappController extends Controller
         return $this->response($result);
     }
 
+    public function sendMedia(Request $request){
+        $result = $this->whatsappService->midia($request);
+
+        if($result['status']) $result['message'] = "Midia enviada com sucesso";
+        return $this->response($result);
+    }
+
     public function readMessage(Request $request){
         $result = $this->whatsappService->read($request);
 

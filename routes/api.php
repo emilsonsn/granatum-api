@@ -282,6 +282,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('messages/{remoteJid}', [WhatsappController::class, 'searchMessage']);
         Route::post('read-message', [WhatsappController::class, 'readMessage']);
         Route::post('send-message', [WhatsappController::class, 'sendMessage']);
+        Route::post('send-midia', [WhatsappController::class, 'sendMedia']);
         Route::post('send-audio', [WhatsappController::class, 'sendAudio']);
         Route::patch('update-status/{id}', [WhatsappController::class, 'updateStatus']);
     });
