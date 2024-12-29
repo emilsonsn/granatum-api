@@ -39,6 +39,13 @@ class LeadController extends Controller
         return $this->response($result);
     }
 
+    public function leadStep(Request $request){
+        $result = $this->leadService->leadStep($request);
+
+        if($result['status']) $result['message'] = "Lead atualizado com sucesso";
+        return $this->response($result);
+    }
+
     public function delete($id){
         $result = $this->leadService->delete($id);
 

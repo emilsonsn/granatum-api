@@ -233,7 +233,8 @@ Route::middleware('jwt')->group(function(){
         Route::get('search', [LeadController::class, 'search']);
         Route::get('{id}', [LeadController::class, 'getById']);
         Route::post('create', [LeadController::class, 'create']);
-        Route::patch('{id}', [LeadController::class, 'update']);
+        Route::patch('lead-step', [LeadController::class, 'leadStep']);
+        Route::patch('{id}', [LeadController::class, 'update']);        
         Route::delete('{id}', [LeadController::class, 'delete']);
     });
 
