@@ -15,7 +15,7 @@ class FunnelStepService
             $perPage = $request->input('take', 10);
 
             $funnelStepSteps = FunnelStep::orderBy('id', 'desc')
-                ->with(['leads']);
+                ->with('leads');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;

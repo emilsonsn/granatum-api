@@ -26,6 +26,6 @@ class FunnelStep extends Model
     }
 
     public function leads(){
-        return $this->hasMany(Lead::class);
+        return $this->hasMany(LeadStep::class, 'step_id')->with('lead');
     }
 }
