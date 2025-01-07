@@ -6,7 +6,6 @@ use App\Models\FunnelStep;
 use Exception;
 use App\Models\Lead;
 use App\Models\LeadStep;
-use App\Traits\GranatumTrait;
 use Illuminate\Support\Facades\Validator;
 
 class LeadService

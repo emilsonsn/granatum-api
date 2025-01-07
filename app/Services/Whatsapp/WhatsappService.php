@@ -209,10 +209,12 @@ class WhatsappService
             $rules = [
                 'number' => "required|string",
                 'instance' => "required|string",
-                'audio' => "required|file|mimes:mp3,ogg,wav|max:10240"
+                'audio' => "required|file|max:10240"
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            $data = $request->all();
+
+            $validator = Validator::make($data, $rules);
 
             if($validator->fails()){
                 throw new Exception($validator->errors()->first());
@@ -252,7 +254,6 @@ class WhatsappService
                     'whatsapp_chat_id' => $whatsappChat->id,
                 ]);
             }
-
 
             $push = [
                 'event' => 'chats.update',
