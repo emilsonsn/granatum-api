@@ -53,14 +53,15 @@ class ClientService
                 return ['status' => false, 'error' => $validator->errors(), 'statusCode' => 400];;
             }
 
-            $client = Client::create($validator->validated());
+            $data = $validator->validated();
+
+            $client = Client::create($data);
 
             return ['status' => true, 'data' => $client];
         } catch (Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
-
 
     public function update($request, $user_id)
     {

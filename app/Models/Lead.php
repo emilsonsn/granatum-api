@@ -22,6 +22,7 @@ class Lead extends Model
         'origin',
         'observations',
         'responsible_id',
+        'funnel_id',
     ];
 
     public function responsible(){
@@ -30,6 +31,10 @@ class Lead extends Model
 
     public function steps(){
         return $this->hasMany(LeadStep::class);
+    }
+
+    public function funnel(){
+        return $this->belongsTo(Funnel::class);
     }
 
 }

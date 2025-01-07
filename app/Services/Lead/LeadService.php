@@ -2,6 +2,7 @@
 
 namespace App\Services\Lead;
 
+use App\Models\FunnelStep;
 use Exception;
 use App\Models\Lead;
 use App\Models\LeadStep;
@@ -17,7 +18,7 @@ class LeadService
             $perPage = $request->input('take', 10);
 
             $leads = Lead::orderBy('id', 'desc')
-                ->with(['responsible']);
+                ->with(['responsible', 'funnel']);
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;
@@ -67,13 +68,27 @@ class LeadService
                 'origin' => ['nullable', 'string', 'max:256'],
                 'observations' => ['nullable', 'string',],
                 'responsible_id' => ['required', 'integer'], 
+                'funnel_id' => ['nullable', 'integer']
             ];
 
             $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) throw new Exception($validator->errors());
+            if ($validator->fails()) throw new Exception($validator->errors());            
 
-            $lead = Lead::create($validator->validated());            
+            $lead = Lead::create($validator->validated());
+
+            if(isset($request->funnel_id)){
+                $funnelStep = FunnelStep::where('funnel_id', $request->funnel_id)
+                    ->first();
+
+                if(!isset($funnelStep)) return;
+
+                $lead['leadStep'] = LeadStep::create([
+                    'step_id' => $funnelStep->id,
+                    'lead_id' => $lead->id,
+                    'postition' => 1
+                ]);
+            }
 
             return ['status' => true, 'data' => $lead];
         } catch (Exception $error) {
@@ -95,6 +110,7 @@ class LeadService
                 'origin' => ['nullable', 'string', 'max:256'],
                 'observations' => ['nullable', 'string',],
                 'responsible_id' => ['required', 'integer'], 
+                'funnel_id' => ['nullable', 'integer']
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -102,6 +118,19 @@ class LeadService
             if ($validator->fails()) throw new Exception($validator->errors());
 
             $leadToUpdate = $leadToUpdate->update($validator->validated());
+
+            if(isset($request->funnel_id)){
+                $funnelStep = FunnelStep::where('funnel_id', $request->funnel_id)
+                    ->first();
+
+                if(!isset($funnelStep)) return;
+
+                $lead['leadStep'] = LeadStep::create([
+                    'step_id' => $funnelStep->id,
+                    'lead_id' => $leadToUpdate->id,
+                    'postition' => 1
+                ]);
+            }
 
             return ['status' => true, 'data' => $leadToUpdate];
         } catch (Exception $error) {
