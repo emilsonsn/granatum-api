@@ -161,9 +161,9 @@ class LeadService
             }
 
             LeadStep::updateOrCreate([
-                'step_id' => $data['step_id'],
-            ],[
                 'lead_id' => $data['lead_id'],
+            ],[
+                'step_id' => $data['step_id'],
                 'position' => $data['position'],
             ]);
 
