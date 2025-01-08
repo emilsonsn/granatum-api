@@ -324,10 +324,9 @@ class WhatsappService
 
             foreach ($fullMidiaPaths as $index => $fullMidiaPath) {
                 $mimeType = $mimeTypes[$index];
-                $mediaType = $mediaTypes[$index]; // Pega o mediaType dinâmico (image, video, document)
-                $category = $categories[$index]; // Pega a categoria para salvar no banco
+                $mediaType = $mediaTypes[$index];
+                $category = $categories[$index];
 
-                // Mock do caminho para teste (remova esta linha quando estiver em produção)
                 $fullMidiaPath = 'https://eppg.fgv.br/sites/default/files/teste.pdf';
 
                 $result = $this->sendMedia($instance, $number, $mediaType, $fullMidiaPath, $message, $mimeType);
@@ -366,6 +365,4 @@ class WhatsappService
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
     }
-
 }
-

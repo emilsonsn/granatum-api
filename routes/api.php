@@ -65,6 +65,10 @@ Route::prefix('selection-process')->group(function(){
     Route::get('{id}', [SelectionProcessController::class, 'getById']);
 });
 
+Route::prefix('lead')->group(function(){
+    Route::post('create', [LeadController::class, 'create']);
+});
+
 Route::middleware('jwt')->group(function(){
 
     Route::middleware(AdminMiddleware::class)->group(function() {
@@ -232,9 +236,8 @@ Route::middleware('jwt')->group(function(){
     Route::prefix('lead')->group(function(){
         Route::get('search', [LeadController::class, 'search']);
         Route::get('{id}', [LeadController::class, 'getById']);
-        Route::post('create', [LeadController::class, 'create']);
         Route::patch('lead-step', [LeadController::class, 'leadStep']);
-        Route::patch('{id}', [LeadController::class, 'update']);        
+        Route::patch('{id}', [LeadController::class, 'update']);
         Route::delete('{id}', [LeadController::class, 'delete']);
     });
 
