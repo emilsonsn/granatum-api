@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetDetailController;
+use App\Http\Controllers\BudgetGeneratedController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
@@ -161,6 +162,15 @@ Route::middleware('jwt')->group(function(){
         Route::post('create', [BudgetController::class, 'create']);
         Route::patch('{id}', [BudgetController::class, 'update']);
         Route::delete('{id}', [BudgetController::class, 'delete']);
+    });  
+    
+    Route::prefix('budget-generated')->group(function(){
+        Route::get('search', [BudgetGeneratedController::class, 'search']);
+        Route::get('{id}', [BudgetGeneratedController::class, 'getById']);        
+        Route::post('create', [BudgetGeneratedController::class, 'create']);
+        Route::patch('{id}', [BudgetGeneratedController::class, 'update']);
+        Route::delete('variable/{id}', [BudgetGeneratedController::class, 'deleteVariable']);
+        Route::delete('{id}', [BudgetGeneratedController::class, 'delete']);
     });    
 
     Route::prefix('budget-detail')->group(function(){

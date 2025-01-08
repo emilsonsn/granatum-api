@@ -80,13 +80,13 @@ class LeadService
                 $funnelStep = FunnelStep::where('funnel_id', $request->funnel_id)
                     ->first();
 
-                if(!isset($funnelStep)) return;
-
-                $lead['leadStep'] = LeadStep::create([
-                    'step_id' => $funnelStep->id,
-                    'lead_id' => $lead->id,
-                    'postition' => 1
-                ]);
+                if(isset($funnelStep)){
+                    $lead['leadStep'] = LeadStep::create([
+                        'step_id' => $funnelStep->id,
+                        'lead_id' => $lead->id,
+                        'postition' => 1
+                    ]);
+                };
             }
 
             return ['status' => true, 'data' => $lead];
