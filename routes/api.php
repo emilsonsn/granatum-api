@@ -10,6 +10,7 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConstructionController;
 use App\Http\Controllers\CrmCampaignController;
+use App\Http\Controllers\CrmDashboardController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\FunnelStepController;
@@ -42,6 +43,11 @@ use Illuminate\Http\Request;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::prefix('crm-dashboard')->group(function(){
+    Route::get('cards/{period}', [CrmDashboardController::class, 'cards']);
+    Route::get('budget-graphic/{status}', [CrmDashboardController::class, 'budgetGraphic']);
+});    
 
 Route::post('login', [AuthController::class, 'login']);
 
@@ -155,6 +161,8 @@ Route::middleware('jwt')->group(function(){
         Route::patch('{id}', [CrmCampaignController::class, 'update']);
         Route::delete('{id}', [CrmCampaignController::class, 'delete']);
     });
+
+
 
     Route::prefix('budget')->group(function(){
         Route::get('search', [BudgetController::class, 'search']);

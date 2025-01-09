@@ -21,14 +21,25 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+     protected $model = \App\Models\User::class;
+
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('password'), // Senha padrão (alterar se necessário)
+            'phone' => $this->faker->phoneNumber,
+            'whatsapp' => $this->faker->boolean ? $this->faker->phoneNumber : null,
+            'cpf_cnpj' => $this->faker->numerify('###########'), // CPF/CNPJ fictício
+            'birth_date' => $this->faker->date('Y-m-d'),
+            'company_position_id' => null, // Alterar se necessário ou criar uma `CompanyPositionFactory`
+            'sector_id' => null, // Alterar se necessário ou criar uma `SectorFactory`
+            'is_active' => $this->faker->boolean,
+            'photo' => $this->faker->imageUrl(100, 100, 'people', true, 'User Photo'),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 
