@@ -44,11 +44,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::prefix('crm-dashboard')->group(function(){
-    Route::get('cards/{period}', [CrmDashboardController::class, 'cards']);
-    Route::get('budget-graphic/{status}', [CrmDashboardController::class, 'budgetGraphic']);
-});    
-
 Route::post('login', [AuthController::class, 'login']);
 
 Route::get('validateToken', [AuthController::class, 'validateToken']);
@@ -162,7 +157,10 @@ Route::middleware('jwt')->group(function(){
         Route::delete('{id}', [CrmCampaignController::class, 'delete']);
     });
 
-
+    Route::prefix('crm-dashboard')->group(function(){
+        Route::get('cards/{period}', [CrmDashboardController::class, 'cards']);
+        Route::get('budget-graphic/{status}', [CrmDashboardController::class, 'budgetGraphic']);
+    });    
 
     Route::prefix('budget')->group(function(){
         Route::get('search', [BudgetController::class, 'search']);
