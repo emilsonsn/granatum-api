@@ -29,7 +29,8 @@ class Order extends Model
         'purchase_date',
         'has_granatum',
         'bank_id',
-        'category_id'
+        'category_id',
+        'cost_center_id'
     ];
 
     public function construction(){

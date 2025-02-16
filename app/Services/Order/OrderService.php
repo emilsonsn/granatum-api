@@ -140,6 +140,7 @@ class OrderService
                 'purchase_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
+                'cost_center_id' => 'nullable|integer',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -259,6 +260,29 @@ class OrderService
         }
     }    
 
+    public function getCostCenter(){
+        try{
+            $result = $this->costCenters();
+    
+            $result = array_reduce($result, function($carry, $costCenter) {
+                if (isset($costCenter['centros_custo_lucro_filhos']) && is_array($costCenter['centros_custo_lucro_filhos'])) {
+                    foreach ($costCenter['centros_custo_lucro_filhos'] as $filha) {
+                        // Atualiza a descrição da categoria filha incluindo a categoria pai
+                        $filha['descricao'] = $costCenter['descricao'] . ' / ' . $filha['descricao'];
+                        $carry[] = $filha;
+                    }
+                } else {
+                    $carry[] = $costCenter;
+                }
+                return $carry;
+            }, []);
+    
+            return ['status' => true, 'data' => $result];
+        } catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }  
+
     public function update($request, $user_id)
     {
         try {
@@ -282,6 +306,7 @@ class OrderService
                 'purchase_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
+                'cost_center_id' => 'nullable|integer',
             ];
 
             $data = $request->all();
@@ -400,7 +425,8 @@ class OrderService
             $purchaseDate = $order->purchase_date;
             $accountBankId = $order->bank_id;
             $categoryId =  $order->category_id;
-    
+            $costCenterId = $order->cost_center_id;
+
             $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
@@ -408,6 +434,7 @@ class OrderService
             Release::create([
                 'release_id' => $response['id'],
                 'category_id' => $categoryId,
+                'centro_custo_lucro_id' => $costCenterId,
                 'account_bank_id' => $accountBankId,
                 'description' => $description,
                 'value' => $value,
@@ -451,7 +478,6 @@ class OrderService
             $item = Item::find($id);
 
             if(!isset($item)) throw new Exception ("Item não encontrado");
-
 
             $orderItemName= $item->name;
             $item->delete();

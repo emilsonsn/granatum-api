@@ -52,6 +52,13 @@ class OrderController extends Controller
         if($result['status']) $result['message'] = "Categorias encontradas";
         return $this->response($result);
     }
+    
+    public function getCostCenter(){
+        $result = $this->orderService->getCostCenter();
+
+        if($result['status']) $result['message'] = "Centros de custo encontrados";
+        return $this->response($result);
+    }
 
     public function delete($id){
         $result = $this->orderService->delete($id);
