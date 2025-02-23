@@ -21,6 +21,10 @@ class Budget extends Model
         'description',
     ];
 
+    public function budgetGenerateds(){
+        return $this->hasMany(BudgetGenerated::class);
+    }
+
     public function budgetDetails(){
         return $this->hasMany(BudgetDetail::class);
     }

@@ -16,7 +16,8 @@ class BudgetGeneratedService
             $perPage = $request->input('take', 10);
             $status = $request->status ?? null;
 
-            $budgetGenerateds = BudgetGenerated::orderBy('id', 'desc');
+            $budgetGenerateds = BudgetGenerated::with(['budget', 'lead'])
+                ->orderBy('id', 'desc');
 
             if($request->filled('search_term')){
                 $search_term = $request->search_term;

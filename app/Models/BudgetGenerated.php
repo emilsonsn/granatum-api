@@ -22,6 +22,10 @@ class BudgetGenerated extends Model
         'status',
     ];
 
+    public function budget(){
+        return $this->belongsTo(Budget::class);
+    }
+
     public function lead(){
         return $this->belongsTo(Lead::class);
     }
