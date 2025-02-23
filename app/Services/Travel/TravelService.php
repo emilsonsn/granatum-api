@@ -132,6 +132,7 @@ class TravelService
                 'attachments' => ['nullable', 'array'],
                 'bank_id' => ['nullable', 'integer'],
                 'category_id' => ['nullable', 'integer'],
+                'cost_center_id' => ['nullable', 'integer'],
             ];
 
             $requestData = $request->all();
@@ -190,6 +191,7 @@ class TravelService
                 'purchase_date' => ['required', 'date'],
                 'bank_id' => ['nullable', 'integer'],
                 'category_id' => ['nullable', 'integer'],
+                'cost_center_id' => ['nullable', 'integer'],
             ];
 
             $requestData = $request->all();
@@ -303,6 +305,7 @@ class TravelService
             $purchaseDate = $travel->purchase_date;
             $accountBankId = $travel->bank_id;
             $categoryId =  $travel->category_id;
+            $costCenterId = $travel->cost_center_id;
     
             $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
     
@@ -311,6 +314,7 @@ class TravelService
             Release::create([
                 'release_id' => $response['id'],
                 'category_id' => $categoryId,
+                'centro_custo_lucro_id' => $costCenterId,
                 'account_bank_id' => $accountBankId,
                 'description' => $description,
                 'value' => $value,

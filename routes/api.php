@@ -132,6 +132,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('search', [OrderController::class, 'search']);
         Route::get('get-bank', [OrderController::class, 'getBank']);
         Route::get('get-categories', [OrderController::class, 'getCategories']);
+        Route::get('cost-centers', [OrderController::class, 'getCostCenter']);        
         Route::get('{id}', [OrderController::class, 'getById']);        
         Route::post('create', [OrderController::class, 'create']);
         Route::post('granatum/{orderId}', [OrderController::class, 'upRelease']);
@@ -190,6 +191,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('get-bank', [OrderController::class, 'getBank']);
         Route::get('cards', [TravelController::class, 'cards']);
         Route::get('get-categories', [OrderController::class, 'getCategories']);
+        Route::get('cost-centers', [OrderController::class, 'getCostCenter']);        
         Route::get('{id}', [TravelController::class, 'getById']);        
         Route::post('create', [TravelController::class, 'create']);
         Route::post('granatum/{travel_id}', [TravelController::class, 'upRelease']);

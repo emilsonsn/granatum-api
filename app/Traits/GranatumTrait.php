@@ -45,6 +45,19 @@ Trait GranatumTrait
         return $result;
     }
 
+    public function costCenters()
+    {
+        $url = $this->buildUrl('centros_custo_lucro');
+
+        $response = Http::get($url);
+
+        $result = $response->json();
+
+        if(!isset($result[0])) throw new Exception('Categorias não encontradas');
+
+        return $result;
+    }
+
     public function createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate)
     {
         $url = $this->buildUrl('lancamentos');
@@ -100,8 +113,6 @@ Trait GranatumTrait
 
         return ['status' => true];
     }
-    
-    
 
     private function buildUrl($endpoint){
         return $this->baseUrl . "/$endpoint" .  '?access_token=' . $this->apiKey;
