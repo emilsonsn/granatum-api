@@ -63,6 +63,11 @@ class UserSeed extends Seeder
                 'is_active' => true,
             ],                                    
         ];
-        User::firstOrCreate();
+
+        foreach($users as $user){
+            User::firstOrCreate([
+                'email' => $user['email'],
+            ],$user);
+        }
     }
 }
