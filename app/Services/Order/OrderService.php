@@ -141,6 +141,7 @@ class OrderService
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
                 'tag_id' => 'nullable|integer',
+                'external_suplier_id'=> 'nullable|integer',
                 'cost_center_id' => 'nullable|integer',
             ];
 
@@ -269,7 +270,17 @@ class OrderService
         } catch(Exception $error) {
             return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
         }
-    }        
+    }  
+    
+    public function getSuplier(){
+        try{
+            $result = $this->suplier();
+    
+            return ['status' => true, 'data' => $result];
+        } catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }      
 
     public function getCostCenter(){
         try{
@@ -318,6 +329,7 @@ class OrderService
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
                 'tag_id' => 'nullable|integer',
+                'external_suplier_id'=> 'nullable|integer',
                 'cost_center_id' => 'nullable|integer',
             ];
 
@@ -438,9 +450,10 @@ class OrderService
             $accountBankId = $order->bank_id;
             $categoryId =  $order->category_id;
             $tagId =  $order->tag_id;
+            $suplierId =  $order->external_suplier_id;
             $costCenterId = $order->cost_center_id;
 
-            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId);
+            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId, $suplierId);
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
 

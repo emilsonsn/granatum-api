@@ -56,8 +56,21 @@ Trait GranatumTrait
         if(!isset($result[0])) throw new Exception('Tags não encontradas');
 
         return $result;
-    }    
+    }   
+    
+    public function suplier()
+    {
+        $url = $this->buildUrl('fornecedores');
 
+        $response = Http::get($url);
+
+        $result = $response->json();
+
+        if(!isset($result[0])) throw new Exception('Fornecedores não encontrados');
+
+        return $result;
+    }       
+    
     public function costCenters()
     {
         $url = $this->buildUrl('centros_custo_lucro');
@@ -71,7 +84,15 @@ Trait GranatumTrait
         return $result;
     }
 
-    public function createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId)
+    public function createRelease(
+        $categoryId,
+        $accountBankId,
+        $description,
+        $value,
+        $purchaseDate,
+        $tagId,
+        $suplierId
+    )
     {
         $url = $this->buildUrl('lancamentos');
 
@@ -85,6 +106,7 @@ Trait GranatumTrait
             ],
             'descricao' => $description,
             'valor' => $value,
+            'pessoa_id' => $suplierId,
             'data_vencimento' => Carbon::now()->addYear()->format('Y-m-d'),
             'data_pagamento' => $purchaseDate,
             'data_competencia' => $purchaseDate,

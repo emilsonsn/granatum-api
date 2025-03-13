@@ -133,6 +133,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('get-bank', [OrderController::class, 'getBank']);
         Route::get('get-categories', [OrderController::class, 'getCategories']);
         Route::get('get-tags', [OrderController::class, 'getTags']);
+        Route::get('get-suplier', [OrderController::class, 'getSuplier']);        
         Route::get('cost-centers', [OrderController::class, 'getCostCenter']);        
         Route::get('{id}', [OrderController::class, 'getById']);        
         Route::post('create', [OrderController::class, 'create']);
@@ -192,6 +193,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('get-bank', [OrderController::class, 'getBank']);
         Route::get('cards', [TravelController::class, 'cards']);
         Route::get('get-categories', [OrderController::class, 'getCategories']);
+        Route::get('get-suplier', [OrderController::class, 'getSuplier']);
         Route::get('get-tags', [OrderController::class, 'getTags']);
         Route::get('cost-centers', [OrderController::class, 'getCostCenter']);        
         Route::get('{id}', [TravelController::class, 'getById']);        

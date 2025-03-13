@@ -27,6 +27,7 @@ class Travel extends Model
         'bank_id',
         'category_id',
         'tag_id',
+        'external_suplier_id',
         'cost_center_id',
         'solicitation_type',
         'user_id',

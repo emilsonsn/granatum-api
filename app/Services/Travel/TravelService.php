@@ -133,6 +133,7 @@ class TravelService
                 'bank_id' => ['nullable', 'integer'],
                 'category_id' => ['nullable', 'integer'],
                 'tag_id' => ['nullable', 'integer'],
+                'external_suplier_id'=> 'nullable|integer',
                 'cost_center_id' => ['nullable', 'integer'],
             ];
 
@@ -193,6 +194,7 @@ class TravelService
                 'bank_id' => ['nullable', 'integer'],
                 'category_id' => ['nullable', 'integer'],
                 'tag_id' => ['nullable', 'integer'],
+                'external_suplier_id'=> 'nullable|integer',
                 'cost_center_id' => ['nullable', 'integer'],
             ];
 
@@ -309,8 +311,17 @@ class TravelService
             $categoryId =  $travel->category_id;
             $tagId = $travel->tag_id;
             $costCenterId = $travel->cost_center_id;
+            $suplierId = $travel->external_suplier_id;
     
-            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId);
+            $response = $this->createRelease(
+                categoryId: $categoryId,
+                accountBankId: $accountBankId,
+                description: $description,
+                value: $value,
+                purchaseDate: $purchaseDate,
+                tagId: $tagId,
+                suplierId: $suplierId
+            );
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
 

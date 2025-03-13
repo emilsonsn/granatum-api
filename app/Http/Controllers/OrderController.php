@@ -59,7 +59,14 @@ class OrderController extends Controller
         if($result['status']) $result['message'] = "Tags encontradas";
         return $this->response($result);
     }
-    
+
+    public function getSuplier(){
+        $result = $this->orderService->getSuplier();
+
+        if($result['status']) $result['message'] = "Fornecedores encontrados";
+        return $this->response($result);
+    }
+
     public function getCostCenter(){
         $result = $this->orderService->getCostCenter();
 
