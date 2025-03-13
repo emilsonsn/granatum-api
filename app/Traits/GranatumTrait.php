@@ -86,7 +86,8 @@ Trait GranatumTrait
             'descricao' => $description,
             'valor' => $value,
             'data_vencimento' => Carbon::now()->addYear()->format('Y-m-d'),
-            'data_pagamento' => $purchaseDate
+            'data_pagamento' => $purchaseDate,
+            'data_competencia' => $purchaseDate,
         ];
 
         $response = Http::post($url, $payload);
