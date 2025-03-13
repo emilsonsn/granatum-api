@@ -30,6 +30,7 @@ class Order extends Model
         'has_granatum',
         'bank_id',
         'category_id',
+        'tag_id',
         'cost_center_id'
     ];
 

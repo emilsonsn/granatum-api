@@ -52,6 +52,13 @@ class OrderController extends Controller
         if($result['status']) $result['message'] = "Categorias encontradas";
         return $this->response($result);
     }
+
+    public function getTags(){
+        $result = $this->orderService->getTags();
+
+        if($result['status']) $result['message'] = "Tags encontradas";
+        return $this->response($result);
+    }
     
     public function getCostCenter(){
         $result = $this->orderService->getCostCenter();

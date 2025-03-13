@@ -140,6 +140,7 @@ class OrderService
                 'purchase_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
+                'tag_id' => 'nullable|integer',
                 'cost_center_id' => 'nullable|integer',
             ];
 
@@ -260,6 +261,16 @@ class OrderService
         }
     }    
 
+    public function getTags(){
+        try{
+            $result = $this->tags();
+    
+            return ['status' => true, 'data' => $result];
+        } catch(Exception $error) {
+            return ['status' => false, 'error' => $error->getMessage(), 'statusCode' => 400];
+        }
+    }        
+
     public function getCostCenter(){
         try{
             $result = $this->costCenters();
@@ -306,6 +317,7 @@ class OrderService
                 'purchase_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
+                'tag_id' => 'nullable|integer',
                 'cost_center_id' => 'nullable|integer',
             ];
 
@@ -425,9 +437,10 @@ class OrderService
             $purchaseDate = $order->purchase_date;
             $accountBankId = $order->bank_id;
             $categoryId =  $order->category_id;
+            $tagId =  $order->tag_id;
             $costCenterId = $order->cost_center_id;
 
-            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate);
+            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId);
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
 

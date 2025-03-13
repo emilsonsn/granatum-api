@@ -45,6 +45,19 @@ Trait GranatumTrait
         return $result;
     }
 
+    public function tags()
+    {
+        $url = $this->buildUrl('tags');
+
+        $response = Http::get($url);
+
+        $result = $response->json();
+
+        if(!isset($result[0])) throw new Exception('Tags não encontradas');
+
+        return $result;
+    }    
+
     public function costCenters()
     {
         $url = $this->buildUrl('centros_custo_lucro');
@@ -58,7 +71,7 @@ Trait GranatumTrait
         return $result;
     }
 
-    public function createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate)
+    public function createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId)
     {
         $url = $this->buildUrl('lancamentos');
 
@@ -67,6 +80,9 @@ Trait GranatumTrait
         $payload = [
             'categoria_id' => $categoryId,
             'conta_id' => $accountBankId,
+            'tags' => [
+                ['id' => $tagId]
+            ],
             'descricao' => $description,
             'valor' => $value,
             'data_vencimento' => Carbon::now()->addYear()->format('Y-m-d'),
