@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            // $table->integer('tag_id')->nullable()->after('category_id');
-            // $table->integer('external_suplier_id')->nullable()->after('tag_id',);
+            $table->integer('tag_id')->nullable()->after('category_id');
+            $table->integer('external_suplier_id')->nullable()->after('tag_id',);
         });
 
         Schema::table('travels', function (Blueprint $table) {
-            // $table->integer('tag_id')->nullable()->after('category_id');
+            $table->integer('tag_id')->nullable()->after('category_id');
             $table->integer('external_suplier_id')->nullable()->after('tag_id',);
         });
     }
