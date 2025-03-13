@@ -17,7 +17,7 @@ return new class extends Migration
         });
 
         Schema::table('travels', function (Blueprint $table) {
-            $table->integer('tag_id')->nullable()->after('category_id');
+            // $table->integer('tag_id')->nullable()->after('category_id');
             $table->integer('external_suplier_id')->nullable()->after('tag_id',);
         });
     }
