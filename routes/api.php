@@ -186,7 +186,7 @@ Route::middleware('jwt')->group(function(){
         Route::get('{id}', [BudgetDetailController::class, 'getById']);        
         Route::post('create', [BudgetDetailController::class, 'create']);
         Route::patch('{id}', [BudgetDetailController::class, 'update']);
-    });    
+    });
 
     Route::prefix('travel')->group(function(){
         Route::get('search', [TravelController::class, 'search']);
