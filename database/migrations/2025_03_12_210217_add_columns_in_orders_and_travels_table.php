@@ -28,8 +28,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('tag_id');
-            $table->dropColumn('external_suplier_id');
+            // $table->dropColumn('tag_id');
+            // $table->dropColumn('external_suplier_id');
         });
 
         Schema::table('travels', function (Blueprint $table) {
