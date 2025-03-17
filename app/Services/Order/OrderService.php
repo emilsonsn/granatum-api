@@ -453,7 +453,16 @@ class OrderService
             $suplierId =  $order->external_suplier_id;
             $costCenterId = $order->cost_center_id;
 
-            $response = $this->createRelease($categoryId, $accountBankId, $description, $value, $purchaseDate, $tagId, $suplierId);
+            $response = $this->createRelease(
+                categoryId: $categoryId,
+                accountBankId: $accountBankId,
+                description: $description,
+                value: $value,
+                purchaseDate: $purchaseDate,
+                tagId: $tagId,
+                suplierId: $suplierId,
+                costCenterId: $costCenterId
+            );
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
 

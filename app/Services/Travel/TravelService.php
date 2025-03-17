@@ -320,7 +320,8 @@ class TravelService
                 value: $value,
                 purchaseDate: $purchaseDate,
                 tagId: $tagId,
-                suplierId: $suplierId
+                suplierId: $suplierId,
+                costCenterId: $costCenterId
             );
     
             if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");

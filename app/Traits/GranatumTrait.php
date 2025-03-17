@@ -91,7 +91,8 @@ Trait GranatumTrait
         $value,
         $purchaseDate,
         $tagId,
-        $suplierId
+        $suplierId,
+        $costCenterId
     )
     {
         $url = $this->buildUrl('lancamentos');
@@ -101,6 +102,7 @@ Trait GranatumTrait
         $payload = [
             'categoria_id' => $categoryId,
             'conta_id' => $accountBankId,
+            'centro_custo_lucro_id' => $costCenterId,
             'tags' => [
                 ['id' => $tagId]
             ],
