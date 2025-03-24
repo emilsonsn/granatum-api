@@ -126,7 +126,7 @@ class OrderService
             $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
             $request['purchase_date'] = $request['purchase_date'] === 'null' ? null : $request['purchase_date'];
             $request['due_date'] = $request['due_date'] === 'null' ? null : Carbon::parse($request['due_date'])->format('Y-m-d');
-            $request['tag_id'] = $request['tag_id'] === 'null' ? null : $request['due_date'];
+            $request['tag_id'] = $request['tag_id'] === 'null' ? null : $request['tag_id'];
             $request['external_suplier_id'] = $request['external_suplier_id'] === 'null' ? null : $request['external_suplier_id'];
 
             $rules = [
@@ -312,7 +312,7 @@ class OrderService
             $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
             $request['purchase_date'] = $request['purchase_date'] === 'null' ? null : Carbon::parse($request['purchase_date'])->format('Y-m-d');
             $request['due_date'] = $request['due_date'] === 'null' ? null : Carbon::parse($request['due_date'])->format('Y-m-d');
-            $request['tag_id'] = $request['tag_id'] === 'null' ? null : $request['due_date'];
+            $request['tag_id'] = $request['tag_id'] === 'null' ? null : $request['tag_id'];
             $request['external_suplier_id'] = $request['external_suplier_id'] === 'null' ? null : $request['external_suplier_id'];
 
             $rules = [
