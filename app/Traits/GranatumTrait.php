@@ -149,7 +149,7 @@ Trait GranatumTrait
                 ]);
 
             $response = $response->json();
-            Log::info('Response ', $response);
+            Log::info('Response ', $response ?? []);
 
             if(isset($response['errors']) && !isset($response['id'])) {
                 throw new Exception ("Erro ao enviar o anexo: " . $file->name);
