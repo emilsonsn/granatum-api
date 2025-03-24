@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Log;
 class OrderService
 {
 
@@ -453,7 +454,10 @@ class OrderService
                 costCenterId: $costCenterId
             );
     
-            if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
+            if(isset($response['errors']) && !isset($response['id'])) {
+                Log::error('erros', $response['errors'] ?? []);
+                throw new Exception ("Erro ao criar lançamento no granatum");
+            }
 
             Release::create([
                 'release_id' => $response['id'],
