@@ -105,17 +105,16 @@ Trait GranatumTrait
         $payload = [
             'categoria_id' => $categoryId,
             'conta_id' => $accountBankId,
-            'centro_custo_lucro_id' => $costCenterId,
-            'tags' => [
-                ['id' => $tagId]
-            ],
             'descricao' => $description,
             'valor' => $value,
-            'pessoa_id' => $suplierId,
             'data_competencia' => $orderDate ?? $purchaseDate ?? Carbon::now()->addYear()->format('Y-m-d'),
             'data_vencimento' => $dueDate ?? $purchaseDate ?? Carbon::now()->addYear()->format('Y-m-d'),
             'data_pagamento' => isset($dueDate) ? null : $purchaseDate,
         ];
+
+        if($tagId) $payload['tags'] = [ ['id' => $tagId] ];
+        if($suplierId) $payload['pessoa_id'] = $suplierId;
+        if($costCenterId) $payload['centro_custo_lucro_id'] = $costCenterId;
 
         $response = Http::post($url, $payload);
 
@@ -150,7 +149,7 @@ Trait GranatumTrait
                 ]);
 
             $response = $response->json();
-            Log::info('Response ', json_decode($response ?? [], true));
+            Log::info('Response ', $response);
 
             if(isset($response['errors']) && !isset($response['id'])) {
                 throw new Exception ("Erro ao enviar o anexo: " . $file->name);
