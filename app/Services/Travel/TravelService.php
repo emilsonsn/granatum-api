@@ -318,13 +318,17 @@ class TravelService
                 accountBankId: $accountBankId,
                 description: $description,
                 value: $value,
+                orderDate: null,
                 purchaseDate: $purchaseDate,
+                dueDate: null,
                 tagId: $tagId,
                 suplierId: $suplierId,
                 costCenterId: $costCenterId
             );
     
-            if(isset($response['errors']) && !isset($response['id'])) throw new Exception ("Erro ao criar lançamento no granatum");
+            if(isset($response['errors']) && !isset($response['id'])) {
+                throw new Exception ("Erro ao criar lançamento no granatum");
+            }
 
             Release::create([
                 'release_id' => $response['id'],

@@ -125,19 +125,22 @@ class OrderService
             $request['purchase_status'] = $request['purchase_status'] === 'null' ? null : $request['purchase_status'];
             $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
             $request['purchase_date'] = $request['purchase_date'] === 'null' ? null : $request['purchase_date'];
+            $request['due_date'] = $request['due_date'] === 'null' ? null : Carbon::parse($request['due_date'])->format('Y-m-d');
+            $request['tag_id'] = $request['tag_id'] === 'null' ? null : $request['due_date'];
+            $request['external_suplier_id'] = $request['external_suplier_id'] === 'null' ? null : $request['external_suplier_id'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
                 'date' => 'required|date',
                 'construction_id' => 'required|integer',
                 'user_id' => 'required|integer',
-                'supplier_id' => 'nullable|integer',
                 'quantity_items' => 'required|integer',
                 'description' => 'required|string',
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'nullable|string|max:255',
                 'purchase_date' => 'nullable|date',
+                'due_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
                 'tag_id' => 'nullable|integer',
@@ -151,9 +154,7 @@ class OrderService
 
             $data = $validator->validated();
 
-            if(
-                $data['purchase_status'] == PurchaseStatusEnum::Resolved->value
-            ){
+            if($data['purchase_status'] == PurchaseStatusEnum::Resolved->value){
                 $data['purchase_date'] = $data['purchase_date'] ?? Carbon::now()->format('Y-m-d');
             }
 
@@ -177,7 +178,6 @@ class OrderService
                     'order_id' => $order->id,
                     'solicitation_type' => $solicitation_type,
                     'total_value' => $order->total_value,
-                    'supplier_id' => $order->supplier_id,
                     'user_id' => $order->user_id,
                     'construction_id' => $order->construction_id,
                     'status' =>  SolicitationStatusEnum::Pending->value,
@@ -242,11 +242,9 @@ class OrderService
         try{
             $result = $this->categories();
     
-            // Primeira redução para combinar categorias filhas com suas respectivas categorias pais
             $result = array_reduce($result, function($carry, $category) {
                 if (isset($category['categorias_filhas']) && is_array($category['categorias_filhas'])) {
                     foreach ($category['categorias_filhas'] as $filha) {
-                        // Atualiza a descrição da categoria filha incluindo a categoria pai
                         $filha['descricao'] = $category['descricao'] . ' / ' . $filha['descricao'];
                         $carry[] = $filha;
                     }
@@ -313,19 +311,22 @@ class OrderService
             $request['purchase_status'] = $request['purchase_status'] === 'null' ? null : $request['purchase_status'];
             $request['user_id'] = $request['user_id'] === 'null' ? Auth::user()->id : $request['user_id'];
             $request['purchase_date'] = $request['purchase_date'] === 'null' ? null : Carbon::parse($request['purchase_date'])->format('Y-m-d');
+            $request['due_date'] = $request['due_date'] === 'null' ? null : Carbon::parse($request['due_date'])->format('Y-m-d');
+            $request['tag_id'] = $request['tag_id'] === 'null' ? null : $request['due_date'];
+            $request['external_suplier_id'] = $request['external_suplier_id'] === 'null' ? null : $request['external_suplier_id'];
 
             $rules = [
                 'order_type' => 'required|string|max:255',
                 'date' => 'required|date',
                 'construction_id' => 'required|integer',
                 'user_id' => 'required|integer',
-                'supplier_id' => 'nullable|integer',
                 'quantity_items' => 'required|integer',
                 'description' => 'required|string',
                 'total_value' => 'required|numeric',
                 'payment_method' => 'required|string|max:255',
                 'purchase_status' => 'required|string|max:255',
                 'purchase_date' => 'nullable|date',
+                'due_date' => 'nullable|date',
                 'bank_id' => 'nullable|integer',
                 'category_id' => 'nullable|integer',
                 'tag_id' => 'nullable|integer',
@@ -365,22 +366,6 @@ class OrderService
             }
 
             $orderToUpdate->update($data);
-
-            // if($data['purchase_status'] == PurchaseStatusEnum::RequestFinance->value){
-            //     $solicitation_type = $data['order_type'] == OrderTypeEnum::Reimbursement->value ? 'Reimbursement' : 'Payment';
-            //     $solicitation = Solicitation::create([
-            //         'order_id' => $orderToUpdate->id,
-            //         'solicitation_type' => $solicitation_type,
-            //         'total_value' => $orderToUpdate->total_value,
-            //         'supplier_id' => $orderToUpdate->supplier_id,
-            //         'user_id' => $orderToUpdate->user_id,
-            //         'construction_id' => $orderToUpdate->construction_id,
-            //         'status' =>  SolicitationStatusEnum::Pending->value,
-            //         'payment_date' => null,
-            //     ]);
-
-            //     $orderToUpdate['solicitation'] = $solicitation;
-            // }
 
             if(isset($request['items'])){
                 foreach($request['items'] as $item){
@@ -446,7 +431,9 @@ class OrderService
             
             $description = $order->description;
             $value = $order->total_value;
+            $orderDate = $order->date;
             $purchaseDate = $order->purchase_date;
+            $dueDate = $order->due_date;
             $accountBankId = $order->bank_id;
             $categoryId =  $order->category_id;
             $tagId =  $order->tag_id;
@@ -458,7 +445,9 @@ class OrderService
                 accountBankId: $accountBankId,
                 description: $description,
                 value: $value,
+                orderDate: $orderDate,
                 purchaseDate: $purchaseDate,
+                dueDate: $dueDate,
                 tagId: $tagId,
                 suplierId: $suplierId,
                 costCenterId: $costCenterId

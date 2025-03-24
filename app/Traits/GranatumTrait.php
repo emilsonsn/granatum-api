@@ -7,6 +7,7 @@ use App\Models\Travel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Log;
 
 Trait GranatumTrait
 {
@@ -89,11 +90,13 @@ Trait GranatumTrait
         $accountBankId,
         $description,
         $value,
+        $orderDate,
         $purchaseDate,
+        $dueDate,
         $tagId,
         $suplierId,
         $costCenterId
-    )
+    ): mixed
     {
         $url = $this->buildUrl('lancamentos');
 
@@ -109,9 +112,9 @@ Trait GranatumTrait
             'descricao' => $description,
             'valor' => $value,
             'pessoa_id' => $suplierId,
-            'data_vencimento' => Carbon::now()->addYear()->format('Y-m-d'),
-            'data_pagamento' => $purchaseDate,
-            'data_competencia' => $purchaseDate,
+            'data_competencia' => $orderDate ?? $purchaseDate ?? Carbon::now()->addYear()->format('Y-m-d'),
+            'data_vencimento' => $dueDate ?? $purchaseDate ?? Carbon::now()->addYear()->format('Y-m-d'),
+            'data_pagamento' => isset($dueDate) ? null : $purchaseDate,
         ];
 
         $response = Http::post($url, $payload);
@@ -135,6 +138,7 @@ Trait GranatumTrait
             $filePath = storage_path('app/public/' . $relativePath); 
     
             if (!file_exists($filePath)) {
+                Log::error('File does not exist');
                 throw new Exception("Arquivo não encontrado: " . $file->name);
             }
     
@@ -146,6 +150,7 @@ Trait GranatumTrait
                 ]);
 
             $response = $response->json();
+            Log::info('Response ', json_decode($response, true));
 
             if(isset($response['errors']) && !isset($response['id'])) {
                 throw new Exception ("Erro ao enviar o anexo: " . $file->name);

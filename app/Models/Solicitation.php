@@ -20,7 +20,6 @@ class Solicitation extends Model
         'order_id',
         'solicitation_type',
         'total_value',
-        'supplier_id',
         'user_id',
         'construction_id',
         'status',
