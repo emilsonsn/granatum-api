@@ -423,7 +423,6 @@ class OrderService
 
     public function upRelease($orderId) {
         try{
-            
             $order = Order::find($orderId);
 
             if(!isset($order)) throw new Exception('Pedido não encontrado');

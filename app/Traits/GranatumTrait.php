@@ -108,8 +108,8 @@ Trait GranatumTrait
             'descricao' => $description,
             'valor' => $value,
             'data_competencia' => $orderDate ?? $purchaseDate ?? Carbon::now()->addYear()->format('Y-m-d'),
-            'data_vencimento' => $dueDate ?? $purchaseDate ?? Carbon::now()->addYear()->format('Y-m-d'),
-            'data_pagamento' => isset($dueDate) ? null : $purchaseDate,
+            'data_vencimento' => $purchaseDate ?? $dueDate ?? Carbon::now()->addYear()->format('Y-m-d'),
+            'data_pagamento' => $purchaseDate ?? null,
         ];
 
         if($tagId) $payload['tags'] = [ ['id' => $tagId] ];
